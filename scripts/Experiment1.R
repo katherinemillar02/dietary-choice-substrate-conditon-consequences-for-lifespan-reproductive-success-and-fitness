@@ -50,9 +50,9 @@ exp1feeding_plot <- exp1feeding_summary %>%
        title = "")+
   theme_minimal() 
 
+#------- creating a linear model 
 exp1lm <- lm(fly_numbers ~ diet, data = long_feedinge1d1)
-
+#------- using summary function for the model 
 summary(exp1lm)
-
-
+#-- Using emmeans to look for significant differences 
 emmeans::emmeans(exp1lm, specs = pairwise ~ diet) 
