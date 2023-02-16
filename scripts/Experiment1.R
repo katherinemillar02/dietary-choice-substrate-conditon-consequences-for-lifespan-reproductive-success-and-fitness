@@ -53,3 +53,6 @@ exp1feeding_plot <- exp1feeding_summary %>%
 exp1lm <- lm(fly_numbers ~ diet, data = long_feedinge1d1)
 
 summary(exp1lm)
+
+
+emmeans::emmeans(exp1lm, specs = pairwise ~ diet) 
