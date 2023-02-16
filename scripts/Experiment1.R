@@ -56,3 +56,4 @@ exp1lm <- lm(fly_numbers ~ diet, data = long_feedinge1d1)
 summary(exp1lm)
 #-- Using emmeans to look for significant differences 
 emmeans::emmeans(exp1lm, specs = pairwise ~ diet) 
+
