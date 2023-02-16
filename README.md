@@ -3,3 +3,7 @@
 # Project Aims 
 A second part/ follow on from a previous project done from a summer studentship.
 A github repistory and R project for the third year project. 
+
+This project involved looking at how different food hardness can affect dietary choice in mated female *drosophila melanogaster*. 
+
+
