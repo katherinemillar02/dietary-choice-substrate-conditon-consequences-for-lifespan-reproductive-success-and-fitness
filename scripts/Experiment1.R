@@ -147,3 +147,39 @@ summary(exp1alllm)
 emmeans::emmeans(exp1alllm, specs = pairwise ~ diet + day) 
 # testing for significance in day 
 drop1(exp1alllm, test = "F")
+
+# Egg count data analysis 
+#---- 🥚 Egg counting ----
+#____ Reading the data in 
+egg_counting_data <- (read_excel(path = "data/RPEggCountE1.xlsx", na = "NA"))
+#____ Making the data long 
+long_egg_counting1 <- egg_counting_data %>% 
+  pivot_longer(cols = ("1:2(H)":"1:8(S)"), names_to = "diet", values_to = "egg_numbers")
+#_____ Making a summary of the data 
+egg_counting1_summary <- long_egg_counting1 %>% 
+  group_by(diet) %>% 
+  summarise(mean = mean(egg_numbers),
+            sd = sd(egg_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+#---------- Visualise the data of egg counting
+egg_counting1_plot <- egg_counting1_summary %>% 
+  ggplot(aes(x = diet, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "orange",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "orange",
+                width = 0.2)+
+  geom_jitter(data = long_egg_counting1,
+              aes(x = diet,
+                  y = egg_numbers),
+              fill = "skyblue",
+              colour = "black",
+              width = 0.2,
+              shape = 21)+
+  ylim(0,200)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of eggs laid on each patch")+
+  theme_minimal()
