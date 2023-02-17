@@ -109,10 +109,11 @@ exp1all_plot <- exp1all_summary %>%
 
 
 
-exp1alllm <- lm(fly_numbers ~ diet, data = exp1all)
+exp1alllm <- lm(fly_numbers ~ diet + day, data = exp1all)
 
 summary(exp1alllm)
 
-emmeans::emmeans(exp1alllm, specs = pairwise ~ diet) 
+emmeans::emmeans(exp1alllm, specs = pairwise ~ diet + day) 
 
 
+drop1(exp1alllm, test = "F")
