@@ -51,9 +51,7 @@ exp1feeding_plotd1 <- exp1feeding_summary %>%
   theme_minimal() 
 
 
-
-
-#------- creating a linear model 
+#------- creating a linear model for day 1 
 exp1lm <- lm(fly_numbers ~ diet, data = long_feedinge1d1)
 #------- using summary function for the model 
 summary(exp1lm)
@@ -98,8 +96,12 @@ exp1feeding_plotd2 <- exp1d2feeding_summary %>%
        title = "")+
   theme_minimal() 
 
+#------- comparing the days using patchwork
 
 exp1feeding_plotd1 + exp1feeding_plotd2
+
+
+#------- combining the data for feeding behaviour 
 
 #------- Mutating a variable for day 
 exp1d1 <- long_feedinge1d1 %>% mutate(day = "1")
