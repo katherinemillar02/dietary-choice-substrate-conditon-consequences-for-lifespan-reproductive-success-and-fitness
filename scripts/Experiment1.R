@@ -28,7 +28,7 @@ exp1feeding_summary <- long_feedinge1d1 %>%
             n = n(),
             se = sd/sqrt(n))
 #------- Visualising the data for feeding day 1 ----------------#
-exp1feeding_plot <- exp1feeding_summary %>% 
+exp1feeding_plotd1 <- exp1feeding_summary %>% 
   ggplot(aes(x = diet, y = mean))+
   geom_bar(stat = "identity",
            fill = "skyblue",
@@ -50,6 +50,9 @@ exp1feeding_plot <- exp1feeding_summary %>%
        title = "")+
   theme_minimal() 
 
+
+
+
 #------- creating a linear model 
 exp1lm <- lm(fly_numbers ~ diet, data = long_feedinge1d1)
 #------- using summary function for the model 
@@ -65,12 +68,38 @@ feedinge1d2 <- read_excel("data/RPFemaleFeedingE1D2.xlsx")
 long_feedinge1d2 <- feedinge1d2 %>% 
   pivot_longer(cols = ("1:2H":"1:8S"), names_to = "diet", values_to = "fly_numbers")
 # summary of just day 2 
-exp2feeding_summary <- long_feedinge1d2 %>%  
+exp1d2feeding_summary <- long_feedinge1d2 %>%  
   group_by(diet) %>% 
   summarise(mean = mean(fly_numbers),
             sd = sd(fly_numbers),
             n = n(),
             se = sd/sqrt(n))
+
+
+exp1feeding_plotd2 <- exp1d2feeding_summary %>% 
+  ggplot(aes(x = diet, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "#FF6863",
+                width = 0.2)+
+  geom_jitter(data = long_feedinge1d2,
+              aes(x = diet,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)+
+  ylim(0.0, 4.0)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of flies on a patch",
+       title = "")+
+  theme_minimal() 
+
+
+exp1feeding_plotd1 + exp1feeding_plotd2
 
 #------- Mutating a variable for day 
 exp1d1 <- long_feedinge1d1 %>% mutate(day = "1")
