@@ -75,7 +75,7 @@ exp1d2feeding_summary <- long_feedinge1d2 %>%
             n = n(),
             se = sd/sqrt(n))
 
-
+#- visualising the data for just day 2 
 exp1feeding_plotd2 <- exp1d2feeding_summary %>% 
   ggplot(aes(x = diet, y = mean))+
   geom_bar(stat = "identity",
@@ -106,7 +106,7 @@ exp1d1 <- long_feedinge1d1 %>% mutate(day = "1")
 exp1d2 <- long_feedinge1d2 %>% mutate(day = "2")
 #------- Combining the days 
 exp1all <- rbind(exp1d1, exp1d2)
-
+# summarising the combined days data 
 exp1all_summary <- exp1all %>%  
   group_by(diet) %>% 
   summarise(mean = mean(fly_numbers),
@@ -114,6 +114,7 @@ exp1all_summary <- exp1all %>%
             n = n(),
             se = sd/sqrt(n))
 
+# visualising the data for combined days 
 exp1all_plot <- exp1all_summary %>% 
   ggplot(aes(x = diet, y = mean))+
   geom_bar(stat = "identity",
@@ -136,13 +137,11 @@ exp1all_plot <- exp1all_summary %>%
        title = "")+
   theme_minimal() 
 
-
-
+# Testing a model for feeding behaviour for both days 
 exp1alllm <- lm(fly_numbers ~ diet + day, data = exp1all)
-
+# Using summary function for analysis 
 summary(exp1alllm)
-
+# using em means to test everything
 emmeans::emmeans(exp1alllm, specs = pairwise ~ diet + day) 
-
-
+# testing for significance in day 
 drop1(exp1alllm, test = "F")
