@@ -6,7 +6,7 @@
 
 A github repistory and R project for the third year project. 
 
-A second part/ a follow on from a previous project done in a summer studentship (Effects of dietary choice on Lifespan in *Drosophila melanogaster*).
+A second part/ a follow on from a previous project done in a summer studentship (Effects of dietary choice on Lifespan in *Drosophila melanogaster* - https://github.com/katherinemillar02/effects-of-dietary-choice-on-lifespan-in-drosophila-melanogaster).
 
 This project involved looking at how different food hardness can affect dietary choice in mated female *drosophila melanogaster*. As well as the effects on fitness and lifespan. 
 
