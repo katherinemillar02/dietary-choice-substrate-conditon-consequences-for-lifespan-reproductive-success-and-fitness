@@ -195,7 +195,7 @@ summary(eggcountinge1ls1)
 #----  doing tests 
 anova(eggcountinge1ls1) 
 confint(eggcountinge1ls1)
-#tidy verse summary
+#tidyverse summary
 broom::tidy(eggcountinge1ls1,  
             exponentiate=T, 
             conf.int=T)
