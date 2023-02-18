@@ -10,4 +10,4 @@ A second part/ a follow on from a previous project done in a summer studentship 
 
 This project involved looking at how different food hardness can affect dietary choice in mated female *drosophila melanogaster*. As well as the effects on fitness and lifespan. 
 
-<img title="droso pic" alt="drosopAlt text" src="/images/exp1assay.png" width=200 height=200>
+<img title="droso pic" alt="drosopAlt text" src="/images/exp1assay.png" width=100 height=100>
