@@ -183,3 +183,32 @@ egg_counting1_plot <- egg_counting1_summary %>%
   labs(x = "Diet \n(Protein; Carbohydrate)",
        y = "Mean (+/- S.E.) number of eggs laid on each patch")+
   theme_minimal()
+
+#-- Egg counting data analysis 
+
+#-- Making a linear model 
+eggcountinge1ls1 <- lm(egg_numbers ~ diet, data = long_egg_counting1)
+#---- Checking the model 
+performance::check_model(eggcountinge1ls1)
+#---- summarising the data 
+summary(eggcountinge1ls1)
+#----  doing tests 
+anova(eggcountinge1ls1) 
+confint(eggcountinge1ls1)
+#tidy verse summary
+broom::tidy(eggcountinge1ls1,  
+            exponentiate=T, 
+            conf.int=T)
+
+
+emmeans::emmeans(eggcountinge1ls1, specs = pairwise ~ diet) 
+
+eggcountinge1ls2 <- glm(egg_numbers ~ diet, data = long_egg_counting1, family = quasipoisson)
+
+summary(eggcountinge1ls2)
+
+emmeans::emmeans(eggcountinge1ls2, specs = pairwise ~ diet) 
+
+# No significance between soft and hard diets for egg laying 
+
+# summary says there is a difference 
