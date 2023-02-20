@@ -1,8 +1,6 @@
 # The effect of mating status and substrate condition on dietary choice and consequences for lifespan and reproductive success.
 
 # Project Aims 
-<img title="droso pic" alt="drosopAlt text" src="/images/RLogo.png" width=100 height=100>
-
 
 A github repistory and R project for the third year project. 
 
