@@ -397,3 +397,7 @@ summary(exp1bothlm)
 emmeans::emmeans(exp1balllm, specs = pairwise ~ diet + day) 
 # testing for significance in day 
 drop1(exp1balllm, test = "F")
+
+# using patchwork to compare experiment 1a and experiment 1b 
+
+exp1all_plot + exp1ball_plot
