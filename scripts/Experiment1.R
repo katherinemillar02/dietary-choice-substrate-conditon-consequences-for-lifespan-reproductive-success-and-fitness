@@ -312,3 +312,74 @@ exp1ball_summary <- exp1ball %>%
             sd = sd(fly_numbers),
             n = n(),
             se = sd/sqrt(n))
+
+# visualising the data for combined days 
+exp1ball_plot <- exp1ball_summary %>% 
+  ggplot(aes(x = diet, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "#FF6863",
+                width = 0.2)+
+  geom_jitter(data = exp1ball,
+              aes(x = diet,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)+
+  ylim(0.0, 4.0)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of flies on a patch",
+       title = "")+
+  theme_minimal() 
+
+
+# Testing a model for feeding behaviour for both days 
+exp1balllm <- lm(fly_numbers ~ diet + day, data = exp1ball)
+# Using summary function for analysis 
+summary(exp1balllm)
+# using em means to test everything
+emmeans::emmeans(exp1balllm, specs = pairwise ~ diet + day) 
+# testing for significance in day 
+drop1(exp1balllm, test = "F")
+
+
+#  testing the overall for experiment 1a against experiment 1b 
+
+exp1both <- rbind(exp1all, exp1ball)
+
+
+# summarising the combined days data 
+exp1both_summary <- exp1both %>%  
+  group_by(diet) %>% 
+  summarise(mean = mean(fly_numbers),
+            sd = sd(fly_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+
+# visualising the data for combined days 
+exp1both_plot <- exp1both_summary %>% 
+  ggplot(aes(x = diet, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "#FF6863",
+                width = 0.2)+
+  geom_jitter(data = exp1both,
+              aes(x = diet,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)+
+  ylim(0.0, 4.0)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of flies on a patch",
+       title = "")+
+  theme_minimal() 
+
