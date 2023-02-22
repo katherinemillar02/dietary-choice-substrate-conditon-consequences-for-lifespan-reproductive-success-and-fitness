@@ -292,7 +292,23 @@ exp1bfeeding_plotd2 <- exp1bd2feeding_summary %>%
   theme_minimal() 
 
 
+#------- comparing the days using patchwork
+
+exp1bfeeding_plotd1 + exp1bfeeding_plotd2
+
+
 #- Data analysis 
 
+#------- Mutating a variable for day 
+exp1bd1 <- long_feedinge1bd1 %>% mutate(day = "1") 
+exp1bd2 <- long_feedinge1bd2 %>% mutate(day = "2")
 
-
+#------- Combining the days 
+exp1ball <- rbind(exp1bd1, exp1bd2)
+# summarising the combined days data 
+exp1ball_summary <- exp1ball %>%  
+  group_by(diet) %>% 
+  summarise(mean = mean(fly_numbers),
+            sd = sd(fly_numbers),
+            n = n(),
+            se = sd/sqrt(n))
