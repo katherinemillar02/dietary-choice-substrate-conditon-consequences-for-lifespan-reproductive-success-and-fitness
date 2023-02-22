@@ -12,4 +12,8 @@ This project began with using a 'patch preference assay' to test different food 
 
 ## Description of R Scripts 
 
-"Experiment1.R" = A script with two repeated experiments. This experiment looked at using the protein: carbohydrate ratios 1:8 and 1:2 with both a soft and hard version of each diet, to test whether mated female *drosophila melanogaster* showed a particular preference for a diet. 
+**"Experiment1.R"**
+
+A script with two repeated experiments. This experiment looked at using the protein: carbohydrate ratios 1:8 and 1:2 with both a soft and hard version of each diet, to test whether mated female *drosophila melanogaster* showed a particular preference for a diet. 
+
+
