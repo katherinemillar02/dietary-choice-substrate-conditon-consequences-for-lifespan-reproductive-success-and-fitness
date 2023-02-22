@@ -347,9 +347,15 @@ emmeans::emmeans(exp1balllm, specs = pairwise ~ diet + day)
 drop1(exp1balllm, test = "F")
 
 
+# adding a variable for a and b 
+exp1a <- exp1all %>% mutate(experiment = "exp1a") 
+exp1b <- exp1ball %>% mutate(experiment = "exp1b")
+
+
+
 #  testing the overall for experiment 1a against experiment 1b 
 
-exp1both <- rbind(exp1all, exp1ball)
+exp1both <- rbind(exp1a, exp1b)
 
 
 # summarising the combined days data 
@@ -383,3 +389,11 @@ exp1both_plot <- exp1both_summary %>%
        title = "")+
   theme_minimal() 
 
+# Testing a model for feeding behaviour for both days 
+exp1bothlm <- lm(fly_numbers ~ diet + experiment, data = exp1both)
+# Using summary function for analysis 
+summary(exp1bothlm)
+# using em means to test everything
+emmeans::emmeans(exp1balllm, specs = pairwise ~ diet + day) 
+# testing for significance in day 
+drop1(exp1balllm, test = "F")
