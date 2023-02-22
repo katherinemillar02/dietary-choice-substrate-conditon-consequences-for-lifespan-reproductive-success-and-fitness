@@ -401,3 +401,5 @@ drop1(exp1bothlm, test = "F")
 # using patchwork to compare experiment 1a and experiment 1b 
 
 exp1all_plot + exp1ball_plot
+
+# test everything individually even the individual days? 
