@@ -212,3 +212,46 @@ emmeans::emmeans(eggcountinge1ls2, specs = pairwise ~ diet)
 # No significance between soft and hard diets for egg laying 
 
 # summary says there is a difference 
+
+
+
+# Experiment 1b - repeating the experiment 
+
+#----- Day 1 
+#-------- Reading the data in
+feedinge1bd1 <- read_excel("data/RPFemaleFeedingE1bD1.xlsx")
+#---- Making the data long
+long_feedinge1bd1 <- feedinge1bd1 %>% 
+  pivot_longer(cols = ("1:2(H)":"1:8(S)"), names_to = "diet", values_to = "fly_numbers")
+# summary of just day 1 
+exp1bfeeding_summary <- long_feedinge1bd1 %>%  
+  group_by(diet) %>% 
+  summarise(mean = mean(fly_numbers),
+            sd = sd(fly_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+#------- Visualising the data for feeding day 1 ----------------#
+exp1bfeeding_plotd1 <- exp1bfeeding_summary %>% 
+  ggplot(aes(x = diet, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "#FF6863",
+                width = 0.2)+
+  geom_jitter(data = long_feedinge1bd1,
+              aes(x = diet,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)+
+  ylim(0.0, 4.0)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of flies on a patch",
+       title = "")+
+  theme_minimal() 
+
+
+
