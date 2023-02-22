@@ -441,6 +441,7 @@ egg_counting1b_plot <- egg_counting1_summary_1b %>%
        y = "Mean (+/- S.E.) number of eggs laid on each patch")+
   theme_minimal()
 
+#-- using patchwork to compare the egg plots 
 
 egg_counting1_plot + egg_counting1b_plot
 
