@@ -473,4 +473,13 @@ eggboth <- rbind(exp1aegg, exp1begg)
 
 eggcountingboth <- lm(egg_numbers ~ diet + experiment, data = eggboth)
 
+
+# experiment can probably be dropped from the model - 
+
+drop1(eggcountingboth, test = "F" )
+
 summary(eggcountingboth)
+
+emmeans::emmeans(eggcountingboth, specs = pairwise ~ diet) 
+
+
