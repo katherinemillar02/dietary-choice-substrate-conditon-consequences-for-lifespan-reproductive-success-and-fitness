@@ -254,4 +254,45 @@ exp1bfeeding_plotd1 <- exp1bfeeding_summary %>%
   theme_minimal() 
 
 
+#----- Day 2 
+#-------- Reading the data in
+feedinge1bd2 <- read_excel("data/RPFemaleFeedingE1bD2.xlsx")
+#---- Making the data long
+long_feedinge1bd2 <- feedinge1bd2 %>% 
+  pivot_longer(cols = ("1:2(H)":"1:8(S)"), names_to = "diet", values_to = "fly_numbers")
+# summary of just day 2 
+exp1bd2feeding_summary <- long_feedinge1bd2 %>%  
+  group_by(diet) %>% 
+  summarise(mean = mean(fly_numbers),
+            sd = sd(fly_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+
+#- visualising the data for just day 2 
+exp1bfeeding_plotd2 <- exp1bd2feeding_summary %>% 
+  ggplot(aes(x = diet, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "#FF6863",
+                width = 0.2)+
+  geom_jitter(data = long_feedinge1bd2,
+              aes(x = diet,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)+
+  ylim(0.0, 4.0)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of flies on a patch",
+       title = "")+
+  theme_minimal() 
+
+
+#- Data analysis 
+
+
 
