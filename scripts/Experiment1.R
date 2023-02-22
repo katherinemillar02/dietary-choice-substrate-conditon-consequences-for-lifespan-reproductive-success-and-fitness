@@ -390,13 +390,13 @@ exp1both_plot <- exp1both_summary %>%
   theme_minimal() 
 
 # Testing a model for feeding behaviour for both days 
-exp1bothlm <- lm(fly_numbers ~ diet + experiment, data = exp1both)
+exp1bothlm <- lm(fly_numbers ~ diet + experiment + day, data = exp1both)
 # Using summary function for analysis 
 summary(exp1bothlm)
 # using em means to test everything
-emmeans::emmeans(exp1balllm, specs = pairwise ~ diet + day) 
+emmeans::emmeans(exp1bothlm, specs = pairwise ~ diet + experiment + day) 
 # testing for significance in day 
-drop1(exp1balllm, test = "F")
+drop1(exp1bothlm, test = "F")
 
 # using patchwork to compare experiment 1a and experiment 1b 
 
