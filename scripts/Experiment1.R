@@ -222,7 +222,7 @@ emmeans::emmeans(eggcountinge1ls2, specs = pairwise ~ diet)
 feedinge1bd1 <- read_excel("data/RPFemaleFeedingE1bD1.xlsx")
 #---- Making the data long
 long_feedinge1bd1 <- feedinge1bd1 %>% 
-  pivot_longer(cols = ("1:2(H)":"1:8(S)"), names_to = "diet", values_to = "fly_numbers")
+  pivot_longer(cols = ("1:2H":"1:8S"), names_to = "diet", values_to = "fly_numbers")
 # summary of just day 1 
 exp1bfeeding_summary <- long_feedinge1bd1 %>%  
   group_by(diet) %>% 
@@ -259,7 +259,7 @@ exp1bfeeding_plotd1 <- exp1bfeeding_summary %>%
 feedinge1bd2 <- read_excel("data/RPFemaleFeedingE1bD2.xlsx")
 #---- Making the data long
 long_feedinge1bd2 <- feedinge1bd2 %>% 
-  pivot_longer(cols = ("1:2(H)":"1:8(S)"), names_to = "diet", values_to = "fly_numbers")
+  pivot_longer(cols = ("1:2H":"1:8S"), names_to = "diet", values_to = "fly_numbers")
 # summary of just day 2 
 exp1bd2feeding_summary <- long_feedinge1bd2 %>%  
   group_by(diet) %>% 
