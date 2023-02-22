@@ -442,6 +442,8 @@ egg_counting1b_plot <- egg_counting1_summary_1b %>%
   theme_minimal()
 
 
+egg_counting1_plot + egg_counting1b_plot
+
 #-- Egg counting data analysis 
 
 #-- Making a linear model 
@@ -459,4 +461,16 @@ broom::tidy(eggcountinge1ls1,
             conf.int=T)
 
 
-#-- collating egg counting data to look for significnce 
+#-- collating egg counting data to look for significance 
+
+exp1aegg<- long_egg_counting1 %>% mutate(experiment = "exp1a")
+exp1begg <- long_egg_counting1b %>% mutate(experiment = "exp1b")
+
+
+eggboth <- rbind(exp1aegg, exp1begg)
+
+
+
+eggcountingboth <- lm(egg_numbers ~ diet + experiment, data = eggboth)
+
+summary(eggcountingboth)
