@@ -154,7 +154,7 @@ drop1(exp1alllm, test = "F")
 egg_counting_data <- (read_excel(path = "data/RPEggCountE1.xlsx", na = "NA"))
 #____ Making the data long 
 long_egg_counting1 <- egg_counting_data %>% 
-  pivot_longer(cols = ("1:2(H)":"1:8(S)"), names_to = "diet", values_to = "egg_numbers")
+  pivot_longer(cols = ("1:2H":"1:8S"), names_to = "diet", values_to = "egg_numbers")
 #_____ Making a summary of the data 
 egg_counting1_summary <- long_egg_counting1 %>% 
   group_by(diet) %>% 
