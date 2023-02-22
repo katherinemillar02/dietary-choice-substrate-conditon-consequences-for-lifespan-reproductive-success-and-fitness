@@ -403,3 +403,60 @@ drop1(exp1bothlm, test = "F")
 exp1all_plot + exp1ball_plot
 
 # test everything individually even the individual days? 
+
+
+# Egg count data analysis 
+#---- 🥚 Egg counting ----
+#____ Reading the data in 
+egg_counting_data_1b <- (read_excel(path = "data/RPEggCountE1b.xlsx", na = "NA"))
+#____ Making the data long 
+long_egg_counting1b <- egg_counting_data_1b %>% 
+  pivot_longer(cols = ("1:2H":"1:8S"), names_to = "diet", values_to = "egg_numbers")
+#_____ Making a summary of the data 
+egg_counting1_summary_1b <- long_egg_counting1b %>% 
+  group_by(diet) %>% 
+  summarise(mean = mean(egg_numbers),
+            sd = sd(egg_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+#---------- Visualise the data of egg counting
+egg_counting1b_plot <- egg_counting1_summary_1b %>% 
+  ggplot(aes(x = diet, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "orange",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "orange",
+                width = 0.2)+
+  geom_jitter(data = long_egg_counting1b,
+              aes(x = diet,
+                  y = egg_numbers),
+              fill = "skyblue",
+              colour = "black",
+              width = 0.2,
+              shape = 21)+
+  ylim(0,200)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of eggs laid on each patch")+
+  theme_minimal()
+
+
+#-- Egg counting data analysis 
+
+#-- Making a linear model 
+eggcountinge1bls1 <- lm(egg_numbers ~ diet, data = long_egg_counting1b)
+#---- Checking the model 
+performance::check_model(eggcountinge1bls1)
+#---- summarising the data 
+summary(eggcountinge1bls1)
+#----  doing tests 
+anova(eggcountinge1ls1) 
+confint(eggcountinge1ls1)
+#tidyverse summary
+broom::tidy(eggcountinge1ls1,  
+            exponentiate=T, 
+            conf.int=T)
+
+
+#-- collating egg counting data to look for significnce 
