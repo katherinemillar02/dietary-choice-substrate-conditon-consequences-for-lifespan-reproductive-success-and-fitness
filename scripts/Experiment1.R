@@ -215,7 +215,7 @@ emmeans::emmeans(eggcountinge1ls2, specs = pairwise ~ diet)
 
 
 
-# Experiment 1b - repeating the experiment 
+# ---------------- Experiment 1b - repeating the experiment 
 
 #----- Day 1 
 #-------- Reading the data in
