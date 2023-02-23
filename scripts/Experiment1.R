@@ -526,3 +526,9 @@ exp1all_plot + exp1ball_plot
 
 # test everything individually even the individual days? 
 
+
+
+# an emmeans model without day and experiment in the model - to look for significance between 1:2 S and H 
+
+
+emmeans::emmeans(exp1bothlm, specs = pairwise ~ diet) 
