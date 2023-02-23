@@ -505,6 +505,7 @@ exp1begg <- long_egg_counting1b %>% mutate(experiment = "exp1b")
 #---  combining the data 
 eggboth <- rbind(exp1aegg, exp1begg)
 
+#---- Combined experiments egg data analysis ----
 
 #---  linear model for collated egg counting data 
 eggcountingboth <- lm(egg_numbers ~ diet + experiment, data = eggboth)
