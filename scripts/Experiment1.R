@@ -172,7 +172,7 @@ drop1(exp1alllm, test = "F")
 
 
 # -------- (Exp 1a) Egg counting  --------
-=
+
 #____ Reading the data in 
 egg_counting_data <- (read_excel(path = "data/RPEggCountE1.xlsx", na = "NA"))
 #____ Making the data long 
@@ -373,69 +373,14 @@ emmeans::emmeans(exp1balllm, specs = pairwise ~ diet + day)
 drop1(exp1balllm, test = "F")
 
 
-# adding a variable for a and b 
-exp1a <- exp1all %>% mutate(experiment = "exp1a") 
-exp1b <- exp1ball %>% mutate(experiment = "exp1b")
 
 
 
-#  testing the overall for experiment 1a against experiment 1b 
 
-exp1both <- rbind(exp1a, exp1b)
-
-
-# summarising the combined days data 
-exp1both_summary <- exp1both %>%  
-  group_by(diet) %>% 
-  summarise(mean = mean(fly_numbers),
-            sd = sd(fly_numbers),
-            n = n(),
-            se = sd/sqrt(n))
-
-# visualising the data for combined days 
-exp1both_plot <- exp1both_summary %>% 
-  ggplot(aes(x = diet, y = mean))+
-  geom_bar(stat = "identity",
-           fill = "skyblue",
-           colour = "#FF6863",
-           alpha = 0.6)+
-  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
-                colour = "#FF6863",
-                width = 0.2)+
-  geom_jitter(data = exp1both,
-              aes(x = diet,
-                  y = fly_numbers),
-              fill = "skyblue",
-              colour = "#3a3c3d",
-              width = 0.2,
-              shape = 21)+
-  ylim(0.0, 4.0)+
-  labs(x = "Diet \n(Protein; Carbohydrate)",
-       y = "Mean (+/- S.E.) number of flies on a patch",
-       title = "")+
-  theme_minimal() 
-
-# Testing a model for feeding behaviour for both days 
-exp1bothlm <- lm(fly_numbers ~ diet + experiment + day, data = exp1both)
-# Using summary function for analysis 
-summary(exp1bothlm)
-# using em means to test everything
-emmeans::emmeans(exp1bothlm, specs = pairwise ~ diet + experiment + day) 
-# testing for significance in day 
-drop1(exp1bothlm, test = "F")
-
-
-
-# comparing the repeats of experiment 1a
-# using patchwork to compare experiment 1a and experiment 1b 
-
-exp1all_plot + exp1ball_plot
-
-# test everything individually even the individual days? 
 
 # ------ experiment 1b
 
-# Egg count data analysis ------
+# (Exp1b) Egg count data analysis ------
 
 #____ Reading the data in 
 egg_counting_data_1b <- (read_excel(path = "data/RPEggCountE1b.xlsx", na = "NA"))
@@ -484,14 +429,73 @@ performance::check_model(eggcountinge1bls1)
 #---- summarising the data 
 summary(eggcountinge1bls1)
 #----  doing tests 
-anova(eggcountinge1ls1) 
-confint(eggcountinge1ls1)
+anova(eggcountinge1bls1) 
+confint(eggcountinge1bls1)
 #tidyverse summary
-broom::tidy(eggcountinge1ls1,  
+broom::tidy(eggcountinge1bls1,  
             exponentiate=T, 
             conf.int=T)
 
 
+# Combining experiments data -----
+
+# adding a variable for a and b 
+exp1a <- exp1all %>% mutate(experiment = "exp1a") 
+exp1b <- exp1ball %>% mutate(experiment = "exp1b")
+
+
+
+#  testing the overall for experiment 1a against experiment 1b 
+
+exp1both <- rbind(exp1a, exp1b)
+
+
+# summarising the combined days data 
+exp1both_summary <- exp1both %>%  
+  group_by(diet) %>% 
+  summarise(mean = mean(fly_numbers),
+            sd = sd(fly_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+
+# visualising the data for combined days 
+exp1both_plot <- exp1both_summary %>% 
+  ggplot(aes(x = diet, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "#FF6863",
+                width = 0.2)+
+  geom_jitter(data = exp1both,
+              aes(x = diet,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)+
+  ylim(0.0, 4.0)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of flies on a patch",
+       title = "")+
+  theme_minimal() 
+
+
+# Combining experiments data analysis -----
+
+
+# Testing a model for feeding behaviour for both days 
+exp1bothlm <- lm(fly_numbers ~ diet + experiment + day, data = exp1both)
+# Using summary function for analysis 
+summary(exp1bothlm)
+# using em means to test everything
+emmeans::emmeans(exp1bothlm, specs = pairwise ~ diet + experiment + day) 
+# testing for significance in day 
+drop1(exp1bothlm, test = "F")
+
+
+#---- Combined experiments egg data ----
 #------- collating egg counting data to look for significance 
 
 #--- adding an experiment variable to egg counting data 
@@ -514,4 +518,10 @@ summary(eggcountingboth)
 
 emmeans::emmeans(eggcountingboth, specs = pairwise ~ diet) 
 
+# comparing the repeats of experiment 1a
+# using patchwork to compare experiment 1a and experiment 1b 
+
+exp1all_plot + exp1ball_plot
+
+# test everything individually even the individual days? 
 
