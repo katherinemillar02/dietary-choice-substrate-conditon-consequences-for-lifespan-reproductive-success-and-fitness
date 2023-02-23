@@ -23,6 +23,7 @@ performance::check_model(exp1alllm)
 ```
 
 
+probably analyse 1:2 hard and soft for feeding behaviour 
 
 
 
@@ -34,7 +35,14 @@ egg counting data works fine to be combined but are the experiments too differen
 
 
 
+using: 
+emmeans::emmeans(exp1bothlm, specs = pairwise ~ diet)
+not using day and experiment in the model 
 
+
+ 1:2H - 1:2S   -1.050 0.11 1193  -9.554  <.0001
+ 
+ is the most interesting result 
 
 
 
