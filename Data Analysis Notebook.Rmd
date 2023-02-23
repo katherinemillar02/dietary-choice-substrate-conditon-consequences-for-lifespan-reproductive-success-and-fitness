@@ -30,9 +30,7 @@ performance::check_model(exp1alllm)
 need to make day a separate variable for separate experiments!! 
 maybe?
 but it looks like it understands it with emmeans so might be fine 
-
-
-egg counting data works fine to be combined 
+egg counting data works fine to be combined but are the experiments too different? 
 
 
 
