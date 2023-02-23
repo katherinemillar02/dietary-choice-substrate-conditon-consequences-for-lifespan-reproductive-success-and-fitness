@@ -14,6 +14,7 @@ library(gtsummary)
 library(knitr)
 library(rphylopic)
 
+#------------------------------ Experiment 1a 
 #----- Day 1 
 #-------- Reading the data in
 feedinge1d1 <- read_excel("data/RPFemaleFeedingE1D1.xlsx")
@@ -50,6 +51,7 @@ exp1feeding_plotd1 <- exp1feeding_summary %>%
        title = "")+
   theme_minimal() 
 
+#------- Data analysis for just day 1 
 
 #------- creating a linear model for day 1 
 exp1lm <- lm(fly_numbers ~ diet, data = long_feedinge1d1)
@@ -57,6 +59,10 @@ exp1lm <- lm(fly_numbers ~ diet, data = long_feedinge1d1)
 summary(exp1lm)
 #-- Using emmeans to look for significant differences 
 emmeans::emmeans(exp1lm, specs = pairwise ~ diet) 
+
+
+
+
 
 
 #----- Day 2 
@@ -96,12 +102,22 @@ exp1feeding_plotd2 <- exp1d2feeding_summary %>%
        title = "")+
   theme_minimal() 
 
+# Data analysis for just day 2 
+#------- creating a linear model for day 1 
+exp1lmd2 <- lm(fly_numbers ~ diet, data = long_feedinge1d2)
+#------- using summary function for the model 
+summary(exp1lmd2)
+#-- Using emmeans to look for significant differences 
+emmeans::emmeans(exp1lmd2, specs = pairwise ~ diet) 
+
+
+
 #------- comparing the days using patchwork
 
 exp1feeding_plotd1 + exp1feeding_plotd2
 
 
-#------- combining the data for feeding behaviour 
+#------- Combining the data for feeding behaviour 
 
 #------- Mutating a variable for day 
 exp1d1 <- long_feedinge1d1 %>% mutate(day = "1")
@@ -139,6 +155,9 @@ exp1all_plot <- exp1all_summary %>%
        title = "")+
   theme_minimal() 
 
+
+
+
 # Testing a model for feeding behaviour for both days 
 exp1alllm <- lm(fly_numbers ~ diet + day, data = exp1all)
 # Using summary function for analysis 
@@ -147,6 +166,9 @@ summary(exp1alllm)
 emmeans::emmeans(exp1alllm, specs = pairwise ~ diet + day) 
 # testing for significance in day 
 drop1(exp1alllm, test = "F")
+
+
+
 
 # Egg count data analysis 
 #---- 🥚 Egg counting ----
@@ -195,12 +217,12 @@ summary(eggcountinge1ls1)
 #----  doing tests 
 anova(eggcountinge1ls1) 
 confint(eggcountinge1ls1)
-#tidyverse summary
+# tidyverse summary
 broom::tidy(eggcountinge1ls1,  
             exponentiate=T, 
             conf.int=T)
 
-
+# Data analysis of egg counting from experiment 1 
 emmeans::emmeans(eggcountinge1ls1, specs = pairwise ~ diet) 
 
 eggcountinge1ls2 <- glm(egg_numbers ~ diet, data = long_egg_counting1, family = quasipoisson)
