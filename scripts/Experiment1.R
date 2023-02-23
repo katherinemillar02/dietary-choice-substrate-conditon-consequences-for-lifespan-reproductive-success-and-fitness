@@ -319,7 +319,7 @@ exp1bfeeding_plotd2 <- exp1bd2feeding_summary %>%
 exp1bfeeding_plotd1 + exp1bfeeding_plotd2
 
 
-#- Data analysis 
+#- Data analysis of combined days (experiment 1a)
 
 #------- Mutating a variable for day 
 exp1bd1 <- long_feedinge1bd1 %>% mutate(day = "1") 
