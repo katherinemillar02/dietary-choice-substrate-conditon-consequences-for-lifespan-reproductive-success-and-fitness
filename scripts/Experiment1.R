@@ -121,8 +121,8 @@ exp1feeding_plotd1 + exp1feeding_plotd2
 #------- Combining the data for feeding behaviour 
 
 #------- Mutating a variable for day 
-exp1d1 <- long_feedinge1d1 %>% mutate(day = "1")
-exp1d2 <- long_feedinge1d2 %>% mutate(day = "2")
+exp1d1 <- long_feedinge1d1 %>% mutate(day = "a1")
+exp1d2 <- long_feedinge1d2 %>% mutate(day = "a2")
 #------- Combining the days 
 exp1all <- rbind(exp1d1, exp1d2)
 # summarising the combined days data 
@@ -326,8 +326,8 @@ exp1bfeeding_plotd1 + exp1bfeeding_plotd2
 #- Data analysis of combined days (experiment 1b)
 
 #------- Mutating a variable for day 
-exp1bd1 <- long_feedinge1bd1 %>% mutate(day = "1") 
-exp1bd2 <- long_feedinge1bd2 %>% mutate(day = "2")
+exp1bd1 <- long_feedinge1bd1 %>% mutate(day = "b1") 
+exp1bd2 <- long_feedinge1bd2 %>% mutate(day = "b2")
 
 #------- Combining the days 
 exp1ball <- rbind(exp1bd1, exp1bd2)
