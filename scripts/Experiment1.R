@@ -14,8 +14,8 @@ library(gtsummary)
 library(knitr)
 library(rphylopic)
 
-#------------------------------ Experiment 1a 
-#----- Day 1 
+#------------------------------ Experiment 1a ---- 
+#----- (Exp1a) Day 1 ------
 #-------- Reading the data in
 feedinge1d1 <- read_excel("data/RPFemaleFeedingE1D1.xlsx")
 #---- Making the data long
@@ -51,7 +51,7 @@ exp1feeding_plotd1 <- exp1feeding_summary %>%
        title = "")+
   theme_minimal() 
 
-#------- Data analysis for just day 1 
+#-------------- (Exp 1a) Day 1 Data analysis  -----------
 
 #------- creating a linear model for day 1 
 exp1lm <- lm(fly_numbers ~ diet, data = long_feedinge1d1)
@@ -63,9 +63,7 @@ emmeans::emmeans(exp1lm, specs = pairwise ~ diet)
 
 
 
-
-
-#----- Day 2 
+#------------ (Exp 1a) Day 2 ------
 #-------- Reading the data in
 feedinge1d2 <- read_excel("data/RPFemaleFeedingE1D2.xlsx")
 #---- Making the data long
@@ -102,6 +100,7 @@ exp1feeding_plotd2 <- exp1d2feeding_summary %>%
        title = "")+
   theme_minimal() 
 
+# (Exp1a) Day 2 Data analysis 
 # Data analysis for just day 2 
 #------- creating a linear model for day 1 
 exp1lmd2 <- lm(fly_numbers ~ diet, data = long_feedinge1d2)
@@ -116,6 +115,8 @@ emmeans::emmeans(exp1lmd2, specs = pairwise ~ diet)
 
 exp1feeding_plotd1 + exp1feeding_plotd2
 
+
+#----- (Exp1a) Combined days data -----
 
 #------- Combining the data for feeding behaviour 
 
@@ -156,7 +157,7 @@ exp1all_plot <- exp1all_summary %>%
   theme_minimal() 
 
 
-
+# ------ -(Exp1a) Combined days data analysis ------
 
 # Testing a model for feeding behaviour for both days 
 exp1alllm <- lm(fly_numbers ~ diet + day, data = exp1all)
@@ -170,8 +171,8 @@ drop1(exp1alllm, test = "F")
 
 
 
-# Egg count data analysis 
-#---- 🥚 Egg counting ----
+# -------- (Exp 1a) Egg counting  --------
+=
 #____ Reading the data in 
 egg_counting_data <- (read_excel(path = "data/RPEggCountE1.xlsx", na = "NA"))
 #____ Making the data long 
@@ -206,7 +207,7 @@ egg_counting1_plot <- egg_counting1_summary %>%
        y = "Mean (+/- S.E.) number of eggs laid on each patch")+
   theme_minimal()
 
-#-- Egg counting data analysis 
+#------- (Exp1a) Egg counting data analysis -----
 
 #-- Making a linear model 
 eggcountinge1ls1 <- lm(egg_numbers ~ diet, data = long_egg_counting1)
@@ -237,9 +238,9 @@ emmeans::emmeans(eggcountinge1ls2, specs = pairwise ~ diet)
 
 
 
-# ---------------- Experiment 1b - repeating the experiment 
+# ---------------- Experiment 1b - repeating the experiment -----
 
-#----- Day 1 
+#----- (Exp1b) Day 1 -----
 #-------- Reading the data in
 feedinge1bd1 <- read_excel("data/RPFemaleFeedingE1bD1.xlsx")
 #---- Making the data long
@@ -274,6 +275,9 @@ exp1bfeeding_plotd1 <- exp1bfeeding_summary %>%
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "")+
   theme_minimal() 
+
+
+#-----  (Exp1b) data analysis -----
 
 
 #----- Day 2 
@@ -431,8 +435,8 @@ exp1all_plot + exp1ball_plot
 
 # ------ experiment 1b
 
-# Egg count data analysis 
-#---- 🥚 Egg counting ----
+# Egg count data analysis ------
+
 #____ Reading the data in 
 egg_counting_data_1b <- (read_excel(path = "data/RPEggCountE1b.xlsx", na = "NA"))
 #____ Making the data long 
