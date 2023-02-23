@@ -436,6 +436,7 @@ broom::tidy(eggcountinge1bls1,
             exponentiate=T, 
             conf.int=T)
 
+emmeans::emmeans(eggcountinge1bls1, specs = pairwise ~ diet)
 
 # Combining experiments data -----
 
