@@ -47,7 +47,7 @@ not using day and experiment in the model
  
  interesting egg results 
  
- if using combined egg data 
+ if using combined egg data: 
 
 1:8H - 1:8S    -42.8 6.88 75  -6.217  <.0001
  1:2S - 1:8S    -79.2 6.88 75 -11.511  <.0001
