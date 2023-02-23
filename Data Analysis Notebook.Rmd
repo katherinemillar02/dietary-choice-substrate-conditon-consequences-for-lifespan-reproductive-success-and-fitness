@@ -21,3 +21,22 @@ The preview shows you a rendered HTML copy of the contents of the editor. Conseq
 ```{r}
 performance::check_model(exp1alllm)
 ```
+
+
+
+
+
+
+need to make day a separate variable for separate experiments!! 
+maybe?
+but it looks like it understands it with emmeans so might be fine 
+
+
+egg counting data works fine to be combined 
+
+
+
+
+
+
+
