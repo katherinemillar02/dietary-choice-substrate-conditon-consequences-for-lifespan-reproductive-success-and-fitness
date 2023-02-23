@@ -319,7 +319,7 @@ exp1bfeeding_plotd2 <- exp1bd2feeding_summary %>%
 exp1bfeeding_plotd1 + exp1bfeeding_plotd2
 
 
-#- Data analysis of combined days (experiment 1a)
+#- Data analysis of combined days (experiment 1b)
 
 #------- Mutating a variable for day 
 exp1bd1 <- long_feedinge1bd1 %>% mutate(day = "1") 
@@ -420,12 +420,16 @@ emmeans::emmeans(exp1bothlm, specs = pairwise ~ diet + experiment + day)
 # testing for significance in day 
 drop1(exp1bothlm, test = "F")
 
+
+
+# comparing the repeats of experiment 1a
 # using patchwork to compare experiment 1a and experiment 1b 
 
 exp1all_plot + exp1ball_plot
 
 # test everything individually even the individual days? 
 
+# ------ experiment 1b
 
 # Egg count data analysis 
 #---- 🥚 Egg counting ----
@@ -484,23 +488,24 @@ broom::tidy(eggcountinge1ls1,
             conf.int=T)
 
 
-#-- collating egg counting data to look for significance 
+#------- collating egg counting data to look for significance 
 
+#--- adding an experiment variable to egg counting data 
 exp1aegg<- long_egg_counting1 %>% mutate(experiment = "exp1a")
 exp1begg <- long_egg_counting1b %>% mutate(experiment = "exp1b")
 
-
+#---  combining the data 
 eggboth <- rbind(exp1aegg, exp1begg)
 
 
-
+#---  linear model for collated egg counting data 
 eggcountingboth <- lm(egg_numbers ~ diet + experiment, data = eggboth)
 
 
 # experiment can probably be dropped from the model - 
-
 drop1(eggcountingboth, test = "F" )
 
+# analysing the data for egg counting 
 summary(eggcountingboth)
 
 emmeans::emmeans(eggcountingboth, specs = pairwise ~ diet) 
