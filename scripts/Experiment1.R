@@ -378,7 +378,7 @@ drop1(exp1balllm, test = "F")
 
 
 
-# ------ experiment 1b
+# ------ Experiment 1b
 
 # (Exp1b) Egg count data analysis ------
 
@@ -564,5 +564,7 @@ egg_counting_plot_all <- eggboth_summary %>%
   labs(x = "Diet \n(Protein; Carbohydrate)",
        y = "Mean (+/- S.E.) number of eggs laid on each patch")+
   theme_minimal()
+
+
 
 
