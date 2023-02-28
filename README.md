@@ -17,4 +17,9 @@ This project began with using a 'patch preference assay' to test different food 
 A script with two repeated experiments. This experiment looked at using the protein: carbohydrate ratios 1:8 and 1:2 with both a soft and hard version of each diet, to test whether mated female *drosophila melanogaster* showed a particular preference for a diet. 
 The preferred diet in which the *drosophila* chose to lay their eggs was also calculated. 
 
+**"Experiment2.R" (8:1 and 1:2 hard and soft diets)**
+
+An experiment to test a known preferred diet (8:1) with a known least preferred diet (1:2) to see if *drosophila melanogaster* will favour food type over dietary levels. 
+
+<img title="droso pic" alt="drosopAlt text" src="/images/drosophila.schematic.png" width=200 height=200>
 
