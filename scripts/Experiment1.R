@@ -488,12 +488,20 @@ exp1both_plot <- exp1both_summary %>%
 
 # Testing a model for feeding behaviour for both days 
 exp1bothlm <- lm(fly_numbers ~ diet + experiment + day, data = exp1both)
+
+exp1bothlm2 <- lm(fly_numbers ~ diet + experiment + day + diet*experiment + diet*day, data = exp1both)
+
+
 # Using summary function for analysis 
 summary(exp1bothlm)
+
+summary(exp1bothlm2)
 # using em means to test everything
 emmeans::emmeans(exp1bothlm, specs = pairwise ~ diet + experiment + day) 
 # testing for significance in day 
 drop1(exp1bothlm, test = "F")
+
+drop1(exp1bothlm2, test = "F")
 
 
 #---- Combined experiments egg data ----
