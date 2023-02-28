@@ -21,5 +21,5 @@ The preferred diet in which the *drosophila* chose to lay their eggs was also ca
 
 An experiment to test a known preferred diet (8:1) with a known least preferred diet (1:2) to see if *drosophila melanogaster* will favour food type over dietary levels. 
 
-<img title="droso pic" alt="drosopAlt text" src="/images/drosophila.schematic.png" width=200 height=200>
+<img title="droso pic" alt="drosopAlt text" src="/images/drosophila.schematic.png" width=300 height=200>
 
