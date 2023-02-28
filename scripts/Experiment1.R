@@ -491,7 +491,7 @@ exp1bothlm <- lm(fly_numbers ~ diet + experiment + day, data = exp1both)
 
 exp1bothlm2 <- lm(fly_numbers ~ diet + experiment + day + diet*experiment + diet*day, data = exp1both)
 
-
+exp1bothlm3 <- lm(fly_numbers ~ diet + experiment + diet*experiment, data = exp1both)
 # Using summary function for analysis 
 summary(exp1bothlm)
 
@@ -503,6 +503,10 @@ drop1(exp1bothlm, test = "F")
 
 drop1(exp1bothlm2, test = "F")
 
+
+drop1(exp1bothlm3, test = "F")
+
+# have to do interaction effects separate for some reason? 
 
 #---- Combined experiments egg data ----
 #------- collating egg counting data to look for significance 
