@@ -111,3 +111,20 @@ emmeans::emmeans(exp2lmd2, specs = pairwise ~ diet)
 
 exp2feeding_plot_d1 + exp2feeding_plotd2
 
+
+#-- mutating a day variable
+
+exp2d1 <- long_feedinge2d1 %>% mutate(day = "1")
+exp2d2 <- long_feedinge2d2 %>% mutate(day = "2")
+
+exp2both <- rbind(exp2d1, exp2d2)
+
+exp2bothlm <- lm(fly_numbers ~ diet + day, data = exp2both)
+
+drop1(exp2bothlm, test = "F")
+
+summary(exp2bothlm)
+
+#-- day is not significant!
+
+emmeans::emmeans(exp2bothlm, specs = pairwise ~ diet)
