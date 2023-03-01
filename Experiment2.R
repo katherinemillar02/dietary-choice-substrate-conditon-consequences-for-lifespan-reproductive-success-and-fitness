@@ -191,3 +191,6 @@ broom::tidy(eggcountinge2ls1,
 
 
 
+
+
+
