@@ -15,7 +15,7 @@ library(knitr)
 library(rphylopic)
 
 
-# Feeding behaviour day 1 
+# -----------Feeding behaviour day 1 -------
 
 #-------- Reading the data in
 feedinge2d1 <- read_excel("data/RPFemaleFeedingE2D1.xlsx")
@@ -62,7 +62,7 @@ summary(exp2lm)
 #-- Using emmeans to look for significant differences 
 emmeans::emmeans(exp2lm, specs = pairwise ~ diet) 
 
-#------------ (Exp 2) Day 2 ------
+#------------ Feeding behaviour day 2  ------
 #-------- Reading the data in
 feedinge2d2 <- read_excel("data/RPFemaleFeedingE2D2.xlsx")
 #---- Making the data long
@@ -108,7 +108,7 @@ summary(exp2lmd2)
 emmeans::emmeans(exp2lmd2, specs = pairwise ~ diet) 
 
 
-
+#--  using patchwork to combine the plots for day 1 and day 2 
 exp2feeding_plot_d1 + exp2feeding_plotd2
 
 
@@ -117,26 +117,33 @@ exp2feeding_plot_d1 + exp2feeding_plotd2
 exp2d1 <- long_feedinge2d1 %>% mutate(day = "1")
 exp2d2 <- long_feedinge2d2 %>% mutate(day = "2")
 
+#- binding the data 
 exp2both <- rbind(exp2d1, exp2d2)
 
+#- using a linear model for feeding behaviour 
 exp2bothlm <- lm(fly_numbers ~ diet + day, data = exp2both)
 
+#-  testing the significance in day for both lm and glm 
 drop1(exp2bothlm, test = "F")
 drop1(exp2bothglm, test = "F")
+#-- day is not significant! yay well it is but only just 
 
+#- using summary function for the linear model 
 summary(exp2bothlm)
 
-
+#-  making a glm 
 exp2bothglm <- glm(fly_numbers ~ diet + day, family = poisson, data = exp2both)
 
-exp2bothglm2 <- glm(fly_numbers ~ diet + day, family = quasipoisson, data = exp2both)
-
+#- using summary function for the general linear model 
 summary(exp2bothglm)
 
+#-- using quasipoisson to count for overdispersion
+exp2bothglm2 <- glm(fly_numbers ~ diet + day, family = quasipoisson, data = exp2both)
+
+#- using summary function for the general linear model with quasipoisson
 summary(exp2bothglm2)
 
-#-- day is not significant! yay 
-
+#- using emmeans to test the linear model in experiment 2 (without day in the model)
 emmeans::emmeans(exp2bothlm, specs = pairwise ~ diet)
 
 
