@@ -122,8 +122,18 @@ exp2both <- rbind(exp2d1, exp2d2)
 exp2bothlm <- lm(fly_numbers ~ diet + day, data = exp2both)
 
 drop1(exp2bothlm, test = "F")
+drop1(exp2bothglm, test = "F")
 
 summary(exp2bothlm)
+
+
+exp2bothglm <- glm(fly_numbers ~ diet + day, family = poisson, data = exp2both)
+
+exp2bothglm2 <- glm(fly_numbers ~ diet + day, family = quasipoisson, data = exp2both)
+
+summary(exp2bothglm)
+
+summary(exp2bothglm2)
 
 #-- day is not significant! yay 
 
