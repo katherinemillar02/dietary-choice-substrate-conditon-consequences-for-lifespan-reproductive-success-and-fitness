@@ -168,3 +168,20 @@ egg_counting2_plot <- egg_counting2_summary %>%
        y = "Mean (+/- S.E.) number of eggs laid on each patch")+
   theme_minimal()
 
+#------- (Exp1a) Egg counting data analysis -----
+
+#-- Making a linear model 
+eggcountinge2ls1 <- lm(egg_numbers ~ diet, data = long_egg_counting2)
+#---- Checking the model 
+performance::check_model(eggcountinge2ls1)
+#---- summarising the data 
+summary(eggcountinge2ls1)
+
+emmeans::emmeans(eggcountinge2ls1, specs = pairwise ~ diet)
+#----  doing tests 
+anova(eggcountinge2ls1) 
+confint(eggcountinge2ls1)
+# tidyverse summary
+broom::tidy(eggcountinge2ls1,  
+            exponentiate=T, 
+            conf.int=T)
