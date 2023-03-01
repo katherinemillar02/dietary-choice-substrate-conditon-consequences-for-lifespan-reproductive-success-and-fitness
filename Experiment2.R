@@ -56,7 +56,7 @@ exp2feeding_plot_d1<- exp2feeding_summary_d1 %>%
 #-------------- (Exp 2) Day 1 Data analysis  -----------
 
 #------- creating a linear model for day 1 
-exp2lm <- lm(fly_numbers ~ diet, data = long_feedinge2d1)
+exp2lm <- lm(fly_numbers ~ diet, data = long_feedinge2d1) 
 #------- using summary function for the model 
 summary(exp2lm)
 #-- Using emmeans to look for significant differences 
