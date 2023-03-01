@@ -125,6 +125,46 @@ drop1(exp2bothlm, test = "F")
 
 summary(exp2bothlm)
 
-#-- day is not significant!
+#-- day is not significant! yay 
 
 emmeans::emmeans(exp2bothlm, specs = pairwise ~ diet)
+
+
+# egg counting data analysis 
+
+# -------- (Exp 2) Egg counting  --------
+
+#____ Reading the data in 
+egg_counting_data_e2 <- (read_excel(path = "data/RPEggCountE2.xlsx", na = "NA"))
+#____ Making the data long 
+long_egg_counting2 <- egg_counting_data_e2 %>% 
+  pivot_longer(cols = ("8:1S":"1:2H"), names_to = "diet", values_to = "egg_numbers")
+#_____ Making a summary of the data 
+egg_counting2_summary <- long_egg_counting2 %>% 
+  group_by(diet) %>% 
+  summarise(mean = mean(egg_numbers),
+            sd = sd(egg_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+#---------- Visualise the data of egg counting
+egg_counting2_plot <- egg_counting2_summary %>% 
+  ggplot(aes(x = diet, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "orange",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "orange",
+                width = 0.2)+
+  geom_jitter(data = long_egg_counting2,
+              aes(x = diet,
+                  y = egg_numbers),
+              fill = "skyblue",
+              colour = "black",
+              width = 0.2,
+              shape = 21)+
+  ylim(0,200)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of eggs laid on each patch")+
+  theme_minimal()
+
