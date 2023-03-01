@@ -22,6 +22,9 @@ The preview shows you a rendered HTML copy of the contents of the editor. Conseq
 performance::check_model(exp1alllm)
 ```
 
+```{r}
+performance::check_model(exp2bothlm)
+```
 
 probably analyse 1:2 hard and soft for feeding behaviour 
 
