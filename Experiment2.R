@@ -76,6 +76,7 @@ exp2d2feeding_summary <- long_feedinge2d2 %>%
             n = n(),
             se = sd/sqrt(n))
 
+#  visualising the data for experiment 2 day 2 
 exp2feeding_plotd2 <- exp2d2feeding_summary %>% 
   ggplot(aes(x = diet, y = mean))+
   geom_bar(stat = "identity",
@@ -154,6 +155,7 @@ exp2both_plot <- exp2both_summary %>%
 #- using a linear model for feeding behaviour 
 exp2bothlm <- lm(fly_numbers ~ diet + day, data = exp2both)
 
+#- making a linear model with an interaction effect 
 exp2bothlm2 <- lm(fly_numbers ~ diet + day + diet * day, data = exp2both)
 
 #-  testing the significance in day for both lm and glm 
@@ -229,10 +231,15 @@ performance::check_model(eggcountinge2ls1)
 #---- summarising the data 
 summary(eggcountinge2ls1)
 
+#-- emmeans to look for significance 
 emmeans::emmeans(eggcountinge2ls1, specs = pairwise ~ diet)
-#----  doing tests 
+
+#----  anova
 anova(eggcountinge2ls1) 
+
+
 confint(eggcountinge2ls1)
+
 # tidyverse summary
 broom::tidy(eggcountinge2ls1,  
             exponentiate=T, 
