@@ -492,6 +492,12 @@ exp1bothlm <- lm(fly_numbers ~ diet + experiment + day, data = exp1both)
 exp1bothlm2 <- lm(fly_numbers ~ diet + experiment + day + diet*experiment + diet*day, data = exp1both)
 
 exp1bothlm3 <- lm(fly_numbers ~ diet + experiment + diet*experiment, data = exp1both)
+
+#  cannot do two interaction effects in one model? 
+# won't do an interaction for day as do not have a hypothesis to support? 
+
+
+
 # Using summary function for analysis 
 summary(exp1bothlm)
 
