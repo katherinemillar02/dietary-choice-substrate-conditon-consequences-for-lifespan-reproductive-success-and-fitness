@@ -30,6 +30,7 @@ exp2feeding_summary_d1 <- long_feedinge2d1 %>%
             n = n(),
             se = sd/sqrt(n))
 
+
 #------- Visualising the data for feeding day 1 ----------------#
 exp2feeding_plot_d1<- exp2feeding_summary_d1 %>% 
   ggplot(aes(x = diet, y = mean))+
@@ -113,6 +114,8 @@ emmeans::emmeans(exp2lmd2, specs = pairwise ~ diet)
 exp2feeding_plot_d1 + exp2feeding_plotd2
 
 
+#------- Combined day data analysis 
+
 #-- mutating a day variable
 
 exp2d1 <- long_feedinge2d1 %>% mutate(day = "1")
@@ -157,6 +160,9 @@ exp2bothlm <- lm(fly_numbers ~ diet + day, data = exp2both)
 
 #- making a linear model with an interaction effect 
 exp2bothlm2 <- lm(fly_numbers ~ diet + day + diet * day, data = exp2both)
+#- maybe will not do an interaction effect for day, as not significant alone 
+# and not part of the hypothesis
+
 
 #-  testing the significance in day for both lm and glm 
 drop1(exp2bothlm, test = "F")
