@@ -120,6 +120,7 @@ exp2d2 <- long_feedinge2d2 %>% mutate(day = "2")
 #- binding the data 
 exp2both <- rbind(exp2d1, exp2d2)
 
+#- exp 2 summary both days
 exp2both_summary <- exp2both %>%  
   group_by(diet) %>% 
   summarise(mean = mean(fly_numbers),
@@ -127,6 +128,7 @@ exp2both_summary <- exp2both %>%
             n = n(),
             se = sd/sqrt(n))
 
+#- visualising the data for exp2 both days 
 exp2both_plot <- exp2both_summary %>% 
   ggplot(aes(x = diet, y = mean))+
   geom_bar(stat = "identity",
@@ -152,9 +154,13 @@ exp2both_plot <- exp2both_summary %>%
 #- using a linear model for feeding behaviour 
 exp2bothlm <- lm(fly_numbers ~ diet + day, data = exp2both)
 
+exp2bothlm2 <- lm(fly_numbers ~ diet + day + diet * day, data = exp2both)
+
 #-  testing the significance in day for both lm and glm 
 drop1(exp2bothlm, test = "F")
 drop1(exp2bothglm, test = "F")
+
+drop1(exp2bothlm2, test = "F")
 #-- day is not significant! yay well it is but only just 
 
 #- using summary function for the linear model 
@@ -214,7 +220,7 @@ egg_counting2_plot <- egg_counting2_summary %>%
        y = "Mean (+/- S.E.) number of eggs laid on each patch")+
   theme_minimal()
 
-#------- (Exp1a) Egg counting data analysis ---------
+#------- (Exp2) Egg counting data analysis ---------
 
 #-- Making a linear model 
 eggcountinge2ls1 <- lm(egg_numbers ~ diet, data = long_egg_counting2)
@@ -231,6 +237,8 @@ confint(eggcountinge2ls1)
 broom::tidy(eggcountinge2ls1,  
             exponentiate=T, 
             conf.int=T)
+
+
 
 
 
