@@ -177,6 +177,8 @@ summary(exp2bothlm)
 #-  making a glm 
 exp2bothglm <- glm(fly_numbers ~ diet + day, family = poisson, data = exp2both)
 
+exp2bothlm2 <- lm(fly_numbers ~ diet,  data = exp2both)
+
 #- using summary function for the general linear model 
 summary(exp2bothglm)
 
@@ -193,9 +195,13 @@ emmeans::emmeans(exp2bothlm, specs = pairwise ~ diet)
 
 anova(exp2bothlm)
 
+# one-way anova 
+
+
+anova(exp2bothlm2)
 
 broom::tidy(exp2bothlm, conf.int = T)
-
+broom::tidy(exp2bothlm2, conf.int = T)
 # egg counting data analysis 
 
 # -------- (Exp 2) Egg counting  --------
@@ -246,7 +252,7 @@ summary(eggcountinge2ls1)
 #-- emmeans to look for significance 
 emmeans::emmeans(eggcountinge2ls1, specs = pairwise ~ diet)
 
-#----  anova
+#---- one-way anova
 anova(eggcountinge2ls1) 
 
 
