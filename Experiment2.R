@@ -179,8 +179,17 @@ exp2bothglm <- glm(fly_numbers ~ diet + day, family = poisson, data = exp2both)
 
 exp2bothlm2 <- lm(fly_numbers ~ diet,  data = exp2both)
 
+
+exp2bothlm3 <- lm(fly_numbers ~ diet * diet,  data = exp2both)
+
+summary(exp2bothlm3)
+
+drop1(exp2bothlm3, test = "F")
+
+
 #- using summary function for the general linear model 
 summary(exp2bothglm)
+
 
 #-- using quasipoisson to count for overdispersion
 exp2bothglm2 <- glm(fly_numbers ~ diet + day, family = quasipoisson, data = exp2both)
@@ -202,6 +211,13 @@ anova(exp2bothlm2)
 
 broom::tidy(exp2bothlm, conf.int = T)
 broom::tidy(exp2bothlm2, conf.int = T)
+
+GGally::ggcoef_model(exp2bothlm2,
+                     show_p_values=FALSE,
+                     signif_stars = FALSE,
+                     conf.level=0.95)
+
+
 # egg counting data analysis 
 
 # -------- (Exp 2) Egg counting  --------
