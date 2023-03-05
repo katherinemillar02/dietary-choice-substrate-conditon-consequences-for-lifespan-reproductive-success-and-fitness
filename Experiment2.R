@@ -114,7 +114,7 @@ emmeans::emmeans(exp2lmd2, specs = pairwise ~ diet)
 exp2feeding_plot_d1 + exp2feeding_plotd2
 
 
-#------- Combined day data analysis 
+#------------ Combined days data analysis -----
 
 #-- mutating a day variable
 
@@ -189,6 +189,12 @@ summary(exp2bothglm2)
 #- using emmeans to test the linear model in experiment 2 (without day in the model)
 emmeans::emmeans(exp2bothlm, specs = pairwise ~ diet)
 
+# two-way anova 
+
+anova(exp2bothlm)
+
+
+broom::tidy(exp2bothlm, conf.int = T)
 
 # egg counting data analysis 
 
