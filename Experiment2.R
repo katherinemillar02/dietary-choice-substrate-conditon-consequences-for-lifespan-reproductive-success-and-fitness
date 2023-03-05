@@ -279,7 +279,10 @@ broom::tidy(eggcountinge2ls1,
             exponentiate=T, 
             conf.int=T)
 
-
+GGally::ggcoef_model(eggcountinge2ls1,
+                     show_p_values=FALSE,
+                     signif_stars = FALSE,
+                     conf.level=0.95)
 
 
 
