@@ -61,3 +61,5 @@ summary(exp3lm)
 #-- Using emmeans to look for significant differences 
 emmeans::emmeans(exp3lm, specs = pairwise ~ diet) 
 
+#--  1:8 soft and 1:8 hard is only just significant - prefer soft to feed on 
+#-- but don't really like 8:1 soft 
