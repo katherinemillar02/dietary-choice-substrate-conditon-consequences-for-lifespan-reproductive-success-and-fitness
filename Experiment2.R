@@ -217,6 +217,21 @@ GGally::ggcoef_model(exp2bothlm2,
                      signif_stars = FALSE,
                      conf.level=0.95)
 
+# looking for interaction effects between diets 
+
+exp2both %>% ggplot(aes(x=fly_numbers, y=diet, colour = diet, fill = diet, group = diet))+
+  geom_jitter(width=0.1) +
+  stat_summary(
+    geom = "point",
+    fun = "mean",
+    size = 3,
+    shape = 23
+  )+stat_summary(
+    geom = "line",
+    fun = "mean",
+    size = 1, linetype = "dashed"
+  )
+
 
 # egg counting data analysis 
 
