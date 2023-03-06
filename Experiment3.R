@@ -14,8 +14,8 @@ library(gtsummary)
 library(knitr)
 library(rphylopic)
 
-#------------------------------ Experiment 1a ---- 
-#----- (Exp1a) Day 1 ------
+#------------------------------ Experiment 3 ---- 
+#----- (Exp3) Day 1 ------
 #-------- Reading the data in
 feedinge3d1 <- read_excel("data/RPFemaleFeedingE3D1.xlsx")
 #---- Making the data long
