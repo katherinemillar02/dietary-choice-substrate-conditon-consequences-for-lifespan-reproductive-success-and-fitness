@@ -119,6 +119,22 @@ emmeans::emmeans(exp3lm_d2, specs = pairwise ~ diet)
 
 #--------------  combining the data 
 
+exp3d1 <- long_feedinge3d1 %>% mutate(day = "1")
+exp3d2 <- long_feedinge3d2 %>% mutate(day = "2")
+
+
+
+exp3both <- rbind(exp3d1, exp3d2)
+
+
+exp3bothlm <- lm(fly_numbers ~ diet + day, data = exp3both)
+
+
+summary(exp3bothlm)
+
+drop1(exp3bothlm, test = "F")
+
+
 #----------- Egg count 
 
 # -------- (Exp 3) Egg counting  --------
