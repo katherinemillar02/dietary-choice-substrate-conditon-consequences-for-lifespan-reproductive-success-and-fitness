@@ -105,3 +105,4 @@ egg_counting3_plot <- egg_counting3_summary %>%
 
 eggcountinge3ls1 <- lm(egg_numbers ~ diet, data = long_egg_counting3)
 emmeans::emmeans(eggcountinge3ls1, specs = pairwise ~ diet)
+summary(eggcountinge3ls1)
