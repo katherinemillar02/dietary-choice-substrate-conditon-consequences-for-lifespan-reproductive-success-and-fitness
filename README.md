@@ -23,3 +23,7 @@ An experiment to test a known preferred diet (8:1) with a known least preferred 
 
 <img title="droso pic" alt="drosopAlt text" src="/images/drosophila.schematic.png" width=400 height=200>
 
+**"Experiment3.R" (8:1 and 1:8 hard and soft diets)**
+
+Oviposition preference based experiment.
+Both feeding behaviour and oviposition preference was measured in this experiment, using a diet which is known that *d. melanogaster* like to lay their eggs on, and a diet which is known to be a least preferred diet for oviposition preference. 
