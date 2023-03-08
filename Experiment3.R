@@ -63,3 +63,45 @@ emmeans::emmeans(exp3lm, specs = pairwise ~ diet)
 
 #--  1:8 soft and 1:8 hard is only just significant - prefer soft to feed on 
 #-- but don't really like 8:1 soft 
+
+
+#----------- Egg count 
+
+# -------- (Exp 3) Egg counting  --------
+
+#____ Reading the data in 
+egg_counting_data_e3 <- (read_excel(path = "data/RPEggCountE3.xlsx", na = "NA"))
+#____ Making the data long 
+long_egg_counting3 <- egg_counting_data_e3 %>% 
+  pivot_longer(cols = ("1:8S":"8:1H"), names_to = "diet", values_to = "egg_numbers")
+#_____ Making a summary of the data 
+egg_counting3_summary <- long_egg_counting3 %>% 
+  group_by(diet) %>% 
+  summarise(mean = mean(egg_numbers),
+            sd = sd(egg_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+#---------- Visualise the data of egg counting
+egg_counting3_plot <- egg_counting3_summary %>% 
+  ggplot(aes(x = diet, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "orange",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "orange",
+                width = 0.2)+
+  geom_jitter(data = long_egg_counting3,
+              aes(x = diet,
+                  y = egg_numbers),
+              fill = "skyblue",
+              colour = "black",
+              width = 0.2,
+              shape = 21)+
+  ylim(0,200)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of eggs laid on each patch")+
+  theme_minimal()
+
+eggcountinge3ls1 <- lm(egg_numbers ~ diet, data = long_egg_counting3)
+emmeans::emmeans(eggcountinge3ls1, specs = pairwise ~ diet)
