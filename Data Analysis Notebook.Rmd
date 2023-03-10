@@ -68,7 +68,7 @@ not using day and experiment in the model
  
 summary of what has been found 
  
-experiment 1a and 1b 
+experiment 1a and 1b = 1:8 and 1:2 
  
 feeding 
 
@@ -87,7 +87,7 @@ experiment 1b
 they prefer to lay their eggs on soft 1:8, then hard 1:8 rather than 1:2 soft or hard 
 
 
-experiment 2 
+experiment 2 = 8:1 and 1:2 
 
 feeding 
 day can only just not be used, but they go to 8:1S and 8:1H before they go to 1:2S and 1:2H
@@ -95,7 +95,7 @@ day can only just not be used, but they go to 8:1S and 8:1H before they go to 1:
 oviposition 
 they lay their eggs on soft 1:2S then soft 8:1S before they lay their eggs on 1:2H and 8:1H - do not really like this diet at all 
 
-experiment 3 
+experiment 3 = 8:1 and 1:8 
 
 feeding 
 day is significant but combined data analysis shows they like the soft 1:8 and 8:1 equally, then feed on 8:1H a bit after, but 1:8H is much less preferred 
@@ -104,5 +104,7 @@ day is significant but combined data analysis shows they like the soft 1:8 and 8
 oviposition 
 they really like to lay their eggs on 1:8 soft (which was expected), then 8:1 soft, 1:8 hard soon after, but 8:1 hard is not really liked at all 
 
+
+two factor test
 
 
