@@ -68,7 +68,6 @@ emmeans::emmeans(exp3lm, specs = pairwise ~ diet)
 
 
 
-#------------------------------ Experiment 3 ---- 
 #----- (Exp3) Day 2 ------
 #-------- Reading the data in
 feedinge3d2 <- read_excel("data/RPFemaleFeedingE3D2.xlsx")
@@ -82,7 +81,7 @@ exp3feeding_summary_d2 <- long_feedinge3d2 %>%
             sd = sd(fly_numbers),
             n = n(),
             se = sd/sqrt(n))
-#------- Visualising the data for feeding day 1 ----------------#
+#------- Visualising the data for feeding day 2 ----------------#
 exp3feeding_plotd2 <- exp3feeding_summary_d2 %>% 
   ggplot(aes(x = diet, y = mean))+
   geom_bar(stat = "identity",
@@ -108,16 +107,16 @@ exp3feeding_plotd2 <- exp3feeding_summary_d2 %>%
 exp3feeding_plotd1 + exp3feeding_plotd2
 
 
-#-------------- (Exp 3) Day 1 Data analysis  -----------
+#-------------- (Exp 3) Day 2 Data analysis  -----------
 
-#------- creating a linear model for day 1 
+#------- creating a linear model for day 2 
 exp3lm_d2 <- lm(fly_numbers ~ diet, data = long_feedinge3d2)
 #------- using summary function for the model 
 summary(exp3lm)
 #-- Using emmeans to look for significant differences 
 emmeans::emmeans(exp3lm_d2, specs = pairwise ~ diet) 
 
-#--------------  combining the data 
+#--------------  combining the data ----
 
 exp3d1 <- long_feedinge3d1 %>% mutate(day = "1")
 exp3d2 <- long_feedinge3d2 %>% mutate(day = "2")
@@ -126,6 +125,13 @@ exp3d2 <- long_feedinge3d2 %>% mutate(day = "2")
 
 exp3both <- rbind(exp3d1, exp3d2)
 
+exp3feeding_summary_both <- exp3both %>%  
+  group_by(diet) %>% 
+  summarise(mean = mean(fly_numbers),
+            sd = sd(fly_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+
 
 exp3bothlm <- lm(fly_numbers ~ diet + day, data = exp3both)
 
@@ -133,6 +139,35 @@ exp3bothlm <- lm(fly_numbers ~ diet + day, data = exp3both)
 summary(exp3bothlm)
 
 drop1(exp3bothlm, test = "F")
+
+
+#-------------- combined day plot for data visualisation 
+
+exp3feeding_plot_both <- exp3feeding_summary_both %>% 
+  ggplot(aes(x = diet, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "#FF6863",
+                width = 0.2)+
+  geom_jitter(data = exp3both,
+              aes(x = diet,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)+
+  ylim(0.0, 4.0)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of flies on a patch",
+       title = "")+
+  theme_minimal() 
+
+
+
+
 
 
 #----------- Egg count 
