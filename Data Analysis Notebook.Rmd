@@ -7,9 +7,7 @@ This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute
 
 Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
 
-```{r}
-plot(cars)
-```
+
 
 Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
 
@@ -58,4 +56,53 @@ not using day and experiment in the model
  1:2S - 1:8S    -79.2 6.88 75 -11.511  <.0001
  
  much prefer to lay their eggs on a soft diet
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+summary of what has been found 
+ 
+experiment 1a and 1b 
+ 
+feeding 
+
+experiment 1a
+day is significant but combined day analysis shows there isn't much preference but 
+1:2H is least preferred to all else 
+
+experiment 1b
+day is significant but combined day analysis shows they like 1:2S the most and all else is equiv, 1:2H also least preferred 
+
+oviposition
+experiment 1a
+they prefer to lay their eggs on soft 1:8, then hard 1:8 rather than 1:2 soft or hard 
+
+experiment 1b
+they prefer to lay their eggs on soft 1:8, then hard 1:8 rather than 1:2 soft or hard 
+
+
+experiment 2 
+
+feeding 
+day can only just not be used, but they go to 8:1S and 8:1H before they go to 1:2S and 1:2H
+
+oviposition 
+they lay their eggs on soft 1:2S then soft 8:1S before they lay their eggs on 1:2H and 8:1H - do not really like this diet at all 
+
+experiment 3 
+
+feeding 
+day is significant but combined data analysis shows they like the soft 1:8 and 8:1 equally, then feed on 8:1H a bit after, but 1:8H is much less preferred 
+
+
+oviposition 
+they really like to lay their eggs on 1:8 soft (which was expected), then 8:1 soft, 1:8 hard soon after, but 8:1 hard is not really liked at all 
+
+
 
