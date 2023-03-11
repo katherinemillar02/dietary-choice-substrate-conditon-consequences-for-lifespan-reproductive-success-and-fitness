@@ -232,6 +232,36 @@ exp2both %>% ggplot(aes(x=fly_numbers, y=diet, colour = diet, fill = diet, group
     size = 1, linetype = "dashed"
   )
 
+# -------- 
+
+section1 <- subset(exp3both, diet == "8:1H" & diet == "1:2H")
+
+section2 <- subset(exp3both, diet == "8:1S" & diet == "1:2S")
+
+
+hardness1 <- subset(exp3both, diet == "8:1H" | diet == "8:1S")
+hardness2 <- subset(exp3both, diet == "1:2H" | diet == "1:2S")
+
+summary(hardness1$fly_numbers, hardness2$fly_numbers)
+
+fh <- rbind(hardness1, hardness2)
+
+summary(fh)
+
+
+
+
+model1 <- aov(y ~ treat + time, data = section1)
+
+model2 <- aov(y ~ treat + time, data = section2)
+
+
+model3 <- aov(fly_numbers ~ diet + diet, data = section1)
+
+model4 <- aov(y ~ treat + time, data = section4)
+
+
+summary(model3)
 
 # egg counting data analysis 
 
