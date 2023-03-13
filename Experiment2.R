@@ -233,6 +233,65 @@ exp2both %>% ggplot(aes(x=fly_numbers, y=diet, colour = diet, fill = diet, group
   )
 
 # -------- 
+# Load your data into R
+
+
+# Create a new column to indicate hard vs soft diets
+exp2both$food_type <- ifelse(exp2both$diet %in% c("8:1H", "1:2H"), "hard", "soft")
+
+# Split the data into hard and soft groups
+hard_data <- subset(exp2both, food_type == "hard")
+soft_data <- subset(exp2both, food_type == "soft")
+
+
+binded <- rbind(hard_data, soft_data)
+
+bindedlm <- lm(fly_numbers ~ food_type, data = binded)
+
+summary(bindedlm)
+
+
+
+aov(fly_numbers ~ food_type, data = binded)
+
+softhard_summary <- binded %>%  
+  group_by(diet) %>% 
+  summarise(mean = mean(fly_numbers),
+            sd = sd(fly_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+
+
+softhard_plot <- softhard_summary %>% 
+  ggplot(aes(x = diet, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "#FF6863",
+                width = 0.2)+
+  geom_jitter(data = binded,
+              aes(x = food_type,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)+
+  ylim(0.0, 4.0)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of flies on a patch",
+       title = "")+
+  theme_minimal() 
+
+
+
+
+exp2both$food_type <- ifelse(exp2both$diet == "trt1" | exp2both$diet == "trt2", "soft", "hard")
+
+model <- aov(fly_numbers ~ diet + food_type, data = exp2both)
+
+summary(model)
 
 section1 <- subset(exp3both, diet == "8:1H" & diet == "1:2H")
 
@@ -248,7 +307,7 @@ fh <- rbind(hardness1, hardness2)
 
 summary(fh)
 
-
+fhlm <- lm(fly_numbers + hardness1 + hardness2, data = fh)
 
 
 model1 <- aov(y ~ treat + time, data = section1)
