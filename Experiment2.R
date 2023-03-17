@@ -233,26 +233,40 @@ exp2both %>% ggplot(aes(x=fly_numbers, y=diet, colour = diet, fill = diet, group
   )
 
 # -------- 
-# Load your data into R
+
 
 
 # Create a new column to indicate hard vs soft diets
 exp2both$food_type <- ifelse(exp2both$diet %in% c("8:1H", "1:2H"), "hard", "soft")
+exp2both$food_nutrition <- ifelse(exp2both$diet %in% c("8:1H", "1:2H"), "8:1", "1:2")
 
 # Split the data into hard and soft groups
 hard_data <- subset(exp2both, food_type == "hard")
 soft_data <- subset(exp2both, food_type == "soft")
+eight_data <- subset(exp2both, food_nutrition == "8:1")
+onetwo_data <- subset(exp2both, food_nutrition == "1:2")
 
+binded <- rbind(hard_data, soft_data, eight_data, onetwo_data)
+binded2 <- rbind(eight_data, onetwo_data)
 
-binded <- rbind(hard_data, soft_data)
-
-bindedlm <- lm(fly_numbers ~ food_type, data = binded)
+bindedlm <- lm(fly_numbers ~ food_type + food_nutrition, data = binded)
 
 summary(bindedlm)
 
+hello <- emmeans::emmeans(bindedlm, )
 
+emmeans::emmeans(binded, specs = pairwise ~ food_nutrition + food_type)
 
 aov(fly_numbers ~ food_type, data = binded)
+
+
+aov(fly_numbers ~ food_nutrition + food_type + food_nutrition:food_type, data = binded)
+
+everythinglm <- lm(fly_numbers ~ food_nutrition + food_type + food_nutrition:food_type, data = binded)
+
+summary(everythinglm)
+
+
 
 softhard_summary <- binded %>%  
   group_by(diet) %>% 
@@ -321,6 +335,45 @@ model4 <- aov(y ~ treat + time, data = section4)
 
 
 summary(model3)
+
+
+# -----------------
+
+# Generate example data
+set.seed(123)
+n <- 20 # sample size for each treatment combination
+diet <- factor(rep(c("hard", "soft"), each = n*2), levels = c("hard", "soft"))
+ratio <- factor(rep(rep(c("1:2", "8:1"), each = n), times = 2), levels = c("1:2", "8:1"))
+response <- c(rnorm(n, mean = 10, sd = 2), rnorm(n, mean = 12, sd = 2),
+              rnorm(n, mean = 15, sd = 2), rnorm(n, mean = 13, sd = 2))
+
+# Two-factor ANOVA
+fit <- lm(response ~ diet + ratio + diet*ratio)
+summary(fit)
+
+
+
+
+# -----------------
+
+# Load data from Excel file
+library(readxl)
+data <- read_excel("data.xlsx")
+
+# Create factors for type of diet and ratio
+diet <- factor(exp2both$diet, levels = c("hard", "soft"))
+ratio <- factor(exp2both$diet, levels = c("1:2H", "8:1H"))
+
+
+
+# Two-factor ANOVA
+fit <- lm(response ~ diet + ratio + diet*ratio, data = data)
+summary(fit)
+
+
+
+
+
 
 # egg counting data analysis 
 
