@@ -121,6 +121,22 @@ exp2feeding_plot_d1 + exp2feeding_plotd2
 exp2d1 <- long_feedinge2d1 %>% mutate(day = "1")
 exp2d2 <- long_feedinge2d2 %>% mutate(day = "2")
 
+exp21 <- feedinge2d1 %>% mutate(day = "1")
+exp22 <- feedinge2d2 %>% mutate(day = "2")
+
+exptest <- rbind(exp21, exp22)
+
+
+# Create a data frame with the four diets
+
+
+# Generate summary statistics for nutrient composition
+summary(nutrient ~ hardness, data = diet_data)
+
+# Generate summary statistics for food hardness
+summary(hardness ~ nutrient, data = diet_data)
+
+
 #- binding the data 
 exp2both <- rbind(exp2d1, exp2d2)
 
@@ -235,6 +251,10 @@ exp2both %>% ggplot(aes(x=fly_numbers, y=diet, colour = diet, fill = diet, group
 # -------- 
 
 
+exp2d1 <- long_feedinge2d1 %>% mutate(day = "1")
+exp2d2 <- long_feedinge2d2 %>% mutate(day = "2")
+
+exp2split <- exp2both %>% mutate()
 
 # Create a new column to indicate hard vs soft diets
 exp2both$food_type <- ifelse(exp2both$diet %in% c("8:1H", "1:2H"), "hard", "soft")
@@ -248,6 +268,14 @@ onetwo_data <- subset(exp2both, food_nutrition == "1:2")
 
 binded <- rbind(hard_data, soft_data, eight_data, onetwo_data)
 binded2 <- rbind(eight_data, onetwo_data)
+binded1 <- rbind(hard_data, soft_data)
+
+lmtest <- lm(exp2both, )
+
+exp2both <- as.data.frame(exp2both)
+
+
+exp2both
 
 bindedlm <- lm(fly_numbers ~ food_type + food_nutrition, data = binded)
 
@@ -434,14 +462,12 @@ confint(eggcountinge2ls1)
 # tidyverse summary
 broom::tidy(eggcountinge2ls1,  
             exponentiate=T, 
-            conf.int=T)
+            conf.int=)
 
 GGally::ggcoef_model(eggcountinge2ls1,
                      show_p_values=FALSE,
                      signif_stars = FALSE,
                      conf.level=0.95)
-
-
 
 
 
