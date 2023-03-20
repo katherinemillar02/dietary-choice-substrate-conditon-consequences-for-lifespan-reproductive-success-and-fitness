@@ -121,21 +121,6 @@ exp2feeding_plot_d1 + exp2feeding_plotd2
 exp2d1 <- long_feedinge2d1 %>% mutate(day = "1")
 exp2d2 <- long_feedinge2d2 %>% mutate(day = "2")
 
-exp21 <- feedinge2d1 %>% mutate(day = "1")
-exp22 <- feedinge2d2 %>% mutate(day = "2")
-
-exptest <- rbind(exp21, exp22)
-
-
-# Create a data frame with the four diets
-
-
-# Generate summary statistics for nutrient composition
-summary(nutrient ~ hardness, data = diet_data)
-
-# Generate summary statistics for food hardness
-summary(hardness ~ nutrient, data = diet_data)
-
 
 #- binding the data 
 exp2both <- rbind(exp2d1, exp2d2)
@@ -193,13 +178,16 @@ summary(exp2bothlm)
 #-  making a glm 
 exp2bothglm <- glm(fly_numbers ~ diet + day, family = poisson, data = exp2both)
 
+#- making an lm 
 exp2bothlm2 <- lm(fly_numbers ~ diet,  data = exp2both)
 
-
+#- an interaction effect of diet in a linear model
 exp2bothlm3 <- lm(fly_numbers ~ diet * diet,  data = exp2both)
 
+#- summarising interaction effect linear model 
 summary(exp2bothlm3)
 
+#- looking for the significance of diet 
 drop1(exp2bothlm3, test = "F")
 
 
@@ -207,7 +195,7 @@ drop1(exp2bothlm3, test = "F")
 summary(exp2bothglm)
 
 
-#-- using quasipoisson to count for overdispersion
+#-- using quasipoisson to count for overdispersion in a glm 
 exp2bothglm2 <- glm(fly_numbers ~ diet + day, family = quasipoisson, data = exp2both)
 
 #- using summary function for the general linear model with quasipoisson
@@ -216,25 +204,22 @@ summary(exp2bothglm2)
 #- using emmeans to test the linear model in experiment 2 (without day in the model)
 emmeans::emmeans(exp2bothlm, specs = pairwise ~ diet)
 
-# two-way anova 
-
+#  anova of the linear model of both days
 anova(exp2bothlm)
-
 # one-way anova 
-
-
 anova(exp2bothlm2)
 
+# tidyverse version of a summary of data 
 broom::tidy(exp2bothlm, conf.int = T)
 broom::tidy(exp2bothlm2, conf.int = T)
 
+# Using GGally to look at the dispersion of means 
 GGally::ggcoef_model(exp2bothlm2,
                      show_p_values=FALSE,
                      signif_stars = FALSE,
                      conf.level=0.95)
 
 # looking for interaction effects between diets 
-
 exp2both %>% ggplot(aes(x=fly_numbers, y=diet, colour = diet, fill = diet, group = diet))+
   geom_jitter(width=0.1) +
   stat_summary(
@@ -251,14 +236,10 @@ exp2both %>% ggplot(aes(x=fly_numbers, y=diet, colour = diet, fill = diet, group
 # -------- 
 
 
-exp2d1 <- long_feedinge2d1 %>% mutate(day = "1")
-exp2d2 <- long_feedinge2d2 %>% mutate(day = "2")
-
-exp2split <- exp2both %>% mutate()
 
 # Create a new column to indicate hard vs soft diets
 exp2both$food_type <- ifelse(exp2both$diet %in% c("8:1H", "1:2H"), "hard", "soft")
-exp2both$food_nutrition <- ifelse(exp2both$diet %in% c("8:1H", "1:2H"), "8:1", "1:2")
+exp2both$food_nutrition <- ifelse(exp2both$diet %in% c("8:1", "1:2H"), "8:1", "1:2")
 
 # Split the data into hard and soft groups
 hard_data <- subset(exp2both, food_type == "hard")
@@ -468,6 +449,7 @@ GGally::ggcoef_model(eggcountinge2ls1,
                      show_p_values=FALSE,
                      signif_stars = FALSE,
                      conf.level=0.95)
+
 
 
 
