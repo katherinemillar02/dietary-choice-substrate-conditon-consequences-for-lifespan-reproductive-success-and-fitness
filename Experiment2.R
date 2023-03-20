@@ -233,47 +233,33 @@ exp2both %>% ggplot(aes(x=fly_numbers, y=diet, colour = diet, fill = diet, group
     size = 1, linetype = "dashed"
   )
 
-# -------- 
-
-
+# ------------ two factor data-analysis ------
 
 # Create a new column to indicate hard vs soft diets
 exp2both$food_type <- ifelse(exp2both$diet %in% c("8:1H", "1:2H"), "hard", "soft")
-exp2both$food_nutrition <- ifelse(exp2both$diet %in% c("8:1", "1:2H"), "8:1", "1:2")
+exp2both$food_nutrition <- ifelse(exp2both$diet %in% c("8:1", "1:2H"), "1:2", "8:1")
 
-# Split the data into hard and soft groups
+# Splitting the data into hard and soft groups
 hard_data <- subset(exp2both, food_type == "hard")
 soft_data <- subset(exp2both, food_type == "soft")
 eight_data <- subset(exp2both, food_nutrition == "8:1")
 onetwo_data <- subset(exp2both, food_nutrition == "1:2")
 
+# binding the split data together 
 binded <- rbind(hard_data, soft_data, eight_data, onetwo_data)
-binded2 <- rbind(eight_data, onetwo_data)
-binded1 <- rbind(hard_data, soft_data)
 
-lmtest <- lm(exp2both, )
+# trying a two-way anova 
+aov(fly_numbers ~ food_type + food_nutrition, data = binded)
 
-exp2both <- as.data.frame(exp2both)
-
-
-exp2both
-
+# creating a linear model of fly numbers and food type and food nutrition 
 bindedlm <- lm(fly_numbers ~ food_type + food_nutrition, data = binded)
 
+# summarising the linear model data 
 summary(bindedlm)
 
-hello <- emmeans::emmeans(bindedlm, )
+# trying a tukey test with emmeans - NOT WORKING 
+emmeans::emmeans(binded, specs = fly_numbers ~ food_nutrition + food_type)
 
-emmeans::emmeans(binded, specs = pairwise ~ food_nutrition + food_type)
-
-aov(fly_numbers ~ food_type, data = binded)
-
-
-aov(fly_numbers ~ food_nutrition + food_type + food_nutrition:food_type, data = binded)
-
-everythinglm <- lm(fly_numbers ~ food_nutrition + food_type + food_nutrition:food_type, data = binded)
-
-summary(everythinglm)
 
 
 
