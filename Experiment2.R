@@ -237,7 +237,9 @@ exp2both %>% ggplot(aes(x=fly_numbers, y=diet, colour = diet, fill = diet, group
 
 # splitting up hard and soft diets and differernt nutrient diets 
 exp2both$food_type <- ifelse(exp2both$diet %in% c("8:1H", "1:2H"), "hard", "soft")
-exp2both$food_nutrition <- ifelse(exp2both$diet %in% c("8:1", "1:2H"), "1:2", "8:1")
+exp2both$food_nutrition <- ifelse(exp2both$diet %in% c("8:1H", "1:2H"), "1:2", "8:1")
+
+exp2both
 
 # splitting the data into hard and soft groups and into nutrient groups 
 hard_data <- subset(exp2both, food_type == "hard")
@@ -246,19 +248,26 @@ eight_data <- subset(exp2both, food_nutrition == "8:1")
 onetwo_data <- subset(exp2both, food_nutrition == "1:2")
 
 # binding the split data together 
-binded <- rbind(hard_data, soft_data, eight_data, onetwo_data)
+typestogether <- rbind(hard_data, soft_data, eight_data, onetwo_data)
+
+exp2bothpractiselm <- lm(fly_numbers ~ food_type + food_nutrition, data = exp2both)
+
+summary(exp2bothpractiselm)
 
 # trying a two-way anova 
-aov(fly_numbers ~ food_type + food_nutrition, data = binded)
+aov(fly_numbers ~ food_type + food_nutrition, data = typestogether)
 
 # creating a linear model of fly numbers and food type and food nutrition 
-bindedlm <- lm(fly_numbers ~ food_type + food_nutrition, data = binded)
+typestogetherlm <- lm(fly_numbers ~ food_type + food_nutrition, data = typestogether)
+
+typestogetherlm2 <- lm(fly_numbers ~ food_type + food_nutrition + food_type * food_nutrition, data = typestogether)
 
 # summarising the linear model data 
-summary(bindedlm)
+summary(typestogetherlm)
+summary(typestogetherlm2)
 
 # trying a tukey test with emmeans - NOT WORKING 
-emmeans::emmeans(binded, specs = fly_numbers ~ food_nutrition + food_type)
+emmeans::emmeans(typestogetherlm, specs = pairwise ~ food_nutrition + food_type)
 
 # summarising hard vs soft 
 softhard_summary <- binded %>%  
@@ -402,6 +411,10 @@ GGally::ggcoef_model(eggcountinge2ls1,
                      conf.level=0.95)
 
 
+
+# two-factor analysis 
+long_egg_counting2$food_type <- ifelse(long_egg_counting2 $diet %in% c("8:1H", "1:2H"), "hard", "soft")
+long_egg_counting2$food_nutrition <- ifelse(long_egg_counting2 $diet %in% c("8:1H", "1:2H"), "1:2", "8:1")
 
 
 
