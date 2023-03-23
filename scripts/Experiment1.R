@@ -236,6 +236,12 @@ emmeans::emmeans(eggcountinge1ls2, specs = pairwise ~ diet)
 
 # summary says there is a difference 
 
+# two factor analysis 
+
+long_egg_counting1$food_type <- ifelse(long_egg_counting1$diet %in% c("8:1H", "1:2H"), "hard", "soft")
+long_egg_counting1$food_nutrition <- ifelse(long_egg_counting1$diet %in% c("8:1H", "1:2H"), "1:2", "8:1")
+
+
 
 
 # ---------------- Experiment 1b - repeating the experiment -----
