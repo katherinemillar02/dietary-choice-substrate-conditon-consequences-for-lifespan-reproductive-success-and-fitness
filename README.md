@@ -2,7 +2,7 @@
 
 # Project Aims 
 
-<img title="droso pic" alt="drosopAlt text" src="/images/RLogo.png" width=200 height=200>
+<img title="droso pic" alt="drosopAlt text" src="/images/RLogo.png" width=100 height=100>
 
 A GitHub repistory and R-project for my third year research project. 
 
@@ -30,4 +30,4 @@ An experiment to test a known preferred diet (8:1) with a known least preferred 
 Oviposition preference based experiment.
 Both feeding behaviour and oviposition preference was measured in this experiment, using a diet which is known that *d. melanogaster* like to lay their eggs on, and a diet which is known to be a least preferred diet for oviposition preference. 
 
-<img title="droso pic" alt="drosopAlt text" src="/images/graphimage.png" width=200 height=200>
+<img title="droso pic" alt="drosopAlt text" src="/images/graphimage.png" width=400 height=300>
