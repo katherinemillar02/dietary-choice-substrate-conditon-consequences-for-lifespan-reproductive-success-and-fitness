@@ -237,9 +237,13 @@ exp2both %>% ggplot(aes(x=fly_numbers, y=diet, colour = diet, fill = diet, group
 
 # splitting up hard and soft diets and differernt nutrient diets 
 exp2both$food_type <- ifelse(exp2both$diet %in% c("8:1H", "1:2H"), "hard", "soft")
-exp2both$food_nutrition <- ifelse(exp2both$diet %in% c("8:1H", "1:2H"), "1:2", "8:1")
+exp2both$food_nutrition <- ifelse(exp2both$diet %in% c("8:1", "1:2H"), "1:2", "8:1")
 
-exp2both
+exp2bothlmnew <- lm(fly_numbers ~ food_type + food_nutrition, data = exp2both)
+exp2bothlmnew2 <- lm(fly_numbers ~ food_type + food_nutrition + food_nutrition * food_type, data = exp2both)
+
+summary(exp2bothlmnew)
+summary(exp2bothlmnew2)
 
 # splitting the data into hard and soft groups and into nutrient groups 
 hard_data <- subset(exp2both, food_type == "hard")
@@ -412,12 +416,103 @@ GGally::ggcoef_model(eggcountinge2ls1,
 
 
 
-# two-factor analysis 
+# egg-  two-factor analysis ------
+
+# changing the data to columns 
 long_egg_counting2$food_type <- ifelse(long_egg_counting2 $diet %in% c("8:1H", "1:2H"), "hard", "soft")
-long_egg_counting2$food_nutrition <- ifelse(long_egg_counting2 $diet %in% c("8:1H", "1:2H"), "1:2", "8:1")
+long_egg_counting2$food_nutrition <- ifelse(long_egg_counting2 $diet %in% c("8:1", "1:2H"), "1:2", "8:1")
+
+
+
+# dong a linear model
+
+eggexp2lm <- lm(egg_numbers ~ food_type + food_nutrition, data = long_egg_counting2)
+
+summary(eggexp2lm)
+
+# visualising the data for egg analysis 
+
+#----###
+
+
+# same thing but doing the subset function 
+# probably do subset analysis if you want to analyse stuff previously 
+hard_data_egg <- subset(long_egg_counting2, food_type == "hard")
+soft_data_egg <- subset(long_egg_counting2, food_type == "soft")
+eight_data_egg <- subset(long_egg_counting2, food_nutrition == "8:1")
+onetwo_data_egg <- subset(long_egg_counting2, food_nutrition == "1:2")
+
+eggexp2_new <- rbind(hard_data_egg, soft_data_egg, eight_data_egg, onetwo_data_egg)
+
+eggexp2lm_new <-  lm(egg_numbers ~ food_type + food_nutrition, data = eggexp2_new)
+
+summary(eggexp2lm_new)
+
+
+
+softhardegg_summary <- eggexp2_new %>%  
+  group_by(food_type) %>% 
+  summarise(mean = mean(egg_numbers),
+            sd = sd(egg_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+
+softhardegg_plot <- softhardegg_summary %>% 
+  ggplot(aes(x = food_type, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "#FF6863",
+                width = 0.2)+
+  geom_jitter(data = eggexp2_new,
+              aes(x = food_type,
+                  y = egg_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)+
+  ylim(0.0, 4.0)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of flies on a patch",
+       title = "")+
+  theme_minimal() 
+
+# summarising egg nutrient composition 
+nutrientegg_summary <- eggexp2_new %>%  
+  group_by(food_nutrition) %>% 
+  summarise(mean = mean(egg_numbers),
+            sd = sd(egg_numbers),
+            n = n(),
+            se = sd/sqrt(n))
 
 
 
 
 
 
+# a nutrient plot 
+nutrientegg_plot <- nutrientegg_summary %>% 
+  ggplot(aes(x = food_nutrition, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "#FF6863",
+                width = 0.2)+
+  geom_jitter(data = eggexp2_new,
+              aes(x = food_nutrition,
+                  y = egg_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)+
+  ylim(0.0, 4.0)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of flies on a patch",
+       title = "")+
+  theme_minimal() 
+
+softhardegg_plot + nutrientegg_plot
