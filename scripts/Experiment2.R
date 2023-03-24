@@ -237,7 +237,12 @@ exp2both %>% ggplot(aes(x=fly_numbers, y=diet, colour = diet, fill = diet, group
 
 # splitting up hard and soft diets and differernt nutrient diets 
 exp2both$food_type <- ifelse(exp2both$diet %in% c("8:1H", "1:2H"), "hard", "soft")
-exp2both$food_nutrition <- ifelse(exp2both$diet %in% c("8:1", "1:2H"), "1:2", "8:1")
+
+exp2both$food_nutrition <- ifelse(exp2both$diet %in% c("8:1", "1:2H", "1:2S"), "1:2", "8:1")
+# added 1:2S and I think this is correct now ??!!
+# but does interaction effect just analyse everything? 
+
+view(exp2both)
 
 exp2bothlmnew <- lm(fly_numbers ~ food_type + food_nutrition, data = exp2both)
 exp2bothlmnew2 <- lm(fly_numbers ~ food_type + food_nutrition + food_nutrition * food_type, data = exp2both)
