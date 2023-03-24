@@ -476,7 +476,7 @@ softhardegg_plot <- softhardegg_summary %>%
               shape = 21)+
   ylim(0.0, 4.0)+
   labs(x = "Diet \n(Protein; Carbohydrate)",
-       y = "Mean (+/- S.E.) number of flies on a patch",
+       y = "Mean (+/- S.E.) number of eggs on a patch",
        title = "")+
   theme_minimal() 
 
@@ -512,7 +512,7 @@ nutrientegg_plot <- nutrientegg_summary %>%
               shape = 21)+
   ylim(0.0, 4.0)+
   labs(x = "Diet \n(Protein; Carbohydrate)",
-       y = "Mean (+/- S.E.) number of flies on a patch",
+       y = "Mean (+/- S.E.) number of eggs on a patch",
        title = "")+
   theme_minimal() 
 
