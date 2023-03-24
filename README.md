@@ -8,7 +8,7 @@ A GitHub repistory and R-project for my third year research project.
 
 This is a second part/ follow on from a previous project done in a summer studentship (Effects of dietary choice on Lifespan in *Drosophila melanogaster* - https://github.com/katherinemillar02/effects-of-dietary-choice-on-lifespan-in-drosophila-melanogaster).
 
-<img title="droso pic" alt="drosopAlt text" src="/images/experimentlayout.png" width=500 height=400>
+<img title="droso pic" alt="drosopAlt text" src="/images/experimentlayout.png" width=400 height=200>
 
 
 This project began with using a 'patch preference assay' to test different food conditions on lifespan and fitness in fruitflies. Using both varying protein: carbohydrate diet patches as well as varying food hardness. 
