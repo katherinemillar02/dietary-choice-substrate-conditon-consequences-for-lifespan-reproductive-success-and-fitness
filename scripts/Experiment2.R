@@ -450,7 +450,8 @@ summary(eggexp2lm_new)
 
 
 
-softhardegg_summary <- eggexp2_new %>%  
+
+softhardegg_summary <- long_egg_counting2 %>%  
   group_by(food_type) %>% 
   summarise(mean = mean(egg_numbers),
             sd = sd(egg_numbers),
@@ -466,7 +467,7 @@ softhardegg_plot <- softhardegg_summary %>%
   geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
                 colour = "#FF6863",
                 width = 0.2)+
-  geom_jitter(data = eggexp2_new,
+  geom_jitter(data = long_egg_counting2,
               aes(x = food_type,
                   y = egg_numbers),
               fill = "skyblue",
@@ -480,7 +481,7 @@ softhardegg_plot <- softhardegg_summary %>%
   theme_minimal() 
 
 # summarising egg nutrient composition 
-nutrientegg_summary <- eggexp2_new %>%  
+nutrientegg_summary <- long_egg_counting2%>%  
   group_by(food_nutrition) %>% 
   summarise(mean = mean(egg_numbers),
             sd = sd(egg_numbers),
@@ -502,7 +503,7 @@ nutrientegg_plot <- nutrientegg_summary %>%
   geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
                 colour = "#FF6863",
                 width = 0.2)+
-  geom_jitter(data = eggexp2_new,
+  geom_jitter(data = long_egg_counting2,
               aes(x = food_nutrition,
                   y = egg_numbers),
               fill = "skyblue",
@@ -514,5 +515,7 @@ nutrientegg_plot <- nutrientegg_summary %>%
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "")+
   theme_minimal() 
+
+view(long_egg_counting2)
 
 softhardegg_plot + nutrientegg_plot
