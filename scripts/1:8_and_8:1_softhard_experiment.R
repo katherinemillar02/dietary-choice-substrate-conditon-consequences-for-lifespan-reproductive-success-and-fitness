@@ -65,9 +65,6 @@ emmeans::emmeans(exp3lm, specs = pairwise ~ diet)
 #-- but don't really like 8:1 soft 
 
 
-
-
-
 #----- (Exp3) Day 2 ------
 #-------- Reading the data in
 feedinge3d2 <- read_excel("data/RPFemaleFeedingE3D2.xlsx")
@@ -104,9 +101,6 @@ exp3feeding_plotd2 <- exp3feeding_summary_d2 %>%
        title = "")+
   theme_minimal() 
 
-exp3feeding_plotd1 + exp3feeding_plotd2
-
-
 #-------------- (Exp 3) Day 2 Data analysis  -----------
 
 #------- creating a linear model for day 2 
@@ -116,31 +110,20 @@ summary(exp3lm)
 #-- Using emmeans to look for significant differences 
 emmeans::emmeans(exp3lm_d2, specs = pairwise ~ diet) 
 
-#--------------  combining the data ----
 
-exp3d1 <- long_feedinge3d1 %>% mutate(day = "1")
-exp3d2 <- long_feedinge3d2 %>% mutate(day = "2")
-
+#-------- visualising the feeding data for different days together using patchwork
+exp3feeding_plotd1 + exp3feeding_plotd2
 
 
-exp3both <- rbind(exp3d1, exp3d2)
+#--------------  Combined days data  ----
 
+#--- summarising the data with combined days 
 exp3feeding_summary_both <- exp3both %>%  
   group_by(diet) %>% 
   summarise(mean = mean(fly_numbers),
             sd = sd(fly_numbers),
             n = n(),
             se = sd/sqrt(n))
-
-
-exp3bothlm <- lm(fly_numbers ~ diet + day, data = exp3both)
-
-
-summary(exp3bothlm)
-
-drop1(exp3bothlm, test = "F")
-
-
 #-------------- combined day plot for data visualisation 
 
 exp3feeding_plot_both <- exp3feeding_summary_both %>% 
@@ -166,11 +149,49 @@ exp3feeding_plot_both <- exp3feeding_summary_both %>%
   theme_minimal() 
 
 
+#--- mutating a day variable 
+exp3d1 <- long_feedinge3d1 %>% mutate(day = "1")
+exp3d2 <- long_feedinge3d2 %>% mutate(day = "2")
+#--- combining the two days 
+exp3both <- rbind(exp3d1, exp3d2)
 
 
+#-- making a linear model for the combined days model with day in the model 
+exp3bothlm <- lm(fly_numbers ~ diet + day, data = exp3both)
+
+#-- summaryb function of combined days linear model 
+summary(exp3bothlm)
+#-- checking for the significance in day in the model
+drop1(exp3bothlm, test = "F")
+
+#--- summarising the data with combined days 
+exp3feeding_summary_both <- exp3both %>%  
+  group_by(diet) %>% 
+  summarise(mean = mean(fly_numbers),
+            sd = sd(fly_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+
+#--- two-factor feeding analysis ------
+
+# splitting up hard and soft diets and differernt nutrient diets 
+exp3both$food_type <- ifelse(exp3both$diet %in% c("8:1H", "1:8H"), "hard", "soft")
+
+exp3both$food_nutrition <- ifelse(exp3both$diet %in% c("8:1", "1:8H", "1:8S"), "1:8", "8:1")
+
+# viewing the new dataset
+view(exp3both)
 
 
-#----------- Egg count 
+# creating a linear model based on food nutrition and food type 
+exp3bothlmnew <- lm(fly_numbers ~ food_type + food_nutrition, data = exp3both)
+
+# creating a linear model based on food nutrition and food type with an interaction effect 
+exp3bothlmnew2 <- lm(fly_numbers ~ food_type + food_nutrition + food_nutrition * food_type, data = exp3both)
+
+# summarising the linear models 
+summary(exp3bothlmnew)
+summary(exp3bothlmnew2)
 
 # -------- (Exp 3) Egg counting  --------
 
