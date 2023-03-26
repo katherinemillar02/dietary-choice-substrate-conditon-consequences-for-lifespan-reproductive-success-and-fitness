@@ -298,6 +298,86 @@ egg_counting3_plot <- egg_counting3_summary %>%
        y = "Mean (+/- S.E.) number of eggs laid on each patch")+
   theme_minimal()
 
+#-- linear model of egg countiung 
 eggcountinge3ls1 <- lm(egg_numbers ~ diet, data = long_egg_counting3)
+
+#-- analysing all egg data using tukey emmeans 
 emmeans::emmeans(eggcountinge3ls1, specs = pairwise ~ diet)
+
+#-- summary function to analyse 
 summary(eggcountinge3ls1)
+
+
+#--------- two-factor egg data analysis ----
+# changing the data to columns 
+long_egg_counting3$food_type <- ifelse(long_egg_counting3 $diet %in% c("8:1H", "1:8H"), "hard", "soft")
+long_egg_counting3$food_nutrition <- ifelse(long_egg_counting3 $diet %in% c("8:1", "1:8H", "1:8S"), "1:8", "8:1")
+
+# code to view the new data
+view(long_egg_counting3)
+
+
+softhardegg_summary_exp3 <- long_egg_counting3 %>%  
+  group_by(food_type) %>% 
+  summarise(mean = mean(egg_numbers),
+            sd = sd(egg_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+
+#- Making a plot of egg counting// soft and hard 
+softhardegg_plot_exp3 <- softhardegg_summary_exp3 %>% 
+  ggplot(aes(x = food_type, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "#FF6863",
+                width = 0.2)+
+  geom_jitter(data = long_egg_counting3,
+              aes(x = food_type,
+                  y = egg_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)+
+  ylim(0.0, 110)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of eggs on a patch",
+       title = "")+
+  theme_minimal() 
+
+# summarising egg nutrient composition 
+nutrientegg_summary_exp3 <- long_egg_counting3%>%  
+  group_by(food_nutrition) %>% 
+  summarise(mean = mean(egg_numbers),
+            sd = sd(egg_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+
+# a nutrient plot 
+nutrientegg_plot_exp3 <- nutrientegg_summary_exp3 %>% 
+  ggplot(aes(x = food_nutrition, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "#FF6863",
+                width = 0.2)+
+  geom_jitter(data = long_egg_counting3,
+              aes(x = food_nutrition,
+                  y = egg_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)+
+  ylim(0.0, 110)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of eggs on a patch",
+       title = "")+
+  theme_minimal() 
+
+
+# combining the experiment hardness plot with the nutrient plot with patchwork 
+softhardegg_plot_exp3 + nutrientegg_plot_exp3
