@@ -344,7 +344,7 @@ nutrient_plot_exp2 <- nutrient_summary_exp2 %>%
 
 
 # using patchwork to compare soft/hardness and nutrient composition - data visualisation
-softhard_plot + nutrient_plot
+softhard_plot_exp2 + nutrient_plot_exp2
 
 
 # -------- (Exp 2) Egg counting  --------
