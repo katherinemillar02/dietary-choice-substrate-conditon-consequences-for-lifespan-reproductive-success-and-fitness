@@ -193,6 +193,75 @@ exp3bothlmnew2 <- lm(fly_numbers ~ food_type + food_nutrition + food_nutrition *
 summary(exp3bothlmnew)
 summary(exp3bothlmnew2)
 
+
+# summarising hard vs soft data 
+softhard_summary <- exp3both %>%  
+  group_by(food_type) %>% 
+  summarise(mean = mean(fly_numbers),
+            sd = sd(fly_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+
+# a soft vs hard plot 
+softhard_plot <- softhard_summary %>% 
+  ggplot(aes(x = food_type, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "#FF6863",
+                width = 0.2)+
+  geom_jitter(data = exp3both,
+              aes(x = food_type,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)+
+  ylim(0.0, 4.0)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of flies on a patch",
+       title = "")+
+  theme_minimal() 
+
+# summarising nutrient composition data 
+nutrient_summary <- exp3both %>%  
+  group_by(food_nutrition) %>% 
+  summarise(mean = mean(fly_numbers),
+            sd = sd(fly_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+
+# a nutrient plot 
+nutrient_plot_exp3 <- nutrient_summary %>% 
+  ggplot(aes(x = food_nutrition, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "#FF6863",
+                width = 0.2)+
+  geom_jitter(data = exp3both,
+              aes(x = food_nutrition_exp3,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)+
+  ylim(0.0, 4.0)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of flies on a patch",
+       title = "")+
+  theme_minimal() 
+
+
+# using patchwork to compare soft/hardness and nutrient composition - data visualisation
+softhard_plot_exp3 + nutrient_plot_exp3
+
+
+
 # -------- (Exp 3) Egg counting  --------
 
 #____ Reading the data in 
