@@ -61,8 +61,6 @@ summary(exp1lm)
 emmeans::emmeans(exp1lm, specs = pairwise ~ diet) 
 
 
-
-
 #------------ (Exp 1a) Day 2 ------
 #-------- Reading the data in
 feedinge1d2 <- read_excel("data/RPFemaleFeedingE1D2.xlsx")
@@ -163,12 +161,10 @@ exp1all_plot <- exp1all_summary %>%
 exp1alllm <- lm(fly_numbers ~ diet + day, data = exp1all)
 # Using summary function for analysis 
 summary(exp1alllm)
-# using em means to test everything
+# using em means to test everything - tukey 
 emmeans::emmeans(exp1alllm, specs = pairwise ~ diet + day) 
-# testing for significance in day 
+# testing for significance in day and diet 
 drop1(exp1alllm, test = "F")
-
-
 
 
 # -------- (Exp 1a) Egg counting  --------
