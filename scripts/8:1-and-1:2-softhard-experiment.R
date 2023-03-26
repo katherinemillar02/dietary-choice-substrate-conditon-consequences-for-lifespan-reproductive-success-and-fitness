@@ -233,7 +233,7 @@ summary(exp2bothglm2)
 
 
 
-# ------------ two factor data-analysis ------
+# ------------ Feeding two factor data-analysis ------
 
 # splitting up hard and soft diets and differernt nutrient diets 
 exp2both$food_type <- ifelse(exp2both$diet %in% c("8:1H", "1:2H"), "hard", "soft")
@@ -242,43 +242,45 @@ exp2both$food_nutrition <- ifelse(exp2both$diet %in% c("8:1", "1:2H", "1:2S"), "
 # added 1:2S and I think this is correct now ??!!
 # but does interaction effect just analyse everything? 
 
+# viewing the new dataset
 view(exp2both)
 
+# creating a linear model based on food nutrition and food type 
 exp2bothlmnew <- lm(fly_numbers ~ food_type + food_nutrition, data = exp2both)
+
+# creating a linear model based on food nutrition and food type with an interaction effect 
 exp2bothlmnew2 <- lm(fly_numbers ~ food_type + food_nutrition + food_nutrition * food_type, data = exp2both)
 
+# summarising the linear models 
 summary(exp2bothlmnew)
 summary(exp2bothlmnew2)
 
 # splitting the data into hard and soft groups and into nutrient groups 
-hard_data <- subset(exp2both, food_type == "hard")
-soft_data <- subset(exp2both, food_type == "soft")
-eight_data <- subset(exp2both, food_nutrition == "8:1")
-onetwo_data <- subset(exp2both, food_nutrition == "1:2")
+#hard_data <- subset(exp2both, food_type == "hard")
+#soft_data <- subset(exp2both, food_type == "soft")
+#eight_data <- subset(exp2both, food_nutrition == "8:1")
+#onetwo_data <- subset(exp2both, food_nutrition == "1:2")
 
 # binding the split data together 
-typestogether <- rbind(hard_data, soft_data, eight_data, onetwo_data)
+#typestogether <- rbind(hard_data, soft_data, eight_data, onetwo_data)
 
-exp2bothpractiselm <- lm(fly_numbers ~ food_type + food_nutrition, data = exp2both)
-
-summary(exp2bothpractiselm)
 
 # trying a two-way anova 
-aov(fly_numbers ~ food_type + food_nutrition, data = typestogether)
+#aov(fly_numbers ~ food_type + food_nutrition, data = typestogether)
 
 # creating a linear model of fly numbers and food type and food nutrition 
-typestogetherlm <- lm(fly_numbers ~ food_type + food_nutrition, data = typestogether)
+#typestogetherlm <- lm(fly_numbers ~ food_type + food_nutrition, data = typestogether)
 
-typestogetherlm2 <- lm(fly_numbers ~ food_type + food_nutrition + food_type * food_nutrition, data = typestogether)
+#typestogetherlm2 <- lm(fly_numbers ~ food_type + food_nutrition + food_type * food_nutrition, data = typestogether)
 
 # summarising the linear model data 
-summary(typestogetherlm)
-summary(typestogetherlm2)
+#summary(typestogetherlm)
+#summary(typestogetherlm2)
 
 # trying a tukey test with emmeans - NOT WORKING 
-emmeans::emmeans(typestogetherlm, specs = pairwise ~ food_nutrition + food_type)
+#emmeans::emmeans(typestogetherlm, specs = pairwise ~ food_nutrition + food_type)
 
-# summarising hard vs soft 
+# summarising hard vs soft data 
 softhard_summary <- exp2both %>%  
   group_by(food_type) %>% 
   summarise(mean = mean(fly_numbers),
@@ -309,19 +311,13 @@ softhard_plot <- softhard_summary %>%
        title = "")+
   theme_minimal() 
 
-
-
-
-# summarising nutrient composition 
+# summarising nutrient composition data 
 nutrient_summary <- exp2both %>%  
   group_by(food_nutrition) %>% 
   summarise(mean = mean(fly_numbers),
             sd = sd(fly_numbers),
             n = n(),
             se = sd/sqrt(n))
-
-
-
 
 # a nutrient plot 
 nutrient_plot <- nutrient_summary %>% 
@@ -347,13 +343,9 @@ nutrient_plot <- nutrient_summary %>%
   theme_minimal() 
 
 
-# using patchwork to compare soft/hardness and nutrient composition 
+# using patchwork to compare soft/hardness and nutrient composition - data visualisation
 softhard_plot + nutrient_plot
 
-
-
-
-# egg counting data analysis 
 
 # -------- (Exp 2) Egg counting  --------
 
