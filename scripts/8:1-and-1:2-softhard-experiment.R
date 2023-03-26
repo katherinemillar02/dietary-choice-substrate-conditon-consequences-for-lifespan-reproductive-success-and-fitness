@@ -389,16 +389,16 @@ egg_counting2_plot <- egg_counting2_summary %>%
 eggcountinge2ls1 <- lm(egg_numbers ~ diet, data = long_egg_counting2)
 #---- Checking the model 
 performance::check_model(eggcountinge2ls1)
-#---- summarising the data 
+#---- summarising the data of the linear model 
 summary(eggcountinge2ls1)
 
-#-- emmeans to look for significance 
+#-- emmeans tukey to look for significance of everything 
 emmeans::emmeans(eggcountinge2ls1, specs = pairwise ~ diet)
 
-#---- one-way anova
+#---- one-way anova? 
 anova(eggcountinge2ls1) 
 
-
+#-- looking at the confidence intervals 
 confint(eggcountinge2ls1)
 
 # tidyverse summary
@@ -406,6 +406,7 @@ broom::tidy(eggcountinge2ls1,
             exponentiate=T, 
             conf.int=)
 
+# visualising the means
 GGally::ggcoef_model(eggcountinge2ls1,
                      show_p_values=FALSE,
                      signif_stars = FALSE,
@@ -413,19 +414,16 @@ GGally::ggcoef_model(eggcountinge2ls1,
 
 
 
-# egg-  two-factor analysis ------
+# Egg - two-factor analysis ------
 
 # changing the data to columns 
 long_egg_counting2$food_type <- ifelse(long_egg_counting2 $diet %in% c("8:1H", "1:2H"), "hard", "soft")
-long_egg_counting2$food_nutrition <- ifelse(long_egg_counting2 $diet %in% c("8:1", "1:2H"), "1:2", "8:1")
+long_egg_counting2$food_nutrition <- ifelse(long_egg_counting2 $diet %in% c("8:1", "1:2H", "1:2S"), "1:2", "8:1")
+
+view(long_egg_counting2)
 
 
 
-# dong a linear model
-
-eggexp2lm <- lm(egg_numbers ~ food_type + food_nutrition, data = long_egg_counting2)
-
-summary(eggexp2lm)
 
 # visualising the data for egg analysis 
 
@@ -434,19 +432,19 @@ summary(eggexp2lm)
 
 # same thing but doing the subset function 
 # probably do subset analysis if you want to analyse stuff previously 
-hard_data_egg <- subset(long_egg_counting2, food_type == "hard")
-soft_data_egg <- subset(long_egg_counting2, food_type == "soft")
-eight_data_egg <- subset(long_egg_counting2, food_nutrition == "8:1")
-onetwo_data_egg <- subset(long_egg_counting2, food_nutrition == "1:2")
+#hard_data_egg <- subset(long_egg_counting2, food_type == "hard")
+#soft_data_egg <- subset(long_egg_counting2, food_type == "soft")
+#eight_data_egg <- subset(long_egg_counting2, food_nutrition == "8:1")
+#onetwo_data_egg <- subset(long_egg_counting2, food_nutrition == "1:2")
 
-eggexp2_new <- rbind(hard_data_egg, soft_data_egg, eight_data_egg, onetwo_data_egg)
+#-eggexp2_new <- rbind(hard_data_egg, soft_data_egg, eight_data_egg, onetwo_data_egg)
 
-eggexp2lm_new <-  lm(egg_numbers ~ food_type + food_nutrition, data = eggexp2_new)
+#-eggexp2lm_new <-  lm(egg_numbers ~ food_type + food_nutrition, data = eggexp2_new)
 
-summary(eggexp2lm_new)
+#--summary(eggexp2lm_new)
 
 
-
+#- Making a summary of egg counting// soft and hard 
 
 softhardegg_summary <- long_egg_counting2 %>%  
   group_by(food_type) %>% 
@@ -455,6 +453,7 @@ softhardegg_summary <- long_egg_counting2 %>%
             n = n(),
             se = sd/sqrt(n))
 
+#- Making a plot of egg counting// soft and hard 
 softhardegg_plot <- softhardegg_summary %>% 
   ggplot(aes(x = food_type, y = mean))+
   geom_bar(stat = "identity",
@@ -471,7 +470,7 @@ softhardegg_plot <- softhardegg_summary %>%
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)+
-  ylim(0.0, 4.0)+
+  ylim(0.0, 110)+
   labs(x = "Diet \n(Protein; Carbohydrate)",
        y = "Mean (+/- S.E.) number of eggs on a patch",
        title = "")+
@@ -484,11 +483,6 @@ nutrientegg_summary <- long_egg_counting2%>%
             sd = sd(egg_numbers),
             n = n(),
             se = sd/sqrt(n))
-
-
-
-
-
 
 # a nutrient plot 
 nutrientegg_plot <- nutrientegg_summary %>% 
@@ -507,12 +501,26 @@ nutrientegg_plot <- nutrientegg_summary %>%
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)+
-  ylim(0.0, 4.0)+
+  ylim(0.0, 110)+
   labs(x = "Diet \n(Protein; Carbohydrate)",
        y = "Mean (+/- S.E.) number of eggs on a patch",
        title = "")+
   theme_minimal() 
 
-view(long_egg_counting2)
 
+#- visualising the data og egg counting nutrient composition vs soft/hard together
 softhardegg_plot + nutrientegg_plot
+
+
+# doing a linear model of egg two factor 
+eggexp2lm <- lm(egg_numbers ~ food_type + food_nutrition, data = long_egg_counting2)
+
+# doing a linear model of egg two factor with an interaction effect 
+eggexp2lm2 <- lm(egg_numbers ~ food_type + food_nutrition + food_type * food_nutrition, data = long_egg_counting2)
+
+#  summarising egg two factor linear model
+summary(eggexp2lm)
+summary(eggexp2lm2)
+
+#  anova 
+aov(egg_numbers ~ food_type + food_nutrition, data = long_egg_counting2)
