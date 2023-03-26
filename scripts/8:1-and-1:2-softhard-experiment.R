@@ -281,7 +281,7 @@ summary(exp2bothlmnew2)
 #emmeans::emmeans(typestogetherlm, specs = pairwise ~ food_nutrition + food_type)
 
 # summarising hard vs soft data 
-softhard_summary_exp3 <- exp3both %>%  
+softhard_summary_exp2 <- exp2both %>%  
   group_by(food_type) %>% 
   summarise(mean = mean(fly_numbers),
             sd = sd(fly_numbers),
@@ -289,7 +289,7 @@ softhard_summary_exp3 <- exp3both %>%
             se = sd/sqrt(n))
 
 # a soft vs hard plot 
-softhard_plot_exp3 <- softhard_summary_exp3 %>% 
+softhard_plot_exp2 <- softhard_summary_exp2 %>% 
   ggplot(aes(x = food_type, y = mean))+
   geom_bar(stat = "identity",
            fill = "skyblue",
@@ -298,7 +298,7 @@ softhard_plot_exp3 <- softhard_summary_exp3 %>%
   geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
                 colour = "#FF6863",
                 width = 0.2)+
-  geom_jitter(data = exp3both,
+  geom_jitter(data = exp2both,
               aes(x = food_type,
                   y = fly_numbers),
               fill = "skyblue",
@@ -312,7 +312,7 @@ softhard_plot_exp3 <- softhard_summary_exp3 %>%
   theme_minimal() 
 
 # summarising nutrient composition data 
-nutrient_summary_exp3 <- exp3both %>%  
+nutrient_summary_exp2 <- exp2both %>%  
   group_by(food_nutrition) %>% 
   summarise(mean = mean(fly_numbers),
             sd = sd(fly_numbers),
@@ -320,7 +320,7 @@ nutrient_summary_exp3 <- exp3both %>%
             se = sd/sqrt(n))
 
 # a nutrient plot 
-nutrient_plot_exp3 <- nutrient_summary_exp3 %>% 
+nutrient_plot_exp2 <- nutrient_summary_exp2 %>% 
   ggplot(aes(x = food_nutrition, y = mean))+
   geom_bar(stat = "identity",
            fill = "skyblue",
@@ -329,7 +329,7 @@ nutrient_plot_exp3 <- nutrient_summary_exp3 %>%
   geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
                 colour = "#FF6863",
                 width = 0.2)+
-  geom_jitter(data = exp3both,
+  geom_jitter(data = exp2both,
               aes(x = food_nutrition,
                   y = fly_numbers),
               fill = "skyblue",
@@ -344,7 +344,7 @@ nutrient_plot_exp3 <- nutrient_summary_exp3 %>%
 
 
 # using patchwork to compare soft/hardness and nutrient composition - data visualisation
-softhard_plot_exp3 + nutrient_plot_exp3
+softhard_plot + nutrient_plot
 
 
 # -------- (Exp 2) Egg counting  --------
