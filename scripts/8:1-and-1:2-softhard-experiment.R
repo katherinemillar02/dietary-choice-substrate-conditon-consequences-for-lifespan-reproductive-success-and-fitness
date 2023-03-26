@@ -510,7 +510,7 @@ nutrientegg_plot <- nutrientegg_summary %>%
 
 #- visualising the data og egg counting nutrient composition vs soft/hard together
 softhardegg_plot + nutrientegg_plot
-
+softhard_plot + nutrient_plot
 
 # doing a linear model of egg two factor 
 eggexp2lm <- lm(egg_numbers ~ food_type + food_nutrition, data = long_egg_counting2)
