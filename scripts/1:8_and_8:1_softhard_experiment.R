@@ -195,7 +195,7 @@ summary(exp3bothlmnew2)
 
 
 # summarising hard vs soft data 
-softhard_summary <- exp3both %>%  
+softhard_summary_exp3 <- exp3both %>%  
   group_by(food_type) %>% 
   summarise(mean = mean(fly_numbers),
             sd = sd(fly_numbers),
@@ -203,7 +203,7 @@ softhard_summary <- exp3both %>%
             se = sd/sqrt(n))
 
 # a soft vs hard plot 
-softhard_plot <- softhard_summary %>% 
+softhard_plot_exp3 <- softhard_summary_exp3 %>% 
   ggplot(aes(x = food_type, y = mean))+
   geom_bar(stat = "identity",
            fill = "skyblue",
@@ -226,7 +226,7 @@ softhard_plot <- softhard_summary %>%
   theme_minimal() 
 
 # summarising nutrient composition data 
-nutrient_summary <- exp3both %>%  
+nutrient_summary_exp3 <- exp3both %>%  
   group_by(food_nutrition) %>% 
   summarise(mean = mean(fly_numbers),
             sd = sd(fly_numbers),
@@ -234,7 +234,7 @@ nutrient_summary <- exp3both %>%
             se = sd/sqrt(n))
 
 # a nutrient plot 
-nutrient_plot_exp3 <- nutrient_summary %>% 
+nutrient_plot_exp3 <- nutrient_summary_exp3 %>% 
   ggplot(aes(x = food_nutrition, y = mean))+
   geom_bar(stat = "identity",
            fill = "skyblue",
@@ -244,7 +244,7 @@ nutrient_plot_exp3 <- nutrient_summary %>%
                 colour = "#FF6863",
                 width = 0.2)+
   geom_jitter(data = exp3both,
-              aes(x = food_nutrition_exp3,
+              aes(x = food_nutrition,
                   y = fly_numbers),
               fill = "skyblue",
               colour = "#3a3c3d",
