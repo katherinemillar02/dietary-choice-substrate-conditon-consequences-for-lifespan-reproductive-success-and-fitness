@@ -131,6 +131,14 @@ exp1all_summary <- exp1all %>%
             n = n(),
             se = sd/sqrt(n))
 
+#  TABLE? 
+exp1all %>% 
+  group_by(diet) %>% 
+  summarise(`Mean fly numbers`= mean(fly_numbers, na.rm = T),
+            `SD`= sd(fly_numbers, na.rm = T)) %>% gt::gt()
+
+
+
 # visualising the data for combined days 
 exp1all_plot <- exp1all_summary %>% 
   ggplot(aes(x = diet, y = mean))+
@@ -165,6 +173,12 @@ summary(exp1alllm)
 emmeans::emmeans(exp1alllm, specs = pairwise ~ diet + day) 
 # testing for significance in day and diet 
 drop1(exp1alllm, test = "F")
+
+# model without day in 
+exp1alllm2 <- lm(fly_numbers ~ diet, data = exp1all)
+
+summary(exp1alllm2)
+drop1(exp1alllm2, test = "F")
 
 
 # -------- (Exp 1a) Egg counting  --------
