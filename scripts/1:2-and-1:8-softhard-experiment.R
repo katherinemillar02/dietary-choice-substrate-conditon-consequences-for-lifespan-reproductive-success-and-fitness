@@ -216,8 +216,10 @@ egg_counting1_plot <- egg_counting1_summary %>%
               shape = 21)+
   ylim(0,200)+
   labs(x = "Diet \n(Protein; Carbohydrate)",
-       y = "Mean (+/- S.E.) number of eggs laid on each patch")+
+       y = "Mean (+/- S.E.) number of eggs laid on each patch", 
+       title = "Mated Female Oviposition Preference")+
   theme_minimal()
+
 
 
 
