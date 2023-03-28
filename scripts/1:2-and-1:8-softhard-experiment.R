@@ -297,7 +297,7 @@ exp1bfeeding_plotd1 <- exp1bfeeding_summary %>%
   theme_minimal() 
 
 
-#-----  (Exp1b) data analysis -----
+
 
 
 #----- Day 2 
@@ -342,7 +342,7 @@ exp1bfeeding_plotd2 <- exp1bd2feeding_summary %>%
 
 exp1bfeeding_plotd1 + exp1bfeeding_plotd2
 
-
+#-----  (Exp1b) data analysis -----
 #- Data analysis of combined days (experiment 1b)
 
 #------- Mutating a variable for day 
@@ -394,8 +394,8 @@ drop1(exp1balllm, test = "F")
 
 
 
-
-
+exp1balllm2 <- lm(fly_numbers ~ diet, data = exp1ball)
+summary(exp1balllm2)
 
 
 # ------ Experiment 1b
