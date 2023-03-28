@@ -180,6 +180,8 @@ exp1alllm2 <- lm(fly_numbers ~ diet, data = exp1all)
 summary(exp1alllm2)
 drop1(exp1alllm2, test = "F")
 
+broom::tidy(exp1alllm2)
+
 
 # -------- (Exp 1a) Egg counting  --------
 
@@ -216,6 +218,8 @@ egg_counting1_plot <- egg_counting1_summary %>%
   labs(x = "Diet \n(Protein; Carbohydrate)",
        y = "Mean (+/- S.E.) number of eggs laid on each patch")+
   theme_minimal()
+
+
 
 #------- (Exp1a) Egg counting data analysis -----
 
