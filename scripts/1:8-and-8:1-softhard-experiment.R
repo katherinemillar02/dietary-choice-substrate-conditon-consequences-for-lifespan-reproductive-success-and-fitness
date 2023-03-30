@@ -172,10 +172,36 @@ exp3feeding_summary_both <- exp3both %>%
             n = n(),
             se = sd/sqrt(n))
 
+
+exp3bothlm2 <- lm(fly_numbers ~ diet, data = exp3both)
+
+exp3bothglm2 <- glm(fly_numbers ~ diet, data = exp3both, family = poisson)
+
+exp3bothglm02 <- glm(fly_numbers ~ diet, data = exp3both, family = quasipoisson)
+
+exp3bothlm01 <- lm(fly_numbers ~ day, data = exp3both)
+
+summary(exp3bothlm01)
+
+summary(exp3bothglm2)
+
+summary(exp3bothglm02)
+
+
+performance::check_model(exp3bothglm02)
+performance::check_model(exp3bothlm2)
+
+performance::check_model(exp3bothglm02, check = c("qq"))
+performance::check_model(exp3bothlm2, check = c("qq"))
+
+
+emmeans::emmeans(exp3bothlm2, specs = pairwise ~ diet)
+
+
 #--- two-factor feeding analysis ------
 
-# splitting up hard and soft diets and differernt nutrient diets 
-exp3both$food_type <- ifelse(exp3both$diet %in% c("8:1H", "1:8H"), "hard", "soft")
+# splitting up hard and soft diets and different nutrient diets 
+exp3both$food_type <- ifelse(exp3both$diet %in% c("8:1H", "1:8H"), "Hard", "Soft")
 
 exp3both$food_nutrition <- ifelse(exp3both$diet %in% c("8:1", "1:8H", "1:8S"), "1:8", "8:1")
 
@@ -189,10 +215,27 @@ exp3bothlmnew <- lm(fly_numbers ~ food_type + food_nutrition, data = exp3both)
 # creating a linear model based on food nutrition and food type with an interaction effect 
 exp3bothlmnew2 <- lm(fly_numbers ~ food_type + food_nutrition + food_nutrition * food_type, data = exp3both)
 
+exp3bothglmnew2 <- glm(fly_numbers ~ food_type + food_nutrition + food_nutrition * food_type, family = poisson(), data = exp3both)
+
+exp3bothglmnew3 <- glm(fly_numbers ~ food_type + food_nutrition + food_nutrition * food_type, family = quasipoisson(), data = exp3both)
+
+performance::check_model(exp3bothlmnew2) 
+performance::check_model(exp3bothglmnew3)
+
+performance::check_model(exp3bothlmnew2, check = c("qq")) 
+performance::check_model(exp3bothglmnew3, check = c("qq"))
+
+
+summary(exp3bothlmnew2)
+
+
+
 # summarising the linear models 
 summary(exp3bothlmnew)
 summary(exp3bothlmnew2)
 
+anova(exp3bothlmnew2)
+aov(exp3bothlmnew2)
 
 # summarising hard vs soft data 
 softhard_summary_exp3 <- exp3both %>%  
@@ -223,7 +266,7 @@ softhard_plot_exp3 <- softhard_summary_exp3 %>%
   labs(x = "Diet \n(Protein; Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "")+
-  theme_minimal() 
+  theme_classic() 
 
 # summarising nutrient composition data 
 nutrient_summary_exp3 <- exp3both %>%  
@@ -254,7 +297,7 @@ nutrient_plot_exp3 <- nutrient_summary_exp3 %>%
   labs(x = "Diet \n(Protein; Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "")+
-  theme_minimal() 
+  theme_classic() 
 
 
 # using patchwork to compare soft/hardness and nutrient composition - data visualisation
