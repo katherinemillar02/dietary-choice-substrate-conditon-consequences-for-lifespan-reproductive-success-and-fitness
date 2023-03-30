@@ -19,11 +19,26 @@ The preview shows you a rendered HTML copy of the contents of the editor. Conseq
 ```{r}
 performance::check_model(exp1alllm)
 summary(exp1alllm)
+
+
+
+performance::check_model(exp1alllm2)
+performance::check_model(exp1allglm)
+
+performance::check_model(exp1alllm2, check = c("qq"))
+performance::check_model(exp1allglm, check = c("qq"))
+
+
 ```
 
 ```{r}
 performance::check_model(exp2bothlm)
 summary(exp2bothlm)
+
+
+
+
+performance::check_model(exp1allglm, check = c("qq"))
 ```
 
 probably analyse 1:2 hard and soft for feeding behaviour 
