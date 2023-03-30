@@ -143,10 +143,10 @@ exp3feeding_plot_both <- exp3feeding_summary_both %>%
               width = 0.2,
               shape = 21)+
   ylim(0.0, 4.0)+
-  labs(x = "Diet \n(Protein; Carbohydrate)",
+  labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "")+
-  theme_minimal() 
+  theme_classic() 
 
 
 #--- mutating a day variable 
