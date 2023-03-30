@@ -249,7 +249,7 @@ summary(exp2bothglm2)
 # ------------ Feeding two factor data-analysis ------
 
 # splitting up hard and soft diets and differernt nutrient diets 
-exp2both$food_type <- ifelse(exp2both$diet %in% c("8:1H", "1:2H"), "hard", "soft")
+exp2both$food_type <- ifelse(exp2both$diet %in% c("8:1H", "1:2H"), "Hard", "Soft")
 
 exp2both$food_nutrition <- ifelse(exp2both$diet %in% c("8:1", "1:2H", "1:2S"), "1:2", "8:1")
 # added 1:2S and I think this is correct now ??!!
@@ -264,9 +264,38 @@ exp2bothlmnew <- lm(fly_numbers ~ food_type + food_nutrition, data = exp2both)
 # creating a linear model based on food nutrition and food type with an interaction effect 
 exp2bothlmnew2 <- lm(fly_numbers ~ food_type + food_nutrition + food_nutrition * food_type, data = exp2both)
 
+exp2bothglmnew2 <- glm(fly_numbers ~ food_type + food_nutrition + food_nutrition * food_type, family = poisson(), data = exp2both)
+
+summary(exp2bothglmnew2)
+summary(exp2bothlmnew2)
+
+confint(exp2bothlmnew2)
+
+library(gtsummary)
+tbl_regression(exp2bothglmnew2)
+
+drop1(exp2bothlmnew2, test = "F")
+
+exp2bothlmnewtest <- lm(fly_numbers ~ food_nutrition * food_type, data = exp2both)
+
+summary(exp2bothlmnewtest)
+
+performance::check_model(exp2bothlmnew2)
+performance::check_model(exp2bothglmnew2)
+
+
+performance::check_model(exp2bothlmnew2, check = c("qq"))
+performance::check_model(exp2bothglmnew2, check = c("qq"))
+
 # summarising the linear models 
 summary(exp2bothlmnew)
 summary(exp2bothlmnew2)
+
+exp2bothlmnew2_summary <- summary(exp2bothlmnew2)
+
+
+cat("F-statistic:", exp2bothlmnew2_summary$fstatistic[1], "\n")
+cat("p-value:", exp2bothlmnew2_summary$fstatistic[2], "\n")
 
 # splitting the data into hard and soft groups and into nutrient groups 
 #hard_data <- subset(exp2both, food_type == "hard")
@@ -322,7 +351,7 @@ softhard_plot_exp2 <- softhard_summary_exp2 %>%
   labs(x = "Diet \n(Protein; Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "")+
-  theme_minimal() 
+  theme_classic() 
 
 # summarising nutrient composition data 
 nutrient_summary_exp2 <- exp2both %>%  
@@ -331,6 +360,8 @@ nutrient_summary_exp2 <- exp2both %>%
             sd = sd(fly_numbers),
             n = n(),
             se = sd/sqrt(n))
+
+
 
 # a nutrient plot 
 nutrient_plot_exp2 <- nutrient_summary_exp2 %>% 
@@ -353,7 +384,7 @@ nutrient_plot_exp2 <- nutrient_summary_exp2 %>%
   labs(x = "Diet \n(Protein; Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "")+
-  theme_minimal() 
+  theme_classic() 
 
 
 # using patchwork to compare soft/hardness and nutrient composition - data visualisation
@@ -392,9 +423,9 @@ egg_counting2_plot <- egg_counting2_summary %>%
               width = 0.2,
               shape = 21)+
   ylim(0,200)+
-  labs(x = "Diet \n(Protein; Carbohydrate)",
+  labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of eggs laid on each patch")+
-  theme_minimal()
+  theme_classic()
 
 #------- (Exp2) Egg counting data analysis ---------
 
