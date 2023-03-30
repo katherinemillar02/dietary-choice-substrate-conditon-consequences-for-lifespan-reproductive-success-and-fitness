@@ -337,9 +337,9 @@ egg_counting3_plot <- egg_counting3_summary %>%
               width = 0.2,
               shape = 21)+
   ylim(0,200)+
-  labs(x = "Diet \n(Protein; Carbohydrate)",
+  labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of eggs laid on each patch")+
-  theme_minimal()
+  theme_classic()
 
 #-- linear model of egg countiung 
 eggcountinge3ls1 <- lm(egg_numbers ~ diet, data = long_egg_counting3)
