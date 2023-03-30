@@ -29,11 +29,17 @@ performance::check_model(exp1alllm2, check = c("qq"))
 performance::check_model(exp1allglm, check = c("qq"))
 
 
+performance::check_model(exp2bothlm, check = c("qq"))
+summary(exp2bothlm)
+
 ```
 
 ```{r}
 performance::check_model(exp2bothlm)
 summary(exp2bothlm)
+
+performance::check_model(exp2bothglm, check = c("qq"))
+summary(exp2bothglm)
 
 
 
