@@ -157,9 +157,8 @@ exp1all_plot <- exp1all_summary %>%
               width = 0.2,
               shape = 21)+
   ylim(0.0, 4.0)+
-  labs(x = "Diet \n(Protein; Carbohydrate)",
-       y = "Mean (+/- S.E.) number of flies on a patch",
-       title = "")+
+  labs(x = "Diet \n(Protein: Carbohydrate)",
+       y = "Mean (+/- S.E.) number of flies on a patch")+
   theme_minimal() 
 
 
@@ -167,8 +166,11 @@ exp1all_plot <- exp1all_summary %>%
 
 # Testing a model for feeding behaviour for both days 
 exp1alllm <- lm(fly_numbers ~ diet + day, data = exp1all)
+exp1alllmtest <- lm(fly_numbers ~ day, data = exp1all)
+summary(exp1alllmtest)
 # Using summary function for analysis 
 summary(exp1alllm)
+anova(exp1alllm)
 # using em means to test everything - tukey 
 emmeans::emmeans(exp1alllm, specs = pairwise ~ diet + day) 
 # testing for significance in day and diet 
@@ -182,6 +184,46 @@ drop1(exp1alllm2, test = "F")
 
 broom::tidy(exp1alllm2)
 
+exp1allglm01 <- glm(fly_numbers ~ diet, data = exp1all, family = poisson)
+exp1allglm <- glm(fly_numbers ~ diet, data = exp1all, family = quasipoisson)
+
+summary(exp1allglm)
+
+summary(exp1allglm01)
+
+exp1allglm %>% broom::tidy(conf.int = T) %>% 
+  select(-`std.error`) %>% 
+  mutate_if(is.numeric, round, 2) %>% 
+  kbl(col.names = c("Predictors",
+                    "Estimates",
+                    "Z-value",
+                    "P",
+                    "Lower 95% CI",
+                    "Upper 95% CI"),
+      caption = "Generalised linear model coefficients", 
+      booktabs = T) %>% 
+  kable_styling(full_width = FALSE, font_size=16)
+
+# why is p value 0? 
+
+
+
+# -------- two factor analysis feeding ------
+
+exp1all$food_type <- ifelse(exp1all$diet %in% c("1:8H", "1:2H"), "hard", "soft")
+exp1all$food_nutrition <- ifelse(exp1all$diet %in% c("1:8", "1:2H", "1:2S"), "1:2", "1:8")
+
+
+view(exp1all)
+
+exp1alllmnew <- lm(fly_numbers ~ food_type + food_nutrition, data = exp1all)
+summary(exp1alllmnew)
+
+exp1alglmnew <- glm(fly_numbers ~ food_type + food_nutrition, family = quasipoisson(), data = exp1all)
+summary(exp1alglmnew)
+
+performance::check_model(exp1alllmnew)
+performance::check_model(exp1alglmnew)
 
 # -------- (Exp 1a) Egg counting  --------
 
@@ -223,6 +265,8 @@ egg_counting1_plot <- egg_counting1_summary %>%
 
 
 
+
+
 #------- (Exp1a) Egg counting data analysis -----
 
 #-- Making a linear model 
@@ -252,7 +296,7 @@ emmeans::emmeans(eggcountinge1ls2, specs = pairwise ~ diet)
 
 # summary says there is a difference 
 
-# two factor analysis 
+--------# two factor analysis egg -----
 
 long_egg_counting1$food_type <- ifelse(long_egg_counting1$diet %in% c("8:1H", "1:2H"), "hard", "soft")
 long_egg_counting1$food_nutrition <- ifelse(long_egg_counting1$diet %in% c("8:1H", "1:2H"), "1:2", "8:1")
