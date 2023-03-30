@@ -150,13 +150,16 @@ exp2both_plot <- exp2both_summary %>%
               width = 0.2,
               shape = 21)+
   ylim(0.0, 4.0)+
-  labs(x = "Diet \n(Protein; Carbohydrate)",
+  labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "")+
-  theme_minimal() 
+  theme_classic() 
 
 #- using a linear model for feeding behaviour 
-exp2bothlm <- lm(fly_numbers ~ diet + day, data = exp2both)
+exp2bothlm <- lm(fly_numbers ~ diet, data = exp2both)
+
+
+
 
 #- making the same linear model but with an interaction effect of day
 exp2bothlm2 <- lm(fly_numbers ~ diet + day + diet * day, data = exp2both)
@@ -167,6 +170,15 @@ exp2bothlm2 <- lm(fly_numbers ~ diet + day + diet * day, data = exp2both)
 #-  testing the significance in day for both lm and glm 
 drop1(exp2bothlm, test = "F")
 drop1(exp2bothglm, test = "F")
+
+anova(exp2bothlm)
+
+exp2bothlm01 <- lm(fly_numbers ~ day, data = exp2both)
+
+anova(exp2bothlm3)
+summary.aov(exp2bothlm3)
+summary(exp2bothlm3)
+drop1(exp2bothlm, test = "F")
 
 drop1(exp2bothlm2, test = "F")
 #-- day is not significant! yay well it is but only just 
@@ -189,6 +201,7 @@ summary(exp2bothlm4)
 
 #- using emmeans to test the linear model in experiment 2 (without day in the model)
 emmeans::emmeans(exp2bothlm, specs = pairwise ~ diet)
+emmeans::emmeans(exp2bothlm3, specs = pairwise ~ diet)
 
 #  anova of the linear model of both days
 anova(exp2bothlm)
@@ -226,7 +239,7 @@ exp2bothglm <- glm(fly_numbers ~ diet + day, family = poisson, data = exp2both)
 summary(exp2bothglm)
 
 #-- using quasipoisson to count for overdispersion in a glm 
-exp2bothglm2 <- glm(fly_numbers ~ diet + day, family = quasipoisson, data = exp2both)
+exp2bothglm2 <- glm(fly_numbers ~ diet, family = quasipoisson, data = exp2both)
 
 #- using summary function for the general linear model with quasipoisson
 summary(exp2bothglm2)
