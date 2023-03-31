@@ -275,6 +275,9 @@ egg_counting1_plot <- egg_counting1_summary %>%
 
 
 
+
+
+
 #------- (Exp1a) Egg counting data analysis -----
 
 #-- Making a linear model 
@@ -306,8 +309,9 @@ emmeans::emmeans(eggcountinge1ls2, specs = pairwise ~ diet)
 
 --------# two factor analysis egg -----
 
-long_egg_counting1$food_type <- ifelse(long_egg_counting1$diet %in% c("8:1H", "1:2H"), "hard", "soft")
-long_egg_counting1$food_nutrition <- ifelse(long_egg_counting1$diet %in% c("8:1H", "1:2H"), "1:2", "8:1")
+
+
+
 
 
 
@@ -518,6 +522,7 @@ emmeans::emmeans(eggcountinge1bls1, specs = pairwise ~ diet)
 exp1a <- exp1all %>% mutate(experiment = "exp1a") 
 exp1b <- exp1ball %>% mutate(experiment = "exp1b")
 
+allexpboth <- rbind(exp1all, exp1ball)
 
 
 #  testing the overall for experiment 1a against experiment 1b 
@@ -527,6 +532,14 @@ exp1both <- rbind(exp1a, exp1b)
 
 # summarising the combined days data 
 exp1both_summary <- exp1both %>%  
+  group_by(diet) %>% 
+  summarise(mean = mean(fly_numbers),
+            sd = sd(fly_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+
+
+exp1both_summary2 <- allexpboth %>%  
   group_by(diet) %>% 
   summarise(mean = mean(fly_numbers),
             sd = sd(fly_numbers),
@@ -551,25 +564,33 @@ exp1both_plot <- exp1both_summary %>%
               width = 0.2,
               shape = 21)+
   ylim(0.0, 4.0)+
-  labs(x = "Diet \n(Protein; Carbohydrate)",
+  labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "")+
-  theme_minimal() 
+  theme_classic() 
 
 
 # Combining experiments data analysis -----
 
 
 # Testing a model for feeding behaviour for both days 
-exp1bothlm <- lm(fly_numbers ~ diet + experiment + day, data = exp1both)
+exp1bothlm <- lm(fly_numbers ~ diet, data = exp1both)
 
-exp1bothlm2 <- lm(fly_numbers ~ diet + experiment + day + diet*experiment + diet*day, data = exp1both)
+exp1bothlm2 <- lm(fly_numbers ~ diet + experiment + day + diet*experiment + diet * day, data = exp1both)
 
-exp1bothlm3 <- lm(fly_numbers ~ diet + experiment + diet*experiment, data = exp1both)
+exp1bothlm3 <- lm(fly_numbers ~ diet + experiment + diet * experiment, data = exp1both)
 
 #  cannot do two interaction effects in one model? 
 # won't do an interaction for day as do not have a hypothesis to support? 
 
+
+exp1bothglm <- glm(fly_numbers ~ diet, family = quasipoisson(), data = exp1both)
+
+performance::check_model(exp1bothlm)
+performance::check_model(exp1bothglm)
+
+performance::check_model(exp1bothlm, check = c("qq"))
+performance::check_model(exp1bothglm, check = c("qq"))
 
 
 # Using summary function for analysis 
@@ -577,7 +598,9 @@ summary(exp1bothlm)
 
 summary(exp1bothlm2)
 # using em means to test everything
-emmeans::emmeans(exp1bothlm, specs = pairwise ~ diet + experiment + day) 
+emmeans::emmeans(exp1bothglm, specs = pairwise ~ diet)
+
+
 # testing for significance in day 
 drop1(exp1bothlm, test = "F")
 
@@ -585,6 +608,99 @@ drop1(exp1bothlm2, test = "F")
 
 
 drop1(exp1bothlm3, test = "F")
+
+
+
+exp1both$food_type <- ifelse(exp1both$diet %in% c("1:8H", "1:2H"), "Hard", "Soft")
+exp1both$food_nutrition <- ifelse(exp1both$diet %in% c("1:8", "1:2H", "1:2S"), "1:2", "1:8")
+
+exp1totallm<- lm(fly_numbers ~ food_type + food_nutrition + food_type * food_nutrition, data = exp1both)
+summary(exp1totallm)
+
+exp1totalglm <- glm(fly_numbers ~ food_type + food_nutrition + food_type * food_nutrition, family = quasipoisson(), data = exp1all)
+summary(exp1totalglm)
+
+performance::check_model(exp1totallm)
+performance::check_model(exp1totalglm)
+
+
+performance::check_model(exp1totallm, check = c("qq"))
+performance::check_model(exp1totalglm, check = c("qq"))
+
+
+anova(exp1totalglm)
+
+
+
+# summarising hard vs soft data 
+softhard_summary_exp1 <- exp1both %>%  
+  group_by(food_type) %>% 
+  summarise(mean = mean(fly_numbers),
+            sd = sd(fly_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+
+# a soft vs hard plot 
+softhard_plot_exp1 <- softhard_summary_exp1 %>% 
+  ggplot(aes(x = food_type, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "#FF6863",
+                width = 0.2)+
+  geom_jitter(data = exp1both,
+              aes(x = food_type,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)+
+  ylim(0.0, 4.0)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of flies on a patch",
+       title = "")+
+  theme_classic() 
+
+# summarising nutrient composition data 
+nutrient_summary_exp1 <- exp1both %>%  
+  group_by(food_nutrition) %>% 
+  summarise(mean = mean(fly_numbers),
+            sd = sd(fly_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+
+# a nutrient plot 
+nutrient_plot_exp1 <- nutrient_summary_exp1 %>% 
+  ggplot(aes(x = food_nutrition, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "#FF6863",
+                width = 0.2)+
+  geom_jitter(data = exp1both,
+              aes(x = food_nutrition,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)+
+  ylim(0.0, 4.0)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of flies on a patch",
+       title = "")+
+  theme_classic() 
+
+
+# using patchwork to compare soft/hardness and nutrient composition - data visualisation
+softhard_plot_exp1 + nutrient_plot_exp1
+
+
+
+
 
 # have to do interaction effects separate for some reason? 
 
@@ -603,12 +719,16 @@ eggboth <- rbind(exp1aegg, exp1begg)
 #---  linear model for collated egg counting data 
 eggcountingboth <- lm(egg_numbers ~ diet + experiment, data = eggboth)
 
-
+eggcountingbothglm <- glm(egg_numbers ~ diet + experiment, data = eggboth)
 # experiment can probably be dropped from the model - 
 drop1(eggcountingboth, test = "F" )
 
 # analysing the data for egg counting 
 summary(eggcountingboth)
+summary(eggcountingbothglm)
+
+
+
 
 emmeans::emmeans(eggcountingboth, specs = pairwise ~ diet) 
 
@@ -653,9 +773,85 @@ egg_counting_plot_all <- eggboth_summary %>%
               width = 0.2,
               shape = 21)+
   ylim(0,200)+
-  labs(x = "Diet \n(Protein; Carbohydrate)",
+  labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of eggs laid on each patch")+
-  theme_minimal()
+  theme_classic()
+
+
+
+
+eggboth$food_type <- ifelse(eggboth$diet %in% c("1:8H", "1:2H"), "Hard", "Soft")
+eggboth$food_nutrition <- ifelse(eggboth$diet %in% c("1:8", "1:2H", "1:2S"), "1:2", "1:8")
+
+
+view(eggboth)
+
+# summarising hard vs soft data 
+softhard_summary_exp1_egg <- eggboth %>%  
+  group_by(food_type) %>% 
+  summarise(mean = mean(egg_numbers),
+            sd = sd(egg_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+
+# a soft vs hard plot 
+softhard_plot_exp1_egg <- softhard_summary_exp1_egg %>% 
+  ggplot(aes(x = food_type, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "#FF6863",
+                width = 0.2)+
+  geom_jitter(data = eggboth,
+              aes(x = food_type,
+                  y = egg_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)+
+  ylim(0.0, 200)+
+  labs(x = "Diet \n(Protein: Carbohydrate)",
+       y = "Mean (+/- S.E.) number of flies on a patch",
+       title = "")+
+  theme_classic() 
+
+# summarising nutrient composition data 
+nutrient_summary_exp1_egg <- eggboth %>%  
+  group_by(food_nutrition) %>% 
+  summarise(mean = mean(egg_numbers),
+            sd = sd(egg_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+
+# a nutrient plot 
+nutrient_plot_exp1_egg <- nutrient_summary_exp1_egg %>% 
+  ggplot(aes(x = food_nutrition, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "#FF6863",
+                width = 0.2)+
+  geom_jitter(data = eggboth,
+              aes(x = food_nutrition,
+                  y = egg_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)+
+  ylim(0.0, 200)+
+  labs(x = "Diet \n(Protein: Carbohydrate)",
+       y = "Mean (+/- S.E.) number of eggs on a patch",
+       title = "")+
+  theme_classic() 
+
+
+# using patchwork to compare soft/hardness and nutrient composition - data visualisation
+softhard_plot_exp1_egg + nutrient_plot_exp1_egg
+
 
 
 
