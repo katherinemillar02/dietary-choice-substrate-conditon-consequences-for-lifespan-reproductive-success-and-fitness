@@ -48,3 +48,67 @@ nutrient_boxplot_exp2 <- nutrient_summary_exp2 %>%
            colour = "#FF6863",
            alpha = 0.6)
 
+
+
+
+ggplot(exp2both, aes(x = diet, y = fly_numbers)) + 
+  geom_boxplot() + 
+  ggtitle("Boxplot of Four Diets with Varying Mean Averages") + 
+  xlab("Diet Type") + 
+  ylab("Average")+
+  COLOUR("orange")
+
+
+boxplot(fly_numbers~diet,
+        data=exp2both,
+        main="Different boxplots for each month",
+        xlab="Month Number",
+        ylab="Degree Fahrenheit",
+        col="orange",
+        border="brown"
+)
+
+
+
+p<-ggplot(exp2both, aes(x=diet, y=fly_numbers, color=diet)) +
+  geom_boxplot()+
+  theme_classic()
+p
+
+p+scale_color_manual(values=c("#999999", "#E69F00", "#56B4E9", "red"))
+p+scale_color_brewer(palette="Dark2")
+p + scale_color_grey() + theme_classic()
+
+
+ggplot(exp2both, aes(x=diet, y=fly_numbers)) +
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme_classic()
+
+
+p<-ggplot(exp2both, aes(x=diet, y=fly_numbers, fill=diet)) +
+  geom_boxplot()+
+  theme_classic()
+p
+
+
+p+scale_fill_manual(values=c("#999999", "#E69F00", "#56B4E9", "red"))
+
+
+p + theme(legend.position="top")
+p + theme(legend.position="bottom")
+p + theme(legend.position="none") # Remove legend
+
+
+p + scale_fill_brewer(palette="Dark2") + theme_minimal()
+
+
+
+p<-ggplot(exp2both , aes(x=food_type, y=fly_numbers, fill=food_type)) +
+  geom_boxplot()+
+  theme_classic()
+p
+
+p + exp2both_plot
+
+exp2both_plot + p
+ 
