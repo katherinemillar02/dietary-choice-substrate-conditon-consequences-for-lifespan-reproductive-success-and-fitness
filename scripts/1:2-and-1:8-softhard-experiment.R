@@ -225,6 +225,14 @@ summary(exp1alglmnew)
 performance::check_model(exp1alllmnew)
 performance::check_model(exp1alglmnew)
 
+exp1alllmnew2 <- lm(fly_numbers ~ food_type + food_nutrition + food_type * food_nutrition, data = exp1all)
+summary(exp1alllmnew2)
+
+exp1alglmnew2 <- glm(fly_numbers ~ food_type + food_nutrition + food_type * food_nutrition, family = quasipoisson(), data = exp1all)
+summary(exp1alglmnew2)
+
+
+
 # -------- (Exp 1a) Egg counting  --------
 
 #____ Reading the data in 
