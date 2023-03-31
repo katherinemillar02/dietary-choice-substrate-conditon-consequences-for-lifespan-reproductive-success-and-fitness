@@ -830,10 +830,10 @@ nutrient_plot_exp1_egg <- nutrient_summary_exp1_egg %>%
   ggplot(aes(x = food_nutrition, y = mean))+
   geom_bar(stat = "identity",
            fill = "skyblue",
-           colour = "#FF6863",
+           colour = "orange",
            alpha = 0.6)+
   geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
-                colour = "#FF6863",
+                colour = "orange",
                 width = 0.2)+
   geom_jitter(data = eggboth,
               aes(x = food_nutrition,
@@ -851,6 +851,25 @@ nutrient_plot_exp1_egg <- nutrient_summary_exp1_egg %>%
 
 # using patchwork to compare soft/hardness and nutrient composition - data visualisation
 softhard_plot_exp1_egg + nutrient_plot_exp1_egg
+
+
+
+exp1allegg <- lm(egg_numbers ~ food_type + food_nutrition + food_type * food_nutrition, data = eggboth)
+summary(exp1allegg)
+
+exp1alleggglm <- glm(egg_numbers ~ food_type + food_nutrition + food_type * food_nutrition, family = quasipoisson(), data = eggboth)
+summary(exp1alleggglm)
+
+performance::check_model(exp1allegg)
+performance::check_model(exp1alleggglm)
+
+performance::check_model(exp1allegg, check = c("qq"))
+performance::check_model(exp1alleggglm, check = c("qq"))
+
+install.packages("ggpubr")
+library(ggpubr)
+
+egg_counting_plot_all + softhard_plot_exp1_egg + nutrient_plot_exp1_egg 
 
 
 
