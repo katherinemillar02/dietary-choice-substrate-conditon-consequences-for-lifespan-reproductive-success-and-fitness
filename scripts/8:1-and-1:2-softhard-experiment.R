@@ -562,9 +562,12 @@ eggexp2lm <- lm(egg_numbers ~ food_type + food_nutrition, data = long_egg_counti
 # doing a linear model of egg two factor with an interaction effect 
 eggexp2lm2 <- lm(egg_numbers ~ food_type + food_nutrition + food_type * food_nutrition, data = long_egg_counting2)
 
+eggexp2glm2 <- glm(egg_numbers ~ food_type + food_nutrition + food_type * food_nutrition, family = quasipoisson(), data = long_egg_counting2)
 #  summarising egg two factor linear model
 summary(eggexp2lm)
 summary(eggexp2lm2)
+summary(eggexp2glm2)
+
 
 #  anova 
 aov(egg_numbers ~ food_type + food_nutrition, data = long_egg_counting2)
