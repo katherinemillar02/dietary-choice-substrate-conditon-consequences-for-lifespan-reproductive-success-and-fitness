@@ -91,6 +91,8 @@ p<-ggplot(exp2both, aes(x=diet, y=fly_numbers, fill=diet)) +
 p
 
 
+
+
 p+scale_fill_manual(values=c("#999999", "#E69F00", "#56B4E9", "red"))
 
 
@@ -108,7 +110,12 @@ p<-ggplot(exp2both , aes(x=food_type, y=fly_numbers, fill=food_type)) +
   theme_classic()
 p
 
+a<-ggplot(exp2both, aes(x=food_nutrition, y=fly_numbers, fill=food_nutrition)) +
+  geom_boxplot()+
+  theme_classic()
+
 p + exp2both_plot
 
-exp2both_plot + p
+exp2both_plot + egg_counting2_plot + p  + a + nutrientegg_plot + softhardegg_plot + p
+
  
