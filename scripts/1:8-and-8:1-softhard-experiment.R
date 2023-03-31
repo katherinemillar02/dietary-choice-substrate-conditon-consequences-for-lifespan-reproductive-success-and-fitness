@@ -228,7 +228,7 @@ performance::check_model(exp3bothglmnew3, check = c("qq"))
 
 summary(exp3bothlmnew2)
 
-
+summary(exp3bothglmnew3)
 
 # summarising the linear models 
 summary(exp3bothlmnew)
@@ -426,15 +426,19 @@ nutrientegg_plot_exp3 <- nutrientegg_summary_exp3 %>%
 softhardegg_plot_exp3 + nutrientegg_plot_exp3
 
 eggexp3lm <- lm(egg_numbers ~ food_type + food_nutrition + food_type * food_nutrition, data = long_egg_counting3)
+summary(eggexp3lm)
 
-eggexp3glm <- glm(egg_numbers ~ food_type + food_nutrition + food_type * food_nutrition, family = poisson, data = long_egg_counting3)
+eggexp3glm <- glm(egg_numbers ~ food_type + food_nutrition + food_type * food_nutrition, family = poisson(), data = long_egg_counting3)
 summary(eggexp3glm)
 
-eggexp3glm2 <- glm(egg_numbers ~ food_type + food_nutrition + food_type * food_nutrition, family = quasipoisson, data = long_egg_counting3)
+eggexp3glm2 <- glm(egg_numbers ~ food_type + food_nutrition + food_type * food_nutrition, family = quasipoisson(), data = long_egg_counting3)
 summary(eggexp3glm2)
+
+
 
 performance::check_model(eggexp3lm)
 performance::check_model(eggexp3glm2)
 
 performance::check_model(eggexp3lm, check = c("qq"))
-performance::check_model(eggexp3glm2)
+
+performance::check_model(eggexp3glm2, check = c("qq"))
