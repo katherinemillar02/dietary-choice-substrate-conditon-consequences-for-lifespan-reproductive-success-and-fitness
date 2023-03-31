@@ -353,7 +353,7 @@ summary(eggcountinge3ls1)
 
 #--------- two-factor egg data analysis ----
 # changing the data to columns 
-long_egg_counting3$food_type <- ifelse(long_egg_counting3 $diet %in% c("8:1H", "1:8H"), "hard", "soft")
+long_egg_counting3$food_type <- ifelse(long_egg_counting3 $diet %in% c("8:1H", "1:8H"), "Hard", "Soft")
 long_egg_counting3$food_nutrition <- ifelse(long_egg_counting3 $diet %in% c("8:1", "1:8H", "1:8S"), "1:8", "8:1")
 
 # code to view the new data
@@ -424,3 +424,17 @@ nutrientegg_plot_exp3 <- nutrientegg_summary_exp3 %>%
 
 # combining the experiment hardness plot with the nutrient plot with patchwork 
 softhardegg_plot_exp3 + nutrientegg_plot_exp3
+
+eggexp3lm <- lm(egg_numbers ~ food_type + food_nutrition + food_type * food_nutrition, data = long_egg_counting3)
+
+eggexp3glm <- glm(egg_numbers ~ food_type + food_nutrition + food_type * food_nutrition, family = poisson, data = long_egg_counting3)
+summary(eggexp3glm)
+
+eggexp3glm2 <- glm(egg_numbers ~ food_type + food_nutrition + food_type * food_nutrition, family = quasipoisson, data = long_egg_counting3)
+summary(eggexp3glm2)
+
+performance::check_model(eggexp3lm)
+performance::check_model(eggexp3glm2)
+
+performance::check_model(eggexp3lm, check = c("qq"))
+performance::check_model(eggexp3glm2)
