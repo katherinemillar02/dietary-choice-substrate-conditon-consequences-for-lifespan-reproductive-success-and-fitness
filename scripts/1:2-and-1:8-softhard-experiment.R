@@ -14,7 +14,10 @@ library(gtsummary)
 library(knitr)
 library(rphylopic)
 
-#------------------------------ Experiment 1a ---- 
+#------------------------------ Experiment 1a ----
+
+# The first experiment using diets 1:2 and 1:8 
+
 #----- (Exp1a) Day 1 ------
 #-------- Reading the data in
 feedinge1d1 <- read_excel("data/RPFemaleFeedingE1D1.xlsx")
