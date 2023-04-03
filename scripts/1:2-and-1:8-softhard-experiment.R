@@ -190,129 +190,6 @@ performance::check_model(exp1a_all_day_glm, check = c("qq"))
 drop1(exp1a_all_day_glm, test = 'F')
 
 
-# THIS CODE IS NOT USED IN OVERALL ANALYSIS 
-# CAN IGNORE FOR NOW
-## JUST THERE FOR KNOWLEDGE 
-anova(exp1alllm)
-#using em means to test everything - tukey 
-emmeans::emmeans(exp1alllm, specs = pairwise ~ diet + day) 
-# testing for significance in day and diet 
-drop1(exp1alllm, test = "F")
-# model without day in 
-exp1alllm2 <- lm(fly_numbers ~ diet, data = exp1all)
-summary(exp1alllm2)
-drop1(exp1alllm2, test = "F")
-broom::tidy(exp1alllm2)
-exp1allglm01 <- glm(fly_numbers ~ diet, data = exp1all, family = poisson)
-exp1allglm <- glm(fly_numbers ~ diet, data = exp1all, family = quasipoisson)
-summary(exp1allglm)
-summary(exp1allglm01)
-exp1allglm %>% broom::tidy(conf.int = T) %>% 
-  select(-`std.error`) %>% 
-  mutate_if(is.numeric, round, 2) %>% 
-  kbl(col.names = c("Predictors",
-                    "Estimates",
-                    "Z-value",
-                    "P",
-                    "Lower 95% CI",
-                    "Upper 95% CI"),
-      caption = "Generalised linear model coefficients", 
-      booktabs = T) %>% 
-  kable_styling(full_width = FALSE, font_size=16)
-# why is p value 0? 
-
-
-
-# -------- Exp1a - Two factor analysis feeding ------
-
-# THIS CODE IS NOT USED IN OVERALL ANALYSIS 
-# CAN IGNORE FOR NOW
-## JUST THERE FOR KNOWLEDGE 
-exp1all$food_type <- ifelse(exp1all$diet %in% c("1:8H", "1:2H"), "hard", "soft")
-exp1all$food_nutrition <- ifelse(exp1all$diet %in% c("1:8", "1:2H", "1:2S"), "1:2", "1:8")
-view(exp1all)
-exp1alllmnew <- lm(fly_numbers ~ food_type + food_nutrition, data = exp1all)
-summary(exp1alllmnew)
-exp1alglmnew <- glm(fly_numbers ~ food_type + food_nutrition, family = quasipoisson(), data = exp1all)
-summary(exp1alglmnew)
-performance::check_model(exp1alllmnew)
-performance::check_model(exp1alglmnew)
-exp1alllmnew2 <- lm(fly_numbers ~ food_type + food_nutrition + food_type * food_nutrition, data = exp1all)
-summary(exp1alllmnew2)
-exp1alglmnew2 <- glm(fly_numbers ~ food_type + food_nutrition + food_type * food_nutrition, family = quasipoisson(), data = exp1all)
-summary(exp1alglmnew2)
-# THIS CODE IS NOT USED IN OVERALL ANALYSIS 
-# CAN IGNORE FOR NOW
-## JUST THERE FOR KNOWLEDGE 
-# -------- (Exp 1a) Egg counting  --------
-
-#____ Reading the data in 
-egg_counting_data <- (read_excel(path = "data/RPEggCountE1.xlsx", na = "NA"))
-#____ Making the data long 
-long_egg_counting1 <- egg_counting_data %>% 
-  pivot_longer(cols = ("1:2H":"1:8S"), names_to = "diet", values_to = "egg_numbers")
-#_____ Making a summary of the data 
-egg_counting1_summary <- long_egg_counting1 %>% 
-  group_by(diet) %>% 
-  summarise(mean = mean(egg_numbers),
-            sd = sd(egg_numbers),
-            n = n(),
-            se = sd/sqrt(n))
-#---------- Visualise the data of egg counting
-egg_counting1_plot <- egg_counting1_summary %>% 
-  ggplot(aes(x = diet, y = mean))+
-  geom_bar(stat = "identity",
-           fill = "skyblue",
-           colour = "orange",
-           alpha = 0.6)+
-  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
-                colour = "orange",
-                width = 0.2)+
-  geom_jitter(data = long_egg_counting1,
-              aes(x = diet,
-                  y = egg_numbers),
-              fill = "skyblue",
-              colour = "black",
-              width = 0.2,
-              shape = 21)+
-  ylim(0,200)+
-  labs(x = "Diet \n(Protein; Carbohydrate)",
-       y = "Mean (+/- S.E.) number of eggs laid on each patch", 
-       title = "Mated Female Oviposition Preference")+
-  theme_minimal()
-# THIS CODE IS NOT USED IN OVERALL ANALYSIS 
-# CAN IGNORE FOR NOW
-## JUST THERE FOR KNOWLEDGE 
-#------- (Exp1a) Egg counting data analysis -----
-#-- Making a linear model 
-eggcountinge1ls1 <- lm(egg_numbers ~ diet, data = long_egg_counting1)
-#---- Checking the model 
-performance::check_model(eggcountinge1ls1)
-#---- summarising the data 
-summary(eggcountinge1ls1)
-#----  doing tests 
-anova(eggcountinge1ls1) 
-confint(eggcountinge1ls1)
-# tidyverse summary
-broom::tidy(eggcountinge1ls1,  
-            exponentiate=T, 
-            conf.int=T)
-# Data analysis of egg counting from experiment 1 
-emmeans::emmeans(eggcountinge1ls1, specs = pairwise ~ diet) 
-eggcountinge1ls2 <- glm(egg_numbers ~ diet, data = long_egg_counting1, family = quasipoisson)
-summary(eggcountinge1ls2)
-emmeans::emmeans(eggcountinge1ls2, specs = pairwise ~ diet) 
-# No significance between soft and hard diets for egg laying 
-# summary says there is a difference 
---------# two factor analysis egg -----
-# THIS CODE IS NOT USED IN OVERALL ANALYSIS 
-# CAN IGNORE FOR NOW
-## JUST THERE FOR KNOWLEDGE 
-
-
-
-
-
 # ---------------- Experiment 1b - repeating the experiment -----
 #----- (Exp1b) Day 1 ----
 #-------- Reading the data in
@@ -349,8 +226,6 @@ exp1bfeeding_plotd1 <- exp1bfeeding_summary %>%
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "")+
   theme_minimal() 
-
-
 
 
 
@@ -437,8 +312,7 @@ exp1ball_plot <- exp1ball_summary %>%
   theme_minimal() 
 
 
-# Testing a model for feeding behaviour for both days 
-exp1balllm <- lm(fly_numbers ~ diet + day, data = exp1ball)
+
 # creating a model with just day in for analysis 
 exp1balllmday <- lm(fly_numbers ~ day, data = exp1ball)
 # using performance::check for the new model
@@ -480,111 +354,31 @@ performance::check_model(exp1ballglmday20)
 performance::check_model(exp1ballglmday20, check = c("qq"))
 
 # normality might look worse but glm generally looks better than lm? 
+# use the glm2 (that hasn't been added +1)
 
 
-# summarising the new glm 2
+#trying drop1 of the right day model of experiment 1b to do day analysis 
+drop1(exp1ballglmday20, test = "F")
+# is this okay 
+
+# summarising the new day glm 2
 summary(exp1ballglmday20)
 
-# Using summary function for analysis 
-summary(exp1balllm)
-summary(exp1balllmday)
-# using em means to test everything
-emmeans::emmeans(exp1balllm, specs = pairwise ~ diet + day) 
-# testing for significance in day 
-drop1(exp1balllm, test = "F")
-drop1(exp1balllmday, test = "F")
+# Combining experiments ----
+# combining the two repeat experiments
 
-
-exp1balllm2 <- lm(fly_numbers ~ diet, data = exp1ball)
-summary(exp1balllm2)
-
-
-# ------ Experiment 1b
-
-# (Exp1b) Egg count data analysis ------
-
-#____ Reading the data in 
-egg_counting_data_1b <- (read_excel(path = "data/RPEggCountE1b.xlsx", na = "NA"))
-#____ Making the data long 
-long_egg_counting1b <- egg_counting_data_1b %>% 
-  pivot_longer(cols = ("1:2H":"1:8S"), names_to = "diet", values_to = "egg_numbers")
-#_____ Making a summary of the data 
-egg_counting1_summary_1b <- long_egg_counting1b %>% 
-  group_by(diet) %>% 
-  summarise(mean = mean(egg_numbers),
-            sd = sd(egg_numbers),
-            n = n(),
-            se = sd/sqrt(n))
-#---------- Visualise the data of egg counting
-egg_counting1b_plot <- egg_counting1_summary_1b %>% 
-  ggplot(aes(x = diet, y = mean))+
-  geom_bar(stat = "identity",
-           fill = "skyblue",
-           colour = "orange",
-           alpha = 0.6)+
-  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
-                colour = "orange",
-                width = 0.2)+
-  geom_jitter(data = long_egg_counting1b,
-              aes(x = diet,
-                  y = egg_numbers),
-              fill = "skyblue",
-              colour = "black",
-              width = 0.2,
-              shape = 21)+
-  ylim(0,200)+
-  labs(x = "Diet \n(Protein; Carbohydrate)",
-       y = "Mean (+/- S.E.) number of eggs laid on each patch")+
-  theme_minimal()
-
-#-- using patchwork to compare the egg plots 
-
-egg_counting1_plot + egg_counting1b_plot
-
-#-- Egg counting data analysis 
-
-#-- Making a linear model 
-eggcountinge1bls1 <- lm(egg_numbers ~ diet, data = long_egg_counting1b)
-#---- Checking the model 
-rmance::check_model(eggcountinge1bls1)
-#---- summarising the data 
-summary(eggcountinge1bls1)
-#----  doing tests 
-anova(eggcountinge1bls1) 
-confint(eggcountinge1bls1)
-#tidyverse summary
-broom::tidy(eggcountinge1bls1,  
-            exponentiate=T, 
-            conf.int=T)
-
-emmeans::emmeans(eggcountinge1bls1, specs = pairwise ~ diet)
-
-  # Combining experiments data -----
-
-# adding a variable for a and b 
-exp1a <- exp1all %>% mutate(experiment = "exp1a") 
+# adding a variable for experments 1a and 1b 
+exp1a <- exp1a_all %>% mutate(experiment = "exp1a") 
 exp1b <- exp1ball %>% mutate(experiment = "exp1b")
 
-allexpboth <- rbind(exp1all, exp1ball)
+#  binding experiment 1a and 1b together into one data-set 
+exp1_combined <- rbind(exp1a, exp1b)
 
+# vewing the new data set 
+view(exp1_combined)
 
-#  testing the overall for experiment 1a against experiment 1b 
-
-exp1both <- rbind(exp1a, exp1b)
-
-view(exp1both)
-
-
-# summarising the combined days data 
-exp1both_summary <- exp1both %>%  
-  group_by(diet) %>% 
-  summarise(mean = mean(fly_numbers),
-            sd = sd(fly_numbers),
-            n = n(),
-            se = sd/sqrt(n))
-
-
-exp1both_summary2 <- allexpboth %>%  
+# summarising the combined experiments data 
+exp1_combined_summary <- exp1_combined %>%  
   group_by(diet) %>% 
   summarise(mean = mean(fly_numbers),
             sd = sd(fly_numbers),
@@ -592,7 +386,7 @@ exp1both_summary2 <- allexpboth %>%
             se = sd/sqrt(n))
 
 # visualising the data for combined days 
-exp1both_plot <- exp1both_summary %>% 
+exp1_combined_plot <- exp1_combined_summary %>% 
   ggplot(aes(x = diet, y = mean))+
   geom_bar(stat = "identity",
            fill = "skyblue",
@@ -601,7 +395,7 @@ exp1both_plot <- exp1both_summary %>%
   geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
                 colour = "#FF6863",
                 width = 0.2)+
-  geom_jitter(data = exp1both,
+  geom_jitter(data = exp1_combined,
               aes(x = diet,
                   y = fly_numbers),
               fill = "skyblue",
@@ -615,47 +409,100 @@ exp1both_plot <- exp1both_summary %>%
   theme_classic() 
 
 
-# Combining experiments data analysis -----
+# Data analysis: Combining experiments - feeding behaviour -----
 
 
-# Testing a model for feeding behaviour for both days 
-exp1bothlm <- lm(fly_numbers ~ diet, data = exp1both)
+# Testing a model for feeding behaviour
+# JUST experiment model for data analysis - so i can make sense of it and using it 
+exp1_combined_experiment <- lm(fly_numbers ~ experiment, data = exp1_combined)
 
-exp1bothlm2 <- lm(fly_numbers ~ diet + experiment + day + experiment + diet, data = exp1both)
+# performance check for experiment linear model of combined experiments data 
+performance::check_model(exp1_combined_experiment)
+performance::check_model(exp1_combined_experiment, check = c("qq"))
 
-exp1bothlm3 <- lm(fly_numbers ~ diet + experiment + day, data = exp1both)
-summary(exp1bothlm3)
+# looks not the best 
+# trying a glm 
+exp1_combined_experiment_glm <- glm(fly_numbers ~ experiment, family = poisson, data = exp1_combined)
 
-#  cannot do two interaction effects in one model? 
-# won't do an interaction for day as do not have a hypothesis to support? 
+# checking if poisson is right fit with summary()
+summary(exp1_combined_experiment_glm)
+
+# poisson is overdispersed so using quasipoisson 
+exp1_combined_experiment_glm_2 <- glm(fly_numbers ~ experiment, family = quasipoisson, data = exp1_combined)
+
+# performance check for experiment generalised linear model of combined experiments data 
+performance::check_model(exp1_combined_experiment_glm_2)
+performance::check_model(exp1_combined_experiment_glm_2, check = c("qq"))
+
+# glm looks better but normality still looks dodgy 
+# the normality on glm looks the same as lm 
+# but the homogenity on glm looks better 
 
 
-exp1bothglm <- glm(fly_numbers ~ diet, family = quasipoisson(), data = exp1both)
+# trying the (fly_numbers + 1) to improve the model? 
+exp1_combined_experiment_glm_3 <- glm(formula = (fly_numbers + 1) ~ experiment, family = quasipoisson, data = exp1_combined)
 
-summary(exp1bothglm)
+# performance check for experiment new generalised linear model 3 of combined experiments data 
+performance::check_model(exp1_combined_experiment_glm_3)
+performance::check_model(exp1_combined_experiment_glm_3, check = c("qq"))
 
-performance::check_model(exp1bothlm)
-performance::check_model(exp1bothglm)
+# any number I add doesn't seem to be changing the qq plot?? 
+#  trying with log - even though glm is log anyway right 
+exp1_combined_experiment_glm_4 <- glm(formula = log(fly_numbers + 1) ~ experiment, family = quasipoisson, data = exp1_combined)
 
-performance::check_model(exp1bothlm, check = c("qq"))
-performance::check_model(exp1bothglm, check = c("qq"))
+#  performance checking model 4 
+performance::check_model(exp1_combined_experiment_glm_4)
+performance::check_model(exp1_combined_experiment_glm_4, check = c("qq"))
 
+# from my analysis I think the glm 3 model was the best
+# not sure how to change normality to look better though? 
+
+# drop1 f the chosen experiment model for experiment analysis
+drop1(exp1_combined_experiment_glm_3, test = "F")
+
+# summary function of the chosen experiment model for experiment analysis 
+summary(exp1_combined_experiment_glm_3)
+
+
+# doing data analysis with experiment not included in a model 
+exp1_combined_lm <- lm(fly_numbers ~ diet, data = exp1_combined)
+
+
+# performance checking model 4 
+performance::check_model(exp1_combined_lm)
+performance::check_model(exp1_combined_lm, check = c("qq"))
+
+# model doesn't look the best
+# trying glm 
+exp1_combined_glm <- glm(fly_numbers ~ diet, family = poisson(), data = exp1_combined)
+# checking if glm is dispersed or not
+summary(exp1_combined_glm)
+# overdispersion so using quasipoisson
+exp1_combined_glm_2 <- glm(fly_numbers ~ diet, family = quasipoisson(), data = exp1_combined)
+
+# performance checking with the new model
+performance::check_model(exp1_combined_glm_2)
+performance::check_model(exp1_combined_glm_2, check = c("qq"))
+# issues at the beginning and end 
+
+exp1_combined_glm_3 <- glm(formula = (fly_numbers + 1) ~ diet, family = quasipoisson, data = exp1_combined)
+
+# performance checking with the new model
+performance::check_model(exp1_combined_glm_3)
+performance::check_model(exp1_combined_glm_3, check = c("qq"))
+
+# both homogenty and normality look worse with +1 
+# don't know how to fix beginning bit of normality - seems to be a reccuring issue 
+# best model of these seems to be exp1_combined_glm_2 
 
 # Using summary function for analysis 
-summary(exp1bothlm)
+summary(exp1_combined_glm_2)
 
-summary(exp1bothlm2)
 # using em means to test everything
-emmeans::emmeans(exp1bothglm, specs = pairwise ~ diet)
+emmeans::emmeans(exp1_combined_glm_2, specs = pairwise ~ diet)
 
 
-# testing for significance in day 
-drop1(exp1bothlm, test = "F")
 
-drop1(exp1bothlm2, test = "F")
-
-
-drop1(exp1bothlm3, test = "F")
 
 
 
@@ -920,6 +767,214 @@ library(ggpubr)
 egg_counting_plot_all + softhard_plot_exp1_egg + nutrient_plot_exp1_egg 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# THIS CODE IS NOT USED IN OVERALL ANALYSIS 
+# CAN IGNORE FOR NOW
+## JUST THERE FOR KNOWLEDGE 
+anova(exp1alllm)
+#using em means to test everything - tukey 
+emmeans::emmeans(exp1alllm, specs = pairwise ~ diet + day) 
+# testing for significance in day and diet 
+drop1(exp1alllm, test = "F")
+# model without day in 
+exp1alllm2 <- lm(fly_numbers ~ diet, data = exp1all)
+summary(exp1alllm2)
+drop1(exp1alllm2, test = "F")
+broom::tidy(exp1alllm2)
+exp1allglm01 <- glm(fly_numbers ~ diet, data = exp1all, family = poisson)
+exp1allglm <- glm(fly_numbers ~ diet, data = exp1all, family = quasipoisson)
+summary(exp1allglm)
+summary(exp1allglm01)
+exp1allglm %>% broom::tidy(conf.int = T) %>% 
+  select(-`std.error`) %>% 
+  mutate_if(is.numeric, round, 2) %>% 
+  kbl(col.names = c("Predictors",
+                    "Estimates",
+                    "Z-value",
+                    "P",
+                    "Lower 95% CI",
+                    "Upper 95% CI"),
+      caption = "Generalised linear model coefficients", 
+      booktabs = T) %>% 
+  kable_styling(full_width = FALSE, font_size=16)
+# why is p value 0? 
+
+
+
+# -------- Exp1a - Two factor analysis feeding ------
+
+# THIS CODE IS NOT USED IN OVERALL ANALYSIS 
+# CAN IGNORE FOR NOW
+## JUST THERE FOR KNOWLEDGE - ----- ----- --- ----- ----- ----- ----- ----- ------- ----- ----- ---------
+exp1all$food_type <- ifelse(exp1all$diet %in% c("1:8H", "1:2H"), "hard", "soft")
+exp1all$food_nutrition <- ifelse(exp1all$diet %in% c("1:8", "1:2H", "1:2S"), "1:2", "1:8")
+view(exp1all)
+exp1alllmnew <- lm(fly_numbers ~ food_type + food_nutrition, data = exp1all)
+summary(exp1alllmnew)
+exp1alglmnew <- glm(fly_numbers ~ food_type + food_nutrition, family = quasipoisson(), data = exp1all)
+summary(exp1alglmnew)
+performance::check_model(exp1alllmnew)
+performance::check_model(exp1alglmnew)
+exp1alllmnew2 <- lm(fly_numbers ~ food_type + food_nutrition + food_type * food_nutrition, data = exp1all)
+summary(exp1alllmnew2)
+exp1alglmnew2 <- glm(fly_numbers ~ food_type + food_nutrition + food_type * food_nutrition, family = quasipoisson(), data = exp1all)
+summary(exp1alglmnew2)
+# THIS CODE IS NOT USED IN OVERALL ANALYSIS 
+# CAN IGNORE FOR NOW
+## JUST THERE FOR KNOWLEDGE 
+# -------- (Exp 1a) Egg counting  --------
+#____ Reading the data in 
+egg_counting_data <- (read_excel(path = "data/RPEggCountE1.xlsx", na = "NA"))
+#____ Making the data long 
+long_egg_counting1 <- egg_counting_data %>% 
+  pivot_longer(cols = ("1:2H":"1:8S"), names_to = "diet", values_to = "egg_numbers")
+#_____ Making a summary of the data 
+egg_counting1_summary <- long_egg_counting1 %>% 
+  group_by(diet) %>% 
+  summarise(mean = mean(egg_numbers),
+            sd = sd(egg_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+#---------- Visualise the data of egg counting
+egg_counting1_plot <- egg_counting1_summary %>% 
+  ggplot(aes(x = diet, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "orange",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "orange",
+                width = 0.2)+
+  geom_jitter(data = long_egg_counting1,
+              aes(x = diet,
+                  y = egg_numbers),
+              fill = "skyblue",
+              colour = "black",
+              width = 0.2,
+              shape = 21)+
+  ylim(0,200)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of eggs laid on each patch", 
+       title = "Mated Female Oviposition Preference")+
+  theme_minimal()
+# THIS CODE IS NOT USED IN OVERALL ANALYSIS 
+# CAN IGNORE FOR NOW
+## JUST THERE FOR KNOWLEDGE 
+#------- (Exp1a) Egg counting data analysis -----
+#-- Making a linear model 
+eggcountinge1ls1 <- lm(egg_numbers ~ diet, data = long_egg_counting1)
+#---- Checking the model 
+performance::check_model(eggcountinge1ls1)
+#---- summarising the data 
+summary(eggcountinge1ls1)
+#----  doing tests 
+anova(eggcountinge1ls1) 
+confint(eggcountinge1ls1)
+# tidyverse summary
+broom::tidy(eggcountinge1ls1,  
+            exponentiate=T, 
+            conf.int=T)
+# Data analysis of egg counting from experiment 1 
+emmeans::emmeans(eggcountinge1ls1, specs = pairwise ~ diet) 
+eggcountinge1ls2 <- glm(egg_numbers ~ diet, data = long_egg_counting1, family = quasipoisson)
+summary(eggcountinge1ls2)
+emmeans::emmeans(eggcountinge1ls2, specs = pairwise ~ diet) 
+# No significance between soft and hard diets for egg laying 
+# summary says there is a difference 
+--------# two factor analysis egg -----
+# THIS CODE IS NOT USED IN OVERALL ANALYSIS 
+# CAN IGNORE FOR NOW
+## JUST THERE FOR KNOWLEDGE 
+# Using summary function for analysis 
+summary(exp1balllm)
+summary(exp1balllmday)
+# using em means to test everything
+emmeans::emmeans(exp1balllm, specs = pairwise ~ diet + day) 
+# testing for significance in day 
+drop1(exp1balllm, test = "F")
+drop1(exp1balllmday, test = "F")
+exp1balllm2 <- lm(fly_numbers ~ diet, data = exp1ball)
+summary(exp1balllm2)
+
+
+# (Exp1b) Egg count data analysis ------
+
+#____ Reading the data in 
+egg_counting_data_1b <- (read_excel(path = "data/RPEggCountE1b.xlsx", na = "NA"))
+#____ Making the data long 
+long_egg_counting1b <- egg_counting_data_1b %>% 
+  pivot_longer(cols = ("1:2H":"1:8S"), names_to = "diet", values_to = "egg_numbers")
+#_____ Making a summary of the data 
+egg_counting1_summary_1b <- long_egg_counting1b %>% 
+  group_by(diet) %>% 
+  summarise(mean = mean(egg_numbers),
+            sd = sd(egg_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+#---------- Visualise the data of egg counting
+egg_counting1b_plot <- egg_counting1_summary_1b %>% 
+  ggplot(aes(x = diet, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "orange",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "orange",
+                width = 0.2)+
+  geom_jitter(data = long_egg_counting1b,
+              aes(x = diet,
+                  y = egg_numbers),
+              fill = "skyblue",
+              colour = "black",
+              width = 0.2,
+              shape = 21)+
+  ylim(0,200)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of eggs laid on each patch")+
+  theme_minimal()
+
+#-- using patchwork to compare the egg plots 
+
+egg_counting1_plot + egg_counting1b_plot
+
+#-- Egg counting data analysis 
+
+#-- Making a linear model 
+eggcountinge1bls1 <- lm(egg_numbers ~ diet, data = long_egg_counting1b)
+#---- Checking the model 
+rmance::check_model(eggcountinge1bls1)
+#---- summarising the data 
+summary(eggcountinge1bls1)
+#----  doing tests 
+anova(eggcountinge1bls1) 
+confint(eggcountinge1bls1)
+#tidyverse summary
+broom::tidy(eggcountinge1bls1,  
+            exponentiate=T, 
+            conf.int=T)
+
+emmeans::emmeans(eggcountinge1bls1, specs = pairwise ~ diet)
 
 
 
