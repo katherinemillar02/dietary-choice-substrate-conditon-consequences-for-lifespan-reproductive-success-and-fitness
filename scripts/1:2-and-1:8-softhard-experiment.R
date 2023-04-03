@@ -631,7 +631,34 @@ exp1begg <- long_egg_counting1b %>% mutate(experiment = "exp1b")
 exp1_egg_combined <- rbind(exp1aegg, exp1begg)
 
 #---- Combined experiments egg data analysis ----
-
+# summary of all combined egg data 
+exp1_egg_combined_summary <- exp1_egg_combined %>%  
+  group_by(diet) %>% 
+  summarise(mean = mean(egg_numbers),
+            sd = sd(egg_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+# plot of all combined egg data 
+exp1_egg_combined_plot <- exp1_egg_combined_summary %>% 
+  ggplot(aes(x = diet, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "orange",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "orange",
+                width = 0.2)+
+  geom_jitter(data = exp1_egg_combined,
+              aes(x = diet,
+                  y = egg_numbers),
+              fill = "skyblue",
+              colour = "black",
+              width = 0.2,
+              shape = 21)+
+  ylim(0,200)+
+  labs(x = "Diet \n(Protein: Carbohydrate)",
+       y = "Mean (+/- S.E.) number of eggs laid on each patch")+
+  theme_classic()
 # making a model to be looking for just the significance in experiment 
 exp1_egg_combined_experiment <- lm(egg_numbers ~ experiment, data = exp1_egg_combined)
 
@@ -644,6 +671,7 @@ performance::check_model(exp1_egg_combined_experiment, check = c("qq"))
 # trying a generalised linear model
 exp1_egg_combined_experiment_glm <- glm(egg_numbers ~ experiment, family = poisson, data = exp1_egg_combined)
 
+# using summary to check for overdispersion
 summary(exp1_egg_combined_experiment_glm)
 # very very overdispersed
 
@@ -654,91 +682,60 @@ performance::check_model(exp1_egg_combined_experiment_glm_2)
 performance::check_model(exp1_egg_combined_experiment_glm_2, check = c("qq"))
 #  looks a lot better 
 #  apart from normality at the beginning 
-# best so far is exp1_egg_combined_experiment_glm_2
+# best so far is exp1_egg_combined_experiment_glm_2 so use this 
 
-
+# using drop1 to see significance of experiment 
+drop1(exp1_egg_combined_experiment_glm_2, test = "F")
 
 #---  linear model for collated egg counting data 
+exp1_egg_combined_lm <- lm(egg_numbers ~ diet, data = exp1_egg_combined)
+
+#  checking the model 
+performance::check_model(exp1_egg_combined_lm)
+performance::check_model(exp1_egg_combined_lm, check = c("qq"))
+# doesn't look the best 
+
+#---  generalised linear model for collated egg counting data 
+exp1_egg_combined_glm <- glm(egg_numbers ~ diet, family = poisson, data = exp1_egg_combined)
+
+summary(exp1_egg_combined_glm)
+
+exp1_egg_combined_glm_2 <- glm(egg_numbers ~ diet, family = quasipoisson, data = exp1_egg_combined)
+
+#  checking the model 
+performance::check_model(exp1_egg_combined_glm_2)
+performance::check_model(exp1_egg_combined_glm_2, check = c("qq"))
+# normality looks okay? 
+
+# trying + 1 on the glm
+exp1_egg_combined_glm_3 <- glm(formula = (egg_numbers + 1) ~ diet, family = quasipoisson, data = exp1_egg_combined)
+
+#  checking the model 
+performance::check_model(exp1_egg_combined_glm_3)
+performance::check_model(exp1_egg_combined_glm_3, check = c("qq"))
+#  doesn't make too much difference to homogenity or normality 
+# final choice anyway: exp1_egg_combined_glm_3
+
+# analysing with the chosen model 
+summary(exp1_egg_combined_glm_3)
+
+# using emmeans tukey to analyse everything 
+emmeans::emmeans(exp1_egg_combined_glm_3, specs = pairwise ~ diet) 
 
 
-
-eggcountingboth <- lm(egg_numbers ~ diet + experiment, data = eggboth)
-
-eggcountingbothglm <- glm(egg_numbers ~ diet + experiment, data = eggboth)
-# experiment can probably be dropped from the model - 
-drop1(eggcountingboth, test = "F" )
-
-# analysing the data for egg counting 
-summary(eggcountingboth)
-summary(eggcountingbothglm)
-
-
-
-
-emmeans::emmeans(eggcountingboth, specs = pairwise ~ diet) 
-
-# comparing the repeats of experiment 1a
-# using patchwork to compare experiment 1a and experiment 1b 
-
-exp1all_plot + exp1ball_plot
-
-# test everything individually even the individual days? 
-
-
-
-# an emmeans model without day and experiment in the model - to look for significance between 1:2 S and H 
-
-
-emmeans::emmeans(exp1bothlm, specs = pairwise ~ diet) 
-
-# plot of all combined egg data 
-
-eggboth_summary <- eggboth %>%  
-  group_by(diet) %>% 
-  summarise(mean = mean(egg_numbers),
-            sd = sd(egg_numbers),
-            n = n(),
-            se = sd/sqrt(n))
-
-
-egg_counting_plot_all <- eggboth_summary %>% 
-  ggplot(aes(x = diet, y = mean))+
-  geom_bar(stat = "identity",
-           fill = "skyblue",
-           colour = "orange",
-           alpha = 0.6)+
-  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
-                colour = "orange",
-                width = 0.2)+
-  geom_jitter(data = eggboth,
-              aes(x = diet,
-                  y = egg_numbers),
-              fill = "skyblue",
-              colour = "black",
-              width = 0.2,
-              shape = 21)+
-  ylim(0,200)+
-  labs(x = "Diet \n(Protein: Carbohydrate)",
-       y = "Mean (+/- S.E.) number of eggs laid on each patch")+
-  theme_classic()
-
-
-
-
+# OVIPOSTION DATA - TWO FACTOR ANALYSIS 
 exp1_egg_combined$food_type <- ifelse(eggboth$diet %in% c("1:8H", "1:2H"), "Hard", "Soft")
 exp1_egg_combined$food_nutrition <- ifelse(eggboth$diet %in% c("1:8", "1:2H", "1:2S"), "1:2", "1:8")
-
-
-view(eggboth)
+# viewing the new dataset 
+view(exp1_egg_combined)
 
 # summarising hard vs soft data 
-softhard_summary_exp1_egg <- eggboth %>%  
+softhard_summary_exp1_egg <- exp1_egg_combined %>%  
   group_by(food_type) %>% 
   summarise(mean = mean(egg_numbers),
             sd = sd(egg_numbers),
             n = n(),
             se = sd/sqrt(n))
-
 # a soft vs hard plot 
 softhard_plot_exp1_egg <- softhard_summary_exp1_egg %>% 
   ggplot(aes(x = food_type, y = mean))+
@@ -749,7 +746,7 @@ softhard_plot_exp1_egg <- softhard_summary_exp1_egg %>%
   geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
                 colour = "#FF6863",
                 width = 0.2)+
-  geom_jitter(data = eggboth,
+  geom_jitter(data = exp1_egg_combined,
               aes(x = food_type,
                   y = egg_numbers),
               fill = "skyblue",
@@ -763,13 +760,12 @@ softhard_plot_exp1_egg <- softhard_summary_exp1_egg %>%
   theme_classic() 
 
 # summarising nutrient composition data 
-nutrient_summary_exp1_egg <- eggboth %>%  
+nutrient_summary_exp1_egg <- exp1_egg_combined %>%  
   group_by(food_nutrition) %>% 
   summarise(mean = mean(egg_numbers),
             sd = sd(egg_numbers),
             n = n(),
             se = sd/sqrt(n))
-
 # a nutrient plot 
 nutrient_plot_exp1_egg <- nutrient_summary_exp1_egg %>% 
   ggplot(aes(x = food_nutrition, y = mean))+
@@ -780,7 +776,7 @@ nutrient_plot_exp1_egg <- nutrient_summary_exp1_egg %>%
   geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
                 colour = "orange",
                 width = 0.2)+
-  geom_jitter(data = eggboth,
+  geom_jitter(data = exp1_egg_combined,
               aes(x = food_nutrition,
                   y = egg_numbers),
               fill = "skyblue",
@@ -792,12 +788,10 @@ nutrient_plot_exp1_egg <- nutrient_summary_exp1_egg %>%
        y = "Mean (+/- S.E.) number of eggs on a patch",
        title = "")+
   theme_classic() 
-
-
 # using patchwork to compare soft/hardness and nutrient composition - data visualisation
 softhard_plot_exp1_egg + nutrient_plot_exp1_egg
 
-
+# OVIPOSITION TWO FACTOR DATA ANALYSIS 
 
 exp1allegg <- lm(egg_numbers ~ food_type + food_nutrition + food_type * food_nutrition, data = eggboth)
 summary(exp1allegg)
@@ -1025,6 +1019,12 @@ broom::tidy(eggcountinge1bls1,
             conf.int=T)
 
 emmeans::emmeans(eggcountinge1bls1, specs = pairwise ~ diet)
+
+# comparing the repeats of experiment 1a
+# using patchwork to compare experiment 1a and experiment 1b 
+exp1all_plot + exp1ball_plot
+
+
 
 
 
