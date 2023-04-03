@@ -17,7 +17,6 @@ library(rphylopic)
 #------------------------------ Experiment 1a ----
 
 # The first experiment using diets 1:2 and 1:8 
-
 #----- (Exp1a) Day 1 ------
 #-------- Reading the data in
 feedinge1d1 <- read_excel("data/RPFemaleFeedingE1D1.xlsx")
@@ -54,8 +53,7 @@ exp1feeding_plotd1 <- exp1feeding_summary %>%
        title = "")+
   theme_minimal() 
 
-#-------------- (Exp 1a) Day 1 Data analysis  -----------
-
+#-------------- Data analysis (Exp 1a) Day 1   -----------
 #------- creating a linear model for day 1 
 exp1lm <- lm(fly_numbers ~ diet, data = long_feedinge1d1)
 #------- using summary function for the model 
@@ -101,7 +99,7 @@ exp1feeding_plotd2 <- exp1d2feeding_summary %>%
        title = "")+
   theme_minimal() 
 
-# (Exp1a) Day 2 Data analysis 
+# (Exp1a) ------- Day 2 Data analysis 
 # Data analysis for just day 2 
 #------- creating a linear model for day 1 
 exp1lmd2 <- lm(fly_numbers ~ diet, data = long_feedinge1d2)
@@ -110,40 +108,38 @@ summary(exp1lmd2)
 #-- Using emmeans to look for significant differences 
 emmeans::emmeans(exp1lmd2, specs = pairwise ~ diet) 
 
-
-
 #------- comparing the days using patchwork
 
 exp1feeding_plotd1 + exp1feeding_plotd2
 
 
-#----- (Exp1a) Combined days data -----
+#----- (Exp1a) Combined days data ---------
 
+# combining days 1 and 2 for overall data analysis 
 #------- Combining the data for feeding behaviour 
 
 #------- Mutating a variable for day 
 exp1d1 <- long_feedinge1d1 %>% mutate(day = "1")
 exp1d2 <- long_feedinge1d2 %>% mutate(day = "2")
 #------- Combining the days 
-exp1all <- rbind(exp1d1, exp1d2)
+exp1a_all <- rbind(exp1d1, exp1d2)
 # summarising the combined days data 
-exp1all_summary <- exp1all %>%  
+exp1a_all_summary <- exp1a_all %>%  
   group_by(diet) %>% 
   summarise(mean = mean(fly_numbers),
             sd = sd(fly_numbers),
             n = n(),
             se = sd/sqrt(n))
 
-#  TABLE? 
-exp1all %>% 
+#  Table of the combined days data for experiment 1a
+exp1a_all %>% 
   group_by(diet) %>% 
   summarise(`Mean fly numbers`= mean(fly_numbers, na.rm = T),
             `SD`= sd(fly_numbers, na.rm = T)) %>% gt::gt()
 
 
-
 # visualising the data for combined days 
-exp1all_plot <- exp1all_summary %>% 
+exp1all_plot <- exp1a_all_summary %>% 
   ggplot(aes(x = diet, y = mean))+
   geom_bar(stat = "identity",
            fill = "skyblue",
@@ -152,7 +148,7 @@ exp1all_plot <- exp1all_summary %>%
   geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
                 colour = "#FF6863",
                 width = 0.2)+
-  geom_jitter(data = exp1all,
+  geom_jitter(data = exp1a_all,
               aes(x = diet,
                   y = fly_numbers),
               fill = "skyblue",
@@ -165,16 +161,40 @@ exp1all_plot <- exp1all_summary %>%
   theme_minimal() 
 
 
-# ------ -(Exp1a) Combined days data analysis ------
+# ------ -(Exp1a) Combined days data analysis ----------
 
-# Testing a model for feeding behaviour for both days 
-exp1alllm <- lm(fly_numbers ~ diet + day, data = exp1all)
-exp1alllmtest <- lm(fly_numbers ~ day, data = exp1all)
-summary(exp1alllmtest)
-# Using summary function for analysis 
-summary(exp1alllm)
+# Testing a model for feeding behaviour for both days with diet including 
+exp1a_all_lm <- lm(fly_numbers ~ diet + day, data = exp1a_all)
+
+# making a model with just day in for analysis 
+exp1a_all_day_lm <- lm(fly_numbers ~ day, data = exp1a_all)
+
+# checking the experiment 1a just day model
+performance::check_model(exp1a_all_day_lm)
+performance::check_model(exp1a_all_day_lm, check = c("qq"))
+
+# making a glm model with just day in for analysis 
+exp1a_all_day_glm <- glm(fly_numbers ~ day, family = poisson, data = exp1a_all)
+
+# checking the experiment 1a just day model (glm)
+performance::check_model(exp1a_all_day_glm)
+performance::check_model(exp1a_all_day_glm, check = c("qq"))
+
+
+# qq looks similar but maybe glm one looks slightly better 
+# homogenity also looks better with glm 
+# I think exp1a_all_day_glm is an okay model to use? 
+
+
+# Using drop1 to look for significance of day in day glm model 
+drop1(exp1a_all_day_glm, test = 'F')
+
+
+# THIS CODE IS NOT USED IN OVERALL ANALYSIS 
+# CAN IGNORE FOR NOW
+## JUST THERE FOR KNOWLEDGE 
 anova(exp1alllm)
-# using em means to test everything - tukey 
+#using em means to test everything - tukey 
 emmeans::emmeans(exp1alllm, specs = pairwise ~ diet + day) 
 # testing for significance in day and diet 
 drop1(exp1alllm, test = "F")
@@ -182,16 +202,11 @@ drop1(exp1alllm, test = "F")
 exp1alllm2 <- lm(fly_numbers ~ diet, data = exp1all)
 summary(exp1alllm2)
 drop1(exp1alllm2, test = "F")
-
 broom::tidy(exp1alllm2)
-
 exp1allglm01 <- glm(fly_numbers ~ diet, data = exp1all, family = poisson)
 exp1allglm <- glm(fly_numbers ~ diet, data = exp1all, family = quasipoisson)
-
 summary(exp1allglm)
-
 summary(exp1allglm01)
-
 exp1allglm %>% broom::tidy(conf.int = T) %>% 
   select(-`std.error`) %>% 
   mutate_if(is.numeric, round, 2) %>% 
@@ -204,36 +219,31 @@ exp1allglm %>% broom::tidy(conf.int = T) %>%
       caption = "Generalised linear model coefficients", 
       booktabs = T) %>% 
   kable_styling(full_width = FALSE, font_size=16)
-
 # why is p value 0? 
 
 
 
-# -------- two factor analysis feeding ------
+# -------- Exp1a - Two factor analysis feeding ------
 
+# THIS CODE IS NOT USED IN OVERALL ANALYSIS 
+# CAN IGNORE FOR NOW
+## JUST THERE FOR KNOWLEDGE 
 exp1all$food_type <- ifelse(exp1all$diet %in% c("1:8H", "1:2H"), "hard", "soft")
 exp1all$food_nutrition <- ifelse(exp1all$diet %in% c("1:8", "1:2H", "1:2S"), "1:2", "1:8")
-
-
 view(exp1all)
-
 exp1alllmnew <- lm(fly_numbers ~ food_type + food_nutrition, data = exp1all)
 summary(exp1alllmnew)
-
 exp1alglmnew <- glm(fly_numbers ~ food_type + food_nutrition, family = quasipoisson(), data = exp1all)
 summary(exp1alglmnew)
-
 performance::check_model(exp1alllmnew)
 performance::check_model(exp1alglmnew)
-
 exp1alllmnew2 <- lm(fly_numbers ~ food_type + food_nutrition + food_type * food_nutrition, data = exp1all)
 summary(exp1alllmnew2)
-
 exp1alglmnew2 <- glm(fly_numbers ~ food_type + food_nutrition + food_type * food_nutrition, family = quasipoisson(), data = exp1all)
 summary(exp1alglmnew2)
-
-
-
+# THIS CODE IS NOT USED IN OVERALL ANALYSIS 
+# CAN IGNORE FOR NOW
+## JUST THERE FOR KNOWLEDGE 
 # -------- (Exp 1a) Egg counting  --------
 
 #____ Reading the data in 
@@ -270,17 +280,10 @@ egg_counting1_plot <- egg_counting1_summary %>%
        y = "Mean (+/- S.E.) number of eggs laid on each patch", 
        title = "Mated Female Oviposition Preference")+
   theme_minimal()
-
-
-
-
-
-
-
-
-
+# THIS CODE IS NOT USED IN OVERALL ANALYSIS 
+# CAN IGNORE FOR NOW
+## JUST THERE FOR KNOWLEDGE 
 #------- (Exp1a) Egg counting data analysis -----
-
 #-- Making a linear model 
 eggcountinge1ls1 <- lm(egg_numbers ~ diet, data = long_egg_counting1)
 #---- Checking the model 
@@ -294,32 +297,24 @@ confint(eggcountinge1ls1)
 broom::tidy(eggcountinge1ls1,  
             exponentiate=T, 
             conf.int=T)
-
 # Data analysis of egg counting from experiment 1 
 emmeans::emmeans(eggcountinge1ls1, specs = pairwise ~ diet) 
-
 eggcountinge1ls2 <- glm(egg_numbers ~ diet, data = long_egg_counting1, family = quasipoisson)
-
 summary(eggcountinge1ls2)
-
 emmeans::emmeans(eggcountinge1ls2, specs = pairwise ~ diet) 
-
 # No significance between soft and hard diets for egg laying 
-
 # summary says there is a difference 
-
 --------# two factor analysis egg -----
-
-
-
+# THIS CODE IS NOT USED IN OVERALL ANALYSIS 
+# CAN IGNORE FOR NOW
+## JUST THERE FOR KNOWLEDGE 
 
 
 
 
 
 # ---------------- Experiment 1b - repeating the experiment -----
-
-#----- (Exp1b) Day 1 -----
+#----- (Exp1b) Day 1 ----
 #-------- Reading the data in
 feedinge1bd1 <- read_excel("data/RPFemaleFeedingE1bD1.xlsx")
 #---- Making the data long
