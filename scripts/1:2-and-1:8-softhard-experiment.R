@@ -503,11 +503,79 @@ emmeans::emmeans(exp1_combined_glm_2, specs = pairwise ~ diet)
 
 
 
-# Two factor analysis - overall experiments for experiment 1 two factor analysis 
+# Two factor analysis - overall experiments for experiment 1 two factor analysis -------
+
 
 # adding the variables to add new columns to the dataset 
 exp1_combined$food_type <- ifelse(exp1both$diet %in% c("1:8H", "1:2H"), "Hard", "Soft")
 exp1_combined$food_nutrition <- ifelse(exp1both$diet %in% c("1:8", "1:2H", "1:2S"), "1:2", "1:8")
+
+# visualising the data for soft and hard vs nutrient composition
+# summarising hard vs soft data 
+softhard_summary_exp1 <- exp1both %>%  
+  group_by(food_type) %>% 
+  summarise(mean = mean(fly_numbers),
+            sd = sd(fly_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+# a soft vs hard plot 
+softhard_plot_exp1 <- softhard_summary_exp1 %>% 
+  ggplot(aes(x = food_type, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "#FF6863",
+                width = 0.2)+
+  geom_jitter(data = exp1both,
+              aes(x = food_type,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)+
+  ylim(0.0, 4.0)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of flies on a patch",
+       title = "")+
+  theme_classic() 
+# summarising nutrient composition data 
+nutrient_summary_exp1 <- exp1both %>%  
+  group_by(food_nutrition) %>% 
+  summarise(mean = mean(fly_numbers),
+            sd = sd(fly_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+# a nutrient plot 
+nutrient_plot_exp1 <- nutrient_summary_exp1 %>% 
+  ggplot(aes(x = food_nutrition, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "#FF6863",
+                width = 0.2)+
+  geom_jitter(data = exp1both,
+              aes(x = food_nutrition,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)+
+  ylim(0.0, 4.0)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of flies on a patch",
+       title = "")+
+  theme_classic() 
+
+# using patchwork to compare soft/hardness and nutrient composition - data visualisation
+softhard_plot_exp1 + nutrient_plot_exp1
+
+
+#  Data analysis --- two factor analysis - food conditions 
+
 
 # making a linear model for food conditions 
 exp1_combined_foodconditions_lm <- lm(fly_numbers ~ food_type + food_nutrition + food_type : food_nutrition, data = exp1_combined)
@@ -553,86 +621,6 @@ performance::check_model(exp1_combined_foodconditions_lm3, check = c("qq"))
 # using summary to do data analysis 
 summary(exp1_combined_foodconditions_lm3)
 
-
-
-
-
-
-
-
-
-
-# summarising hard vs soft data 
-softhard_summary_exp1 <- exp1both %>%  
-  group_by(food_type) %>% 
-  summarise(mean = mean(fly_numbers),
-            sd = sd(fly_numbers),
-            n = n(),
-            se = sd/sqrt(n))
-
-# a soft vs hard plot 
-softhard_plot_exp1 <- softhard_summary_exp1 %>% 
-  ggplot(aes(x = food_type, y = mean))+
-  geom_bar(stat = "identity",
-           fill = "skyblue",
-           colour = "#FF6863",
-           alpha = 0.6)+
-  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
-                colour = "#FF6863",
-                width = 0.2)+
-  geom_jitter(data = exp1both,
-              aes(x = food_type,
-                  y = fly_numbers),
-              fill = "skyblue",
-              colour = "#3a3c3d",
-              width = 0.2,
-              shape = 21)+
-  ylim(0.0, 4.0)+
-  labs(x = "Diet \n(Protein; Carbohydrate)",
-       y = "Mean (+/- S.E.) number of flies on a patch",
-       title = "")+
-  theme_classic() 
-
-# summarising nutrient composition data 
-nutrient_summary_exp1 <- exp1both %>%  
-  group_by(food_nutrition) %>% 
-  summarise(mean = mean(fly_numbers),
-            sd = sd(fly_numbers),
-            n = n(),
-            se = sd/sqrt(n))
-
-# a nutrient plot 
-nutrient_plot_exp1 <- nutrient_summary_exp1 %>% 
-  ggplot(aes(x = food_nutrition, y = mean))+
-  geom_bar(stat = "identity",
-           fill = "skyblue",
-           colour = "#FF6863",
-           alpha = 0.6)+
-  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
-                colour = "#FF6863",
-                width = 0.2)+
-  geom_jitter(data = exp1both,
-              aes(x = food_nutrition,
-                  y = fly_numbers),
-              fill = "skyblue",
-              colour = "#3a3c3d",
-              width = 0.2,
-              shape = 21)+
-  ylim(0.0, 4.0)+
-  labs(x = "Diet \n(Protein; Carbohydrate)",
-       y = "Mean (+/- S.E.) number of flies on a patch",
-       title = "")+
-  theme_classic() 
-
-
-# using patchwork to compare soft/hardness and nutrient composition - data visualisation
-softhard_plot_exp1 + nutrient_plot_exp1
-
-
-
-
-
-# have to do interaction effects separate for some reason? 
 
 #---- Combined experiments egg data ----
 #------- collating egg counting data to look for significance 
