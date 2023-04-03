@@ -119,8 +119,8 @@ exp1feeding_plotd1 + exp1feeding_plotd2
 #------- Combining the data for feeding behaviour 
 
 #------- Mutating a variable for day 
-exp1d1 <- long_feedinge1d1 %>% mutate(day = "a1")
-exp1d2 <- long_feedinge1d2 %>% mutate(day = "a2")
+exp1d1 <- long_feedinge1d1 %>% mutate(day = "1")
+exp1d2 <- long_feedinge1d2 %>% mutate(day = "2")
 #------- Combining the days 
 exp1all <- rbind(exp1d1, exp1d2)
 # summarising the combined days data 
@@ -175,10 +175,8 @@ anova(exp1alllm)
 emmeans::emmeans(exp1alllm, specs = pairwise ~ diet + day) 
 # testing for significance in day and diet 
 drop1(exp1alllm, test = "F")
-
 # model without day in 
 exp1alllm2 <- lm(fly_numbers ~ diet, data = exp1all)
-
 summary(exp1alllm2)
 drop1(exp1alllm2, test = "F")
 
@@ -404,8 +402,8 @@ exp1bfeeding_plotd1 + exp1bfeeding_plotd2
 #- Data analysis of combined days (experiment 1b)
 
 #------- Mutating a variable for day 
-exp1bd1 <- long_feedinge1bd1 %>% mutate(day = "b1") 
-exp1bd2 <- long_feedinge1bd2 %>% mutate(day = "b2")
+exp1bd1 <- long_feedinge1bd1 %>% mutate(day = "1") 
+exp1bd2 <- long_feedinge1bd2 %>% mutate(day = "2")
 
 #------- Combining the days 
 exp1ball <- rbind(exp1bd1, exp1bd2)
@@ -443,13 +441,60 @@ exp1ball_plot <- exp1ball_summary %>%
 
 # Testing a model for feeding behaviour for both days 
 exp1balllm <- lm(fly_numbers ~ diet + day, data = exp1ball)
+# creating a model with just day in for analysis 
+exp1balllmday <- lm(fly_numbers ~ day, data = exp1ball)
+# using performance::check for the new model
+performance::check_model(exp1balllmday)
+performance::check_model(exp1balllmday, check = c("qq"))
+
+# trying to fix the model which checks for day 
+exp1balllmday2 <- lm(formula = (fly_numbers + 1) ~ day, data = exp1ball)
+
+# using performance::check to check the new day model
+performance::check_model(exp1balllmday2)
+performance::check_model(exp1balllmday2, check = c("qq"))
+# normality looks exactly the same even with + 1 
+
+# day model doesn't look too good - what to do? 
+
+# trying a glm
+exp1balllmdayglm <- glm(fly_numbers ~ day, family = poisson, data = exp1ball)
+
+# summarising glm
+summary(exp1balllmdayglm)
+
+#  more than 1 so do quaspoisson 
+# trying a glm 2 
+exp1balllmdayglm2 <- glm(fly_numbers ~ day, family = quasipoisson, data = exp1ball)
+
+# summarising glm 2
+summary(exp1balllmdayglm2)
+
+# usng performance::check on the glm2
+performance::check_model(exp1balllmdayglm2)
+performance::check_model(exp1balllmdayglm2, check = c("qq"))
+
+# trying to fix the glm model which checks for day 
+exp1ballglmday20 <- glm(formula = (fly_numbers + 1) ~ day, family = quasipoisson, data = exp1ball)
+
+# using performance::check on the glm20
+performance::check_model(exp1ballglmday20)
+performance::check_model(exp1ballglmday20, check = c("qq"))
+
+# normality might look worse but glm generally looks better than lm? 
+
+
+# summarising the new glm 2
+summary(exp1ballglmday20)
+
 # Using summary function for analysis 
 summary(exp1balllm)
+summary(exp1balllmday)
 # using em means to test everything
 emmeans::emmeans(exp1balllm, specs = pairwise ~ diet + day) 
 # testing for significance in day 
 drop1(exp1balllm, test = "F")
-
+drop1(exp1balllmday, test = "F")
 
 
 exp1balllm2 <- lm(fly_numbers ~ diet, data = exp1ball)
@@ -503,7 +548,7 @@ egg_counting1_plot + egg_counting1b_plot
 #-- Making a linear model 
 eggcountinge1bls1 <- lm(egg_numbers ~ diet, data = long_egg_counting1b)
 #---- Checking the model 
-performance::check_model(eggcountinge1bls1)
+rmance::check_model(eggcountinge1bls1)
 #---- summarising the data 
 summary(eggcountinge1bls1)
 #----  doing tests 
@@ -516,7 +561,7 @@ broom::tidy(eggcountinge1bls1,
 
 emmeans::emmeans(eggcountinge1bls1, specs = pairwise ~ diet)
 
-# Combining experiments data -----
+  # Combining experiments data -----
 
 # adding a variable for a and b 
 exp1a <- exp1all %>% mutate(experiment = "exp1a") 
@@ -528,6 +573,8 @@ allexpboth <- rbind(exp1all, exp1ball)
 #  testing the overall for experiment 1a against experiment 1b 
 
 exp1both <- rbind(exp1a, exp1b)
+
+view(exp1both)
 
 
 # summarising the combined days data 
@@ -576,15 +623,18 @@ exp1both_plot <- exp1both_summary %>%
 # Testing a model for feeding behaviour for both days 
 exp1bothlm <- lm(fly_numbers ~ diet, data = exp1both)
 
-exp1bothlm2 <- lm(fly_numbers ~ diet + experiment + day + diet*experiment + diet * day, data = exp1both)
+exp1bothlm2 <- lm(fly_numbers ~ diet + experiment + day + experiment + diet, data = exp1both)
 
-exp1bothlm3 <- lm(fly_numbers ~ diet + experiment + diet * experiment, data = exp1both)
+exp1bothlm3 <- lm(fly_numbers ~ diet + experiment + day, data = exp1both)
+summary(exp1bothlm3)
 
 #  cannot do two interaction effects in one model? 
 # won't do an interaction for day as do not have a hypothesis to support? 
 
 
 exp1bothglm <- glm(fly_numbers ~ diet, family = quasipoisson(), data = exp1both)
+
+summary(exp1bothglm)
 
 performance::check_model(exp1bothlm)
 performance::check_model(exp1bothglm)
@@ -614,10 +664,10 @@ drop1(exp1bothlm3, test = "F")
 exp1both$food_type <- ifelse(exp1both$diet %in% c("1:8H", "1:2H"), "Hard", "Soft")
 exp1both$food_nutrition <- ifelse(exp1both$diet %in% c("1:8", "1:2H", "1:2S"), "1:2", "1:8")
 
-exp1totallm<- lm(fly_numbers ~ food_type + food_nutrition + food_type * food_nutrition, data = exp1both)
+exp1totallm<- lm(fly_numbers ~ food_type + food_nutrition + food_type : food_nutrition, data = exp1both)
 summary(exp1totallm)
 
-exp1totalglm <- glm(fly_numbers ~ food_type + food_nutrition + food_type * food_nutrition, family = quasipoisson(), data = exp1all)
+exp1totalglm <- glm(fly_numbers ~ food_type + food_nutrition + food_type : food_nutrition, family = quasipoisson(), data = exp1both)
 summary(exp1totalglm)
 
 performance::check_model(exp1totallm)
