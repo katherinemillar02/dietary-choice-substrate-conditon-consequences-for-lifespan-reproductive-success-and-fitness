@@ -498,32 +498,67 @@ performance::check_model(exp1_combined_glm_3, check = c("qq"))
 # Using summary function for analysis 
 summary(exp1_combined_glm_2)
 
-# using em means to test everything
+# using em-means to test everything
 emmeans::emmeans(exp1_combined_glm_2, specs = pairwise ~ diet)
 
 
 
+# Two factor analysis - overall experiments for experiment 1 two factor analysis 
+
+# adding the variables to add new columns to the dataset 
+exp1_combined$food_type <- ifelse(exp1both$diet %in% c("1:8H", "1:2H"), "Hard", "Soft")
+exp1_combined$food_nutrition <- ifelse(exp1both$diet %in% c("1:8", "1:2H", "1:2S"), "1:2", "1:8")
+
+# making a linear model for food conditions 
+exp1_combined_foodconditions_lm <- lm(fly_numbers ~ food_type + food_nutrition + food_type : food_nutrition, data = exp1_combined)
+
+# checking the model 
+performance::check_model(exp1_combined_foodconditions_lm)
+performance::check_model(exp1_combined_foodconditions_lm, check = c("qq"))
+
+# trying a glm 
+exp1_combined_foodconditions_glm <- glm(fly_numbers ~ food_type + food_nutrition + food_type : food_nutrition, family = poisson(), data = exp1_combined)
+
+# using the summary function to check for overdispersion
+summary(exp1_combined_foodconditions_glm)
+
+# overdispersed so use quasipoisson
+exp1_combined_foodconditions_glm2 <- glm(fly_numbers ~ food_type + food_nutrition + food_type : food_nutrition, family = quasipoisson(), data = exp1_combined)
+
+# checking the new generalised linear model 
+performance::check_model(exp1_combined_foodconditions_glm2)
+performance::check_model(exp1_combined_foodconditions_glm2, check = c("qq"))
+
+# linear model is probably better so far 
+
+# adding 1 to fly numbers to change the lm 
+
+exp1_combined_foodconditions_lm2 <- lm(formula = (fly_numbers + 1) ~ food_type + food_nutrition + food_type : food_nutrition, data = exp1_combined)
+
+# putting the model in log 
+exp1_combined_foodconditions_lm3 <- lm(formula = log(fly_numbers + 1) ~ food_type + food_nutrition + food_type : food_nutrition, data = exp1_combined)
+
+# checking the new  linear model 
+performance::check_model(exp1_combined_foodconditions_lm2)
+performance::check_model(exp1_combined_foodconditions_lm2, check = c("qq"))
+# worse than the original linear model 
+
+# checking the new  linear model 3
+performance::check_model(exp1_combined_foodconditions_lm3)
+performance::check_model(exp1_combined_foodconditions_lm3, check = c("qq"))
+
+# normality looks a lot better with the linear model in log + 1
+# final choice = exp1_combined_foodconditions_lm3
+
+# using summary to do data analysis 
+summary(exp1_combined_foodconditions_lm3)
 
 
 
-exp1both$food_type <- ifelse(exp1both$diet %in% c("1:8H", "1:2H"), "Hard", "Soft")
-exp1both$food_nutrition <- ifelse(exp1both$diet %in% c("1:8", "1:2H", "1:2S"), "1:2", "1:8")
-
-exp1totallm<- lm(fly_numbers ~ food_type + food_nutrition + food_type : food_nutrition, data = exp1both)
-summary(exp1totallm)
-
-exp1totalglm <- glm(fly_numbers ~ food_type + food_nutrition + food_type : food_nutrition, family = quasipoisson(), data = exp1both)
-summary(exp1totalglm)
-
-performance::check_model(exp1totallm)
-performance::check_model(exp1totalglm)
 
 
-performance::check_model(exp1totallm, check = c("qq"))
-performance::check_model(exp1totalglm, check = c("qq"))
 
 
-anova(exp1totalglm)
 
 
 
