@@ -624,17 +624,44 @@ summary(exp1_combined_foodconditions_lm3)
 
 #---- Combined experiments egg data ----
 #------- collating egg counting data to look for significance 
-
 #--- adding an experiment variable to egg counting data 
-exp1aegg<- long_egg_counting1 %>% mutate(experiment = "exp1a")
+exp1aegg <- long_egg_counting1 %>% mutate(experiment = "exp1a")  
 exp1begg <- long_egg_counting1b %>% mutate(experiment = "exp1b")
-
 #---  combining the data 
-eggboth <- rbind(exp1aegg, exp1begg)
+exp1_egg_combined <- rbind(exp1aegg, exp1begg)
 
 #---- Combined experiments egg data analysis ----
 
+# making a model to be looking for just the significance in experiment 
+exp1_egg_combined_experiment <- lm(egg_numbers ~ experiment, data = exp1_egg_combined)
+
+# checking the model 
+performance::check_model(exp1_egg_combined_experiment)
+performance::check_model(exp1_egg_combined_experiment, check = c("qq"))
+# normality could be better 
+# linearity and homogenity don't look the best
+
+# trying a generalised linear model
+exp1_egg_combined_experiment_glm <- glm(egg_numbers ~ experiment, family = poisson, data = exp1_egg_combined)
+
+summary(exp1_egg_combined_experiment_glm)
+# very very overdispersed
+
+exp1_egg_combined_experiment_glm_2 <- glm(egg_numbers ~ experiment, family = quasipoisson, data = exp1_egg_combined)
+
+#  checking the model 
+performance::check_model(exp1_egg_combined_experiment_glm_2)
+performance::check_model(exp1_egg_combined_experiment_glm_2, check = c("qq"))
+#  looks a lot better 
+#  apart from normality at the beginning 
+# best so far is exp1_egg_combined_experiment_glm_2
+
+
+
 #---  linear model for collated egg counting data 
+
+
+
 eggcountingboth <- lm(egg_numbers ~ diet + experiment, data = eggboth)
 
 eggcountingbothglm <- glm(egg_numbers ~ diet + experiment, data = eggboth)
@@ -698,8 +725,8 @@ egg_counting_plot_all <- eggboth_summary %>%
 
 
 
-eggboth$food_type <- ifelse(eggboth$diet %in% c("1:8H", "1:2H"), "Hard", "Soft")
-eggboth$food_nutrition <- ifelse(eggboth$diet %in% c("1:8", "1:2H", "1:2S"), "1:2", "1:8")
+exp1_egg_combined$food_type <- ifelse(eggboth$diet %in% c("1:8H", "1:2H"), "Hard", "Soft")
+exp1_egg_combined$food_nutrition <- ifelse(eggboth$diet %in% c("1:8", "1:2H", "1:2S"), "1:2", "1:8")
 
 
 view(eggboth)
