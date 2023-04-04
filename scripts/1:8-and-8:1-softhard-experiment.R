@@ -326,17 +326,38 @@ egg_counting3_plot <- egg_counting3_summary %>%
        y = "Mean (+/- S.E.) number of eggs laid on each patch")+
   theme_classic()
 
-#-- linear model of egg countiung 
-eggcountinge3ls1 <- lm(egg_numbers ~ diet, data = long_egg_counting3)
+#-- linear model of egg counting 
+exp3_egg_lm <- lm(egg_numbers ~ diet, data = long_egg_counting3)
+
+performance::check_model(exp3_egg_lm)
+performance::check_model(exp3_egg_lm, check = c("qq"))
+performance::check_model(exp3_egg_lm, check = c("linearity"))
+# not a good model 
+
+# trying a glm 
+exp3_egg_glm <- glm(egg_numbers ~ diet, family = poisson, data = long_egg_counting3)
+
+summary(exp3_egg_glm)
+
+exp3_egg_glm2 <- glm(egg_numbers ~ diet, family = quasipoisson, data = long_egg_counting3)
+
+
+performance::check_model(exp3_egg_glm2)
+performance::check_model(exp3_egg_glm2, check = c("qq"))
+# qq looks better
+#  homogenity looks ok 
+# stick with this 
+
+#  using the chosen model for data analysis 
+# summary function to look at anova 
+summary(exp3_egg_glm2)
 
 #-- analysing all egg data using tukey emmeans 
-emmeans::emmeans(eggcountinge3ls1, specs = pairwise ~ diet)
-
-#-- summary function to analyse 
-summary(eggcountinge3ls1)
+emmeans::emmeans(exp3_egg_glm2, specs = pairwise ~ diet)
 
 
-#--------- two-factor egg data analysis ----
+
+#--------- TWO-FACTOR DATA ANALYSIS -- EGG COUNTING - EXPERIMENT 3 
 # changing the data to columns 
 long_egg_counting3$food_type <- ifelse(long_egg_counting3 $diet %in% c("8:1H", "1:8H"), "Hard", "Soft")
 long_egg_counting3$food_nutrition <- ifelse(long_egg_counting3 $diet %in% c("8:1", "1:8H", "1:8S"), "1:8", "8:1")
@@ -344,14 +365,13 @@ long_egg_counting3$food_nutrition <- ifelse(long_egg_counting3 $diet %in% c("8:1
 # code to view the new data
 view(long_egg_counting3)
 
-
+# Visualising the data soft and hard 
 softhardegg_summary_exp3 <- long_egg_counting3 %>%  
   group_by(food_type) %>% 
   summarise(mean = mean(egg_numbers),
             sd = sd(egg_numbers),
             n = n(),
             se = sd/sqrt(n))
-
 #- Making a plot of egg counting// soft and hard 
 softhardegg_plot_exp3 <- softhardegg_summary_exp3 %>% 
   ggplot(aes(x = food_type, y = mean))+
