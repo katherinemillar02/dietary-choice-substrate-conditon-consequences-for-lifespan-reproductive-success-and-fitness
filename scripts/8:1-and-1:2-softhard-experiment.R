@@ -15,8 +15,7 @@ library(knitr)
 library(rphylopic)
 
 
-# -----------Feeding behaviour day 1 -------
-
+# -----------Feeding behaviour JUST day 1 -------
 #-------- Reading the data in
 feedinge2d1 <- read_excel("data/RPFemaleFeedingE2D1.xlsx")
 #---- Making the data long
@@ -29,8 +28,6 @@ exp2feeding_summary_d1 <- long_feedinge2d1 %>%
             sd = sd(fly_numbers),
             n = n(),
             se = sd/sqrt(n))
-
-
 #------- Visualising the data for feeding day 1 ----------------#
 exp2feeding_plot_d1<- exp2feeding_summary_d1 %>% 
   ggplot(aes(x = diet, y = mean))+
@@ -53,9 +50,7 @@ exp2feeding_plot_d1<- exp2feeding_summary_d1 %>%
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "")+
   theme_minimal() 
-
 #-------------- (Exp 2) Day 1 Data analysis  -----------
-
 #------- creating a linear model for day 1 
 exp2lm <- lm(fly_numbers ~ diet, data = long_feedinge2d1) 
 #------- using summary function for the model 
@@ -63,7 +58,7 @@ summary(exp2lm)
 #-- Using emmeans to look for significant differences 
 emmeans::emmeans(exp2lm, specs = pairwise ~ diet) 
 
-#------------ Feeding behaviour day 2  ------
+#------------ Feeding behaviour JUST day 2  ------
 #-------- Reading the data in
 feedinge2d2 <- read_excel("data/RPFemaleFeedingE2D2.xlsx")
 #---- Making the data long
@@ -101,7 +96,6 @@ exp2feeding_plotd2 <- exp2d2feeding_summary %>%
   theme_minimal() 
 
 #-------------- (Exp 2) Day 2 Data analysis  -----------
-
 #------- creating a linear model for day 1 
 exp2lmd2 <- lm(fly_numbers ~ diet, data = long_feedinge2d2) 
 #------- using summary function for the model 
@@ -109,31 +103,26 @@ summary(exp2lmd2)
 #-- Using emmeans to look for significant differences 
 emmeans::emmeans(exp2lmd2, specs = pairwise ~ diet) 
 
-
 #--  using patchwork to combine the plots for day 1 and day 2 
 exp2feeding_plot_d1 + exp2feeding_plotd2
 
-
-#------------ Combined days data analysis -----
-
+#---- used data analysis -----
+#------------ Combined days -----
+#---- visualising the data
 #-- mutating a day variable
-
 exp2d1 <- long_feedinge2d1 %>% mutate(day = "1")
 exp2d2 <- long_feedinge2d2 %>% mutate(day = "2")
-
 #- binding the data 
-exp2both <- rbind(exp2d1, exp2d2)
-
+exp2_combined <- rbind(exp2d1, exp2d2)
 #- exp 2 summary both days
-exp2both_summary <- exp2both %>%  
+exp2_combined_summary <- exp2_combined %>%  
   group_by(diet) %>% 
   summarise(mean = mean(fly_numbers),
             sd = sd(fly_numbers),
             n = n(),
             se = sd/sqrt(n))
-
 #- visualising the data for exp2 both days 
-exp2both_plot <- exp2both_summary %>% 
+exp2_combined_plot <- exp2_combined_summary %>% 
   ggplot(aes(x = diet, y = mean))+
   geom_bar(stat = "identity",
            fill = "skyblue",
@@ -142,7 +131,7 @@ exp2both_plot <- exp2both_summary %>%
   geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
                 colour = "#FF6863",
                 width = 0.2)+
-  geom_jitter(data = exp2both,
+  geom_jitter(data = exp2_combined,
               aes(x = diet,
                   y = fly_numbers),
               fill = "skyblue",
@@ -155,71 +144,99 @@ exp2both_plot <- exp2both_summary %>%
        title = "")+
   theme_classic() 
 
-#- using a linear model for feeding behaviour 
-exp2bothlm <- lm(fly_numbers ~ diet, data = exp2both)
 
 
 
+#------------ Combined days data analysis  -----
 
-#- making the same linear model but with an interaction effect of day
-exp2bothlm2 <- lm(fly_numbers ~ diet + day + diet * day, data = exp2both)
-#- maybe will not do an interaction effect for day, as not significant alone 
-# and not part of the hypothesis that days are different
-# probs do not do much focusing on this one
+# testing for the significance in day
+exp2_combined_days_lm <- lm(fly_numbers ~ day, data = exp2_combined)
 
-#-  testing the significance in day for both lm and glm 
-drop1(exp2bothlm, test = "F")
-drop1(exp2bothglm, test = "F")
+# checking the model
+performance::check_model(exp2_combined_days_lm)
+performance::check_model(exp2_combined_days_lm, check = c("qq"))
+performance::check_model(exp2_combined_days_lm, check = c("linearity"))
+# data doesn't look too great
 
-anova(exp2bothlm)
+# trying a glm 
+exp2_combined_days_glm <- glm(fly_numbers ~ day, family = poisson, data = exp2_combined)
+#
+summary(exp2_combined_days_glm)
+# overdispersed 
 
-exp2bothlm01 <- lm(fly_numbers ~ day, data = exp2both)
+# trying a glm  with quasipoisson
+exp2_combined_days_glm_2 <- glm(fly_numbers ~ day, family = quasipoisson, data = exp2_combined)
 
-anova(exp2bothlm3)
-summary.aov(exp2bothlm3)
-summary(exp2bothlm3)
-drop1(exp2bothlm, test = "F")
 
-drop1(exp2bothlm2, test = "F")
-#-- day is not significant! yay well it is but only just 
+# checking the model
+performance::check_model(exp2_combined_days_glm_2)
+performance::check_model(exp2_combined_days_glm_2, check = c("qq"))
+# still doesn't look great but homogenity looks better 
 
-#-- making a model without day 
-exp2bothlm3 <- lm(fly_numbers ~ diet, data = exp2both)
+# trying a glm + 1 
+exp2_combined_days_glm_3 <- glm(formula = (fly_numbers + 1) ~ day, family = quasipoisson, data = exp2_combined)
 
-#- looking for the significance of diet 
-drop1(exp2bothlm3, test = "F")
+# checking the model
+performance::check_model(exp2_combined_days_glm_3)
+performance::check_model(exp2_combined_days_glm_3, check = c("qq"))
+# normality still looks bad at the beginning 
+# ways to fix this? 
 
-#- an interaction effect of diet in a linear model
-exp2bothlm4 <- lm(fly_numbers ~ diet * diet,  data = exp2both)
-# having an interaction effect of something against something doesnt change anything 
+# from this the best model is exp2_combined_days_glm_3
 
-#- using summary function for the linear models 
-summary(exp2bothlm)
-summary(exp2bothlm2)
-summary(exp2bothlm3)
-summary(exp2bothlm4)
+summary(exp2_combined_days_glm_3)
+
+# analysing fly numbers and diet data 
+# trying a linear model
+exp2_combined_lm <- lm(fly_numbers ~ diet, data = exp2_combined)
+
+# checking the model
+performance::check_model(exp2_combined_lm)
+performance::check_model(exp2_combined_lm, check = c("qq"))
+performance::check_model(exp2_combined_lm, check = c("linearity"))
+# qq looks sort of okay but linearity very uneven
+
+exp2_combined_lm2 <- lm(formula = (fly_numbers + 1) ~ diet, data = exp2_combined)
+
+
+# checking the model 2 
+performance::check_model(exp2_combined_lm2)
+performance::check_model(exp2_combined_lm2, check = c("qq"))
+performance::check_model(exp2_combined_lm2, check = c("linearity"))
+# the + 1 doesn't make a difference? 
+
+# trying a glm 
+exp2_combined_glm <- glm(fly_numbers ~ diet, family = poisson, data = exp2_combined)
+
+summary(exp2_combined_glm)
+
+
+exp2_combined_glm2 <- glm(fly_numbers ~ diet, family = quasipoisson, data = exp2_combined)
+
+# checking the glm model 2 
+performance::check_model(exp2_combined_glm2)
+performance::check_model(exp2_combined_glm2, check = c("qq"))
+
+# from this exp2_combined_lm2 is the best model but linearity dodgy on both
+
+# data analysis with the chosen model 
+summary(exp2_combined_lm2)
 
 #- using emmeans to test the linear model in experiment 2 (without day in the model)
-emmeans::emmeans(exp2bothlm, specs = pairwise ~ diet)
-emmeans::emmeans(exp2bothlm3, specs = pairwise ~ diet)
-
-#  anova of the linear model of both days
-anova(exp2bothlm)
-# one-way anova? 
-anova(exp2bothlm2)
+emmeans::emmeans(exp2_combined_lm2, specs = pairwise ~ diet)
 
 # tidyverse version of a summary of data 
-broom::tidy(exp2bothlm, conf.int = T)
-broom::tidy(exp2bothlm2, conf.int = T)
+broom::tidy(exp2_combined_lm2, conf.int = T)
+
 
 # Using GGally to look at the dispersion of means 
-GGally::ggcoef_model(exp2bothlm2,
+GGally::ggcoef_model(exp2_combined_lm2,
                      show_p_values=FALSE,
                      signif_stars = FALSE,
                      conf.level=0.95)
 
 # looking for interaction effects between diets 
-exp2both %>% ggplot(aes(x=fly_numbers, y=diet, colour = diet, fill = diet, group = diet))+
+exp2_combined %>% ggplot(aes(x=fly_numbers, y=diet, colour = diet, fill = diet, group = diet))+
   geom_jitter(width=0.1) +
   stat_summary(
     geom = "point",
@@ -232,17 +249,7 @@ exp2both %>% ggplot(aes(x=fly_numbers, y=diet, colour = diet, fill = diet, group
     size = 1, linetype = "dashed"
   )
 
-#-  making a glm with day in it 
-exp2bothglm <- glm(fly_numbers ~ diet + day, family = poisson, data = exp2both)
 
-#- using summary function for the general linear model 
-summary(exp2bothglm)
-
-#-- using quasipoisson to count for overdispersion in a glm 
-exp2bothglm2 <- glm(fly_numbers ~ diet, family = quasipoisson, data = exp2both)
-
-#- using summary function for the general linear model with quasipoisson
-summary(exp2bothglm2)
 
 
 
