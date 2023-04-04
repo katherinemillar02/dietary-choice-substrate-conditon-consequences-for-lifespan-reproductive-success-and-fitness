@@ -214,35 +214,6 @@ exp3_combined$food_nutrition <- ifelse(exp3_combined$diet %in% c("8:1", "1:8H", 
 view(exp3_combined)
 
 
-#--- DATA ANALYSIS - TWO FACTOR FEEDING ANALYSIS --- FOOD CONDITIONS
-
-# creating a linear model based on food nutrition and food type 
-exp3bothlmnew <- lm(fly_numbers ~ food_type + food_nutrition, data = exp3both)
-
-# creating a linear model based on food nutrition and food type with an interaction effect 
-exp3bothlmnew2 <- lm(fly_numbers ~ food_type + food_nutrition + food_nutrition * food_type, data = exp3both)
-
-exp3bothglmnew2 <- glm(fly_numbers ~ food_type + food_nutrition + food_nutrition * food_type, family = poisson(), data = exp3both)
-
-exp3bothglmnew3 <- glm(fly_numbers ~ food_type + food_nutrition + food_nutrition * food_type, family = quasipoisson(), data = exp3both)
-
-performance::check_model(exp3bothlmnew2) 
-performance::check_model(exp3bothglmnew3)
-
-performance::check_model(exp3bothlmnew2, check = c("qq")) 
-performance::check_model(exp3bothglmnew3, check = c("qq"))
-
-
-summary(exp3bothlmnew2)
-
-summary(exp3bothglmnew3)
-
-# summarising the linear models 
-summary(exp3bothlmnew)
-summary(exp3bothlmnew2)
-
-anova(exp3bothlmnew2)
-aov(exp3bothlmnew2)
 
 # summarising hard vs soft data 
 softhard_summary_exp3 <- exp3both %>%  
@@ -251,7 +222,6 @@ softhard_summary_exp3 <- exp3both %>%
             sd = sd(fly_numbers),
             n = n(),
             se = sd/sqrt(n))
-
 # a soft vs hard plot 
 softhard_plot_exp3 <- softhard_summary_exp3 %>% 
   ggplot(aes(x = food_type, y = mean))+
@@ -274,7 +244,6 @@ softhard_plot_exp3 <- softhard_summary_exp3 %>%
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "")+
   theme_classic() 
-
 # summarising nutrient composition data 
 nutrient_summary_exp3 <- exp3both %>%  
   group_by(food_nutrition) %>% 
@@ -282,7 +251,6 @@ nutrient_summary_exp3 <- exp3both %>%
             sd = sd(fly_numbers),
             n = n(),
             se = sd/sqrt(n))
-
 # a nutrient plot 
 nutrient_plot_exp3 <- nutrient_summary_exp3 %>% 
   ggplot(aes(x = food_nutrition, y = mean))+
@@ -305,11 +273,21 @@ nutrient_plot_exp3 <- nutrient_summary_exp3 %>%
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "")+
   theme_classic() 
-
-
 # using patchwork to compare soft/hardness and nutrient composition - data visualisation
 softhard_plot_exp3 + nutrient_plot_exp3
 
+#--- DATA ANALYSIS - TWO FACTOR FEEDING ANALYSIS --- FOOD CONDITIONS
+
+# creating a linear model based on food nutrition and food type 
+exp3_combined_foodcondition_lm <- lm(fly_numbers ~ food_type + food_nutrition + food_type : food_nutrition, data = exp3_combined)
+
+performance::check_model(exp3_combined_foodcondition_lm)
+performance::check_model(exp3_combined_foodcondition_lm, check = c("qq"))
+performance::check_model(exp3_combined_foodcondition_lm, check = c("linearity"))
+# looks ok? 
+
+#  using chosen model for data analysis 
+summary(exp3_combined_foodcondition_lm)
 
 
 # -------- (Exp 3) Egg counting  --------
