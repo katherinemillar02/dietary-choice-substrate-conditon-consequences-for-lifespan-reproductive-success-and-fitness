@@ -394,7 +394,6 @@ softhardegg_plot_exp3 <- softhardegg_summary_exp3 %>%
        y = "Mean (+/- S.E.) number of eggs on a patch",
        title = "")+
   theme_minimal() 
-
 # summarising egg nutrient composition 
 nutrientegg_summary_exp3 <- long_egg_counting3%>%  
   group_by(food_nutrition) %>% 
@@ -402,7 +401,6 @@ nutrientegg_summary_exp3 <- long_egg_counting3%>%
             sd = sd(egg_numbers),
             n = n(),
             se = sd/sqrt(n))
-
 # a nutrient plot 
 nutrientegg_plot_exp3 <- nutrientegg_summary_exp3 %>% 
   ggplot(aes(x = food_nutrition, y = mean))+
@@ -425,25 +423,41 @@ nutrientegg_plot_exp3 <- nutrientegg_summary_exp3 %>%
        y = "Mean (+/- S.E.) number of eggs on a patch",
        title = "")+
   theme_minimal() 
-
-
 # combining the experiment hardness plot with the nutrient plot with patchwork 
 softhardegg_plot_exp3 + nutrientegg_plot_exp3
 
-eggexp3lm <- lm(egg_numbers ~ food_type + food_nutrition + food_type * food_nutrition, data = long_egg_counting3)
-summary(eggexp3lm)
 
-eggexp3glm <- glm(egg_numbers ~ food_type + food_nutrition + food_type * food_nutrition, family = poisson(), data = long_egg_counting3)
-summary(eggexp3glm)
+# TWO FACTOR ANALYSIS - OVIPOSITION PREFERENCE 
+# TWO FACTOR ANALYSIS - OVIPOSITION PREFERENCE - DATA ANALYSIS 
 
-eggexp3glm2 <- glm(egg_numbers ~ food_type + food_nutrition + food_type * food_nutrition, family = quasipoisson(), data = long_egg_counting3)
-summary(eggexp3glm2)
+# trying a linear model
+exp3_egg_foodcondition_lm <- lm(egg_numbers ~ food_type + food_nutrition + food_type * food_nutrition, data = long_egg_counting3)
+
+# checking the model
+performance::check_model(exp3_egg_foodcondition_lm)
+performance::check_model(exp3_egg_foodcondition_lm, check = c("qq"))
+performance::check_model(exp3_egg_foodcondition_lm, check = c("linearity"))
+# neither the qq or the linearity model looks great 
+
+# trying a glm
+exp3_egg_foodcondition_glm <- glm(egg_numbers ~ food_type + food_nutrition + food_type * food_nutrition, family = poisson, data = long_egg_counting3)
+summary(exp3_egg_foodcondition_glm)
+
+exp3_egg_foodcondition_glm2 <- glm(egg_numbers ~ food_type + food_nutrition + food_type * food_nutrition, family = quasipoisson, data = long_egg_counting3)
+
+# checking the model
+performance::check_model(exp3_egg_foodcondition_glm2)
+performance::check_model(exp3_egg_foodcondition_glm2, check = c("qq"))
+# qq looks a lot better 
+# homogenity looks similar but maybe better 
+# go with this model? 
+
+# data analysis for the chosen model 
+summary(exp3_egg_foodcondition_glm2)
 
 
 
-performance::check_model(eggexp3lm)
-performance::check_model(eggexp3glm2)
 
-performance::check_model(eggexp3lm, check = c("qq"))
 
-performance::check_model(eggexp3glm2, check = c("qq"))
+
+
