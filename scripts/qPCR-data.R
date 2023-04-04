@@ -10,6 +10,16 @@ newlong_foxoqPCR <- newfoxoqpcr %>%
 
 newfoxoqpcr <- na.omit(foxoqPCR)
 
+newlong_foxoqPCR <- newfoxoqpcr %>% 
+  pivot_longer(cols = ("A1":"D3"), names_to = "sample", values_to = "cq")
+
+
+
+
+
+
+
+
 foxoqPCR_summary <- long_foxoqPCR %>%  
   group_by(sample) %>% 
   summarise(mean = mean(cq),
@@ -41,6 +51,42 @@ foxoqPCR_plotd1 <- foxoqPCR_summary %>%
 
 
 is.na(foxoqPCR2)
+
+newfoxoqpcr2 <- na.omit(foxoqPCR2)
+
+newlong_foxoqPCR2 <- newfoxoqpcr2 %>% 
+  pivot_longer(cols = ("A":"D"), names_to = "sample", values_to = "cq")
+
+
+newfoxoqPCR2_summary <- newlong_foxoqPCR2 %>%  
+  group_by(sample) %>% 
+  summarise(mean = mean(cq),
+            sd = sd(cq),
+            n = n(),
+            se = sd/sqrt(n))
+
+
+newfoxoqPCR_plot2 <- newfoxoqPCR2_summary %>% 
+  ggplot(aes(x = sample, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "#FF6863",
+                width = 0.2)+
+  geom_jitter(data = long_foxoqPCR2,
+              aes(x = sample,
+                  y = cq),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)+
+  ylim(0.0, 50)+
+  labs(x = "Diet larvae grew on \n(Protein: Carbohydrate)",
+       y = "Mean Cq", 
+       title = "Foxo")+
+  theme_classic()
 
 
 foxoqPCR2 <- read_excel("data/qPCR_foxo_data_2.xlsx", na = "NA")
@@ -75,6 +121,8 @@ foxoqPCR_plot2 <- foxoqPCR2_summary %>%
        y = "Mean Cq", 
        title = "Foxo")+
   theme_classic()
+
+
 
 #%>% %>% %>% %>% %>% %>% %>% %>% %>% %>% 
 
