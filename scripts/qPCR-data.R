@@ -65,6 +65,6 @@ foxoqPCR_plot2 <- foxoqPCR2_summary %>%
   ylim(0.0, 50)+
   labs(x = "Diet \n(Protein; Carbohydrate) Larvae grew on",
        y = "Mean Cq",
-       title = "")+
+       title = "Foxo")+
   theme_classic()
  
