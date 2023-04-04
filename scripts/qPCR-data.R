@@ -2,6 +2,14 @@ foxoqPCR <- read_excel("data/qPCR_foxo_data.xlsx")
 long_foxoqPCR <- foxoqPCR %>% 
   pivot_longer(cols = ("A1":"D3"), names_to = "sample", values_to = "cq")
 
+is.na(foxoqPCR)
+
+newlong_foxoqPCR <- newfoxoqpcr %>% 
+  pivot_longer(cols = ("A1":"D3"), names_to = "sample", values_to = "cq")
+
+
+newfoxoqpcr <- na.omit(foxoqPCR)
+
 foxoqPCR_summary <- long_foxoqPCR %>%  
   group_by(sample) %>% 
   summarise(mean = mean(cq),
@@ -32,10 +40,10 @@ foxoqPCR_plotd1 <- foxoqPCR_summary %>%
   theme_minimal() 
 
 
+is.na(foxoqPCR2)
 
 
-
-foxoqPCR2 <- read_excel("data/qPCR_foxo_data_2.xlsx")
+foxoqPCR2 <- read_excel("data/qPCR_foxo_data_2.xlsx", na = "NA")
 long_foxoqPCR2 <- foxoqPCR2 %>% 
   pivot_longer(cols = ("A":"D"), names_to = "sample", values_to = "cq")
 
@@ -63,8 +71,16 @@ foxoqPCR_plot2 <- foxoqPCR2_summary %>%
               width = 0.2,
               shape = 21)+
   ylim(0.0, 50)+
-  labs(x = "Diet \n(Protein; Carbohydrate) Larvae grew on",
-       y = "Mean Cq",
+  labs(x = "Diet larvae grew on \n(Protein: Carbohydrate)",
+       y = "Mean Cq", 
        title = "Foxo")+
   theme_classic()
+
+#%>% %>% %>% %>% %>% %>% %>% %>% %>% %>% 
+
+
+
+install.packages("pcr")
+library(pcr)
+
  
