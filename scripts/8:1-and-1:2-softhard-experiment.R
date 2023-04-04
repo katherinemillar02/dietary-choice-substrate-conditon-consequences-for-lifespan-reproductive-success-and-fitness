@@ -250,84 +250,50 @@ exp2_combined %>% ggplot(aes(x=fly_numbers, y=diet, colour = diet, fill = diet, 
   )
 
 
-
-
-
-# ------------ Feeding two factor data-analysis ------
+# ------------  TWO FACTOR ANALYSIS -- FEEDING
 
 # splitting up hard and soft diets and differernt nutrient diets 
-exp2both$food_type <- ifelse(exp2both$diet %in% c("8:1H", "1:2H"), "Hard", "Soft")
-
-exp2both$food_nutrition <- ifelse(exp2both$diet %in% c("8:1", "1:2H", "1:2S"), "1:2", "8:1")
-# added 1:2S and I think this is correct now ??!!
-# but does interaction effect just analyse everything? 
-
+exp2_combined$food_type <- ifelse(exp2_combined$diet %in% c("8:1H", "1:2H"), "Hard", "Soft")
+exp2_combined$food_nutrition <- ifelse(exp2_combined$diet %in% c("8:1", "1:2H", "1:2S"), "1:2", "8:1")
 # viewing the new dataset
-view(exp2both)
+view(exp2_combined)
+
+# ------------  TWO FACTOR ANALYSIS - DATA ANALYSIS --- FEEDING
 
 # creating a linear model based on food nutrition and food type 
-exp2bothlmnew <- lm(fly_numbers ~ food_type + food_nutrition, data = exp2both)
+exp2_combined_foodcondition_lm <- lm(fly_numbers ~ food_type + food_nutrition + food_type : food_nutrition, data = exp2_combined)
 
-# creating a linear model based on food nutrition and food type with an interaction effect 
-exp2bothlmnew2 <- lm(fly_numbers ~ food_type + food_nutrition + food_nutrition * food_type, data = exp2both)
+# checking the model 
+performance::check_model(exp2_combined_foodcondition_lm)
+performance::check_model(exp2_combined_foodcondition_lm, check = c("qq"))
+performance::check_model(exp2_combined_foodcondition_lm, check = c("linearity"))
+# qq looks okay but linearity not good
+# trying a glm
+exp2_combined_foodcondition_glm <- glm(fly_numbers ~ food_type + food_nutrition + food_type : food_nutrition, family = poisson, data = exp2_combined)
 
-exp2bothglmnew2 <- glm(fly_numbers ~ food_type + food_nutrition + food_nutrition * food_type, family = poisson(), data = exp2both)
+summary(exp2_combined_foodcondition_glm)
 
-summary(exp2bothglmnew2)
-summary(exp2bothlmnew2)
-
-confint(exp2bothlmnew2)
-
-library(gtsummary)
-tbl_regression(exp2bothglmnew2)
-
-drop1(exp2bothlmnew2, test = "F")
-
-exp2bothlmnewtest <- lm(fly_numbers ~ food_nutrition * food_type, data = exp2both)
-
-summary(exp2bothlmnewtest)
-
-performance::check_model(exp2bothlmnew2)
-performance::check_model(exp2bothglmnew2)
+exp2_combined_foodcondition_glm2 <- glm(fly_numbers ~ food_type + food_nutrition + food_type : food_nutrition, family = quasipoisson, data = exp2_combined)
 
 
-performance::check_model(exp2bothlmnew2, check = c("qq"))
-performance::check_model(exp2bothglmnew2, check = c("qq"))
-
-# summarising the linear models 
-summary(exp2bothlmnew)
-summary(exp2bothlmnew2)
-
-exp2bothlmnew2_summary <- summary(exp2bothlmnew2)
+# checking the model 
+performance::check_model(exp2_combined_foodcondition_glm2)
+performance::check_model(exp2_combined_foodcondition_glm2, check = c("qq"))
+# qq and homogenity look worse than the lm 
+# stick with exp2_combined_foodcondition_lm
 
 
-cat("F-statistic:", exp2bothlmnew2_summary$fstatistic[1], "\n")
-cat("p-value:", exp2bothlmnew2_summary$fstatistic[2], "\n")
+# doing data analysis with the chosen model
 
-# splitting the data into hard and soft groups and into nutrient groups 
-#hard_data <- subset(exp2both, food_type == "hard")
-#soft_data <- subset(exp2both, food_type == "soft")
-#eight_data <- subset(exp2both, food_nutrition == "8:1")
-#onetwo_data <- subset(exp2both, food_nutrition == "1:2")
+# summary function which will show anova 
+summary(exp2_combined_foodcondition_lm)
 
-# binding the split data together 
-#typestogether <- rbind(hard_data, soft_data, eight_data, onetwo_data)
+# confidence intervals
+confint(exp2_combined_foodcondition_lm)
 
+# table of data 
+tbl_regression(exp2_combined_foodcondition_lm)
 
-# trying a two-way anova 
-#aov(fly_numbers ~ food_type + food_nutrition, data = typestogether)
-
-# creating a linear model of fly numbers and food type and food nutrition 
-#typestogetherlm <- lm(fly_numbers ~ food_type + food_nutrition, data = typestogether)
-
-#typestogetherlm2 <- lm(fly_numbers ~ food_type + food_nutrition + food_type * food_nutrition, data = typestogether)
-
-# summarising the linear model data 
-#summary(typestogetherlm)
-#summary(typestogetherlm2)
-
-# trying a tukey test with emmeans - NOT WORKING 
-#emmeans::emmeans(typestogetherlm, specs = pairwise ~ food_nutrition + food_type)
 
 # summarising hard vs soft data 
 softhard_summary_exp2 <- exp2both %>%  
@@ -359,7 +325,6 @@ softhard_plot_exp2 <- softhard_summary_exp2 %>%
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "")+
   theme_classic() 
-
 # summarising nutrient composition data 
 nutrient_summary_exp2 <- exp2both %>%  
   group_by(food_nutrition) %>% 
@@ -367,9 +332,6 @@ nutrient_summary_exp2 <- exp2both %>%
             sd = sd(fly_numbers),
             n = n(),
             se = sd/sqrt(n))
-
-
-
 # a nutrient plot 
 nutrient_plot_exp2 <- nutrient_summary_exp2 %>% 
   ggplot(aes(x = food_nutrition, y = mean))+
@@ -392,13 +354,37 @@ nutrient_plot_exp2 <- nutrient_summary_exp2 %>%
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "")+
   theme_classic() 
-
-
 # using patchwork to compare soft/hardness and nutrient composition - data visualisation
 softhard_plot_exp2 + nutrient_plot_exp2
 
 
-# -------- (Exp 2) Egg counting  --------
+# splitting the data into hard and soft groups and into nutrient groups 
+#hard_data <- subset(exp2both, food_type == "hard")
+#soft_data <- subset(exp2both, food_type == "soft")
+#eight_data <- subset(exp2both, food_nutrition == "8:1")
+#onetwo_data <- subset(exp2both, food_nutrition == "1:2")
+
+# binding the split data together 
+#typestogether <- rbind(hard_data, soft_data, eight_data, onetwo_data)
+
+
+# trying a two-way anova 
+#aov(fly_numbers ~ food_type + food_nutrition, data = typestogether)
+
+# creating a linear model of fly numbers and food type and food nutrition 
+#typestogetherlm <- lm(fly_numbers ~ food_type + food_nutrition, data = typestogether)
+
+#typestogetherlm2 <- lm(fly_numbers ~ food_type + food_nutrition + food_type * food_nutrition, data = typestogether)
+
+# summarising the linear model data 
+#summary(typestogetherlm)
+#summary(typestogetherlm2)
+
+# trying a tukey test with emmeans - NOT WORKING 
+#emmeans::emmeans(typestogetherlm, specs = pairwise ~ food_nutrition + food_type)
+
+
+# -------- EXPERIMENT 2 OVIPOSITION PREFERENCE  --------
 
 #____ Reading the data in 
 egg_counting_data_e2 <- (read_excel(path = "data/RPEggCountE2.xlsx", na = "NA"))
@@ -435,75 +421,68 @@ egg_counting2_plot <- egg_counting2_summary %>%
   theme_classic()
 
 #------- (Exp2) Egg counting data analysis ---------
-
 #-- Making a linear model 
-eggcountinge2ls1 <- lm(egg_numbers ~ diet, data = long_egg_counting2)
+exp2_egg_lm <- lm(egg_numbers ~ diet, data = long_egg_counting2)
 #---- Checking the model 
-performance::check_model(eggcountinge2ls1)
-#---- summarising the data of the linear model 
-summary(eggcountinge2ls1)
+performance::check_model(exp2_egg_lm)
+performance::check_model(exp2_egg_lm, check = c("qq"))
+performance::check_model(exp2_egg_lm, check = c("linearity"))
+# model doesn't look very good
+
+#-- Making a generalised linear model 
+exp2_egg_glm <- glm(egg_numbers ~ diet, family = poisson, data = long_egg_counting2)
+
+summary(exp2_egg_glm)
+
+exp2_egg_glm2 <- glm(egg_numbers ~ diet, family = quasipoisson, data = long_egg_counting2)
+
+#---- Checking the model 
+performance::check_model(exp2_egg_glm2)
+performance::check_model(exp2_egg_glm2, check = c("qq"))
+# homogenity looks ok but still a alight slope
+# go with this 
+
+# doing data analysis for the chosen model 
+summary(exp2_egg_glm2)
 
 #-- emmeans tukey to look for significance of everything 
-emmeans::emmeans(eggcountinge2ls1, specs = pairwise ~ diet)
+emmeans::emmeans(exp2_egg_glm2, specs = pairwise ~ diet)
 
 #---- one-way anova? 
-anova(eggcountinge2ls1) 
+anova(exp2_egg_glm2) 
 
 #-- looking at the confidence intervals 
-confint(eggcountinge2ls1)
+confint(exp2_egg_glm2)
 
 # tidyverse summary
-broom::tidy(eggcountinge2ls1,  
+broom::tidy(exp2_egg_glm2,  
             exponentiate=T, 
             conf.int=)
 
 # visualising the means
-GGally::ggcoef_model(eggcountinge2ls1,
+GGally::ggcoef_model(exp2_egg_glm2,
                      show_p_values=FALSE,
                      signif_stars = FALSE,
                      conf.level=0.95)
 
 
 
-# Egg - two-factor analysis ------
-
+# TWO FACTOR ANALYSIS - OVIPOSITION - 
 # changing the data to columns 
 long_egg_counting2$food_type <- ifelse(long_egg_counting2 $diet %in% c("8:1H", "1:2H"), "hard", "soft")
 long_egg_counting2$food_nutrition <- ifelse(long_egg_counting2 $diet %in% c("8:1", "1:2H", "1:2S"), "1:2", "8:1")
 
+# looking at the data 
 view(long_egg_counting2)
 
 
-
-
-# visualising the data for egg analysis 
-
-#----###
-
-
-# same thing but doing the subset function 
-# probably do subset analysis if you want to analyse stuff previously 
-#hard_data_egg <- subset(long_egg_counting2, food_type == "hard")
-#soft_data_egg <- subset(long_egg_counting2, food_type == "soft")
-#eight_data_egg <- subset(long_egg_counting2, food_nutrition == "8:1")
-#onetwo_data_egg <- subset(long_egg_counting2, food_nutrition == "1:2")
-
-#-eggexp2_new <- rbind(hard_data_egg, soft_data_egg, eight_data_egg, onetwo_data_egg)
-
-#-eggexp2lm_new <-  lm(egg_numbers ~ food_type + food_nutrition, data = eggexp2_new)
-
-#--summary(eggexp2lm_new)
-
-
 #- Making a summary of egg counting// soft and hard 
-
 softhardegg_summary <- long_egg_counting2 %>%  
   group_by(food_type) %>% 
   summarise(mean = mean(egg_numbers),
             sd = sd(egg_numbers),
             n = n(),
             se = sd/sqrt(n))
-
 #- Making a plot of egg counting// soft and hard 
 softhardegg_plot <- softhardegg_summary %>% 
   ggplot(aes(x = food_type, y = mean))+
@@ -526,7 +505,6 @@ softhardegg_plot <- softhardegg_summary %>%
        y = "Mean (+/- S.E.) number of eggs on a patch",
        title = "")+
   theme_minimal() 
-
 # summarising egg nutrient composition 
 nutrientegg_summary <- long_egg_counting2%>%  
   group_by(food_nutrition) %>% 
@@ -534,7 +512,6 @@ nutrientegg_summary <- long_egg_counting2%>%
             sd = sd(egg_numbers),
             n = n(),
             se = sd/sqrt(n))
-
 # a nutrient plot 
 nutrientegg_plot <- nutrientegg_summary %>% 
   ggplot(aes(x = food_nutrition, y = mean))+
@@ -558,23 +535,63 @@ nutrientegg_plot <- nutrientegg_summary %>%
        title = "")+
   theme_minimal() 
 
-
-#- visualising the data og egg counting nutrient composition vs soft/hard together
+#- visualising the data of egg counting nutrient composition vs soft/hard together
 softhardegg_plot + nutrientegg_plot
-softhard_plot + nutrient_plot
 
+
+#- TWO FACTOR OVIPOSITION DATA ANALYSIS ------
 # doing a linear model of egg two factor 
-eggexp2lm <- lm(egg_numbers ~ food_type + food_nutrition, data = long_egg_counting2)
+exp2_egg_foodcondition_lm <- lm(egg_numbers ~ food_type + food_nutrition + food_type : food_nutrition, data = long_egg_counting2)
 
-# doing a linear model of egg two factor with an interaction effect 
-eggexp2lm2 <- lm(egg_numbers ~ food_type + food_nutrition + food_type * food_nutrition, data = long_egg_counting2)
+#---- Checking the model 
+performance::check_model(exp2_egg_foodcondition_lm)
+performance::check_model(exp2_egg_foodcondition_lm, check = c("qq"))
+performance::check_model(exp2_egg_foodcondition_lm, check = c("linearity"))
+# looks quite bad 
 
-eggexp2glm2 <- glm(egg_numbers ~ food_type + food_nutrition + food_type * food_nutrition, family = quasipoisson(), data = long_egg_counting2)
-#  summarising egg two factor linear model
-summary(eggexp2lm)
-summary(eggexp2lm2)
-summary(eggexp2glm2)
+# trying a glm 
+exp2_egg_foodcondition_glm <- glm(egg_numbers ~ food_type + food_nutrition + food_type : food_nutrition, family = poisson, data = long_egg_counting2)
 
 
-#  anova 
-aov(egg_numbers ~ food_type + food_nutrition, data = long_egg_counting2)
+summary(exp2_egg_foodcondition_glm)
+
+exp2_egg_foodcondition_glm2 <- glm(egg_numbers ~ food_type + food_nutrition + food_type : food_nutrition, family = quasipoisson, data = long_egg_counting2)
+
+#---- Checking the model 
+performance::check_model(exp2_egg_foodcondition_glm2)
+performance::check_model(exp2_egg_foodcondition_glm2, check = c("qq"))
+# homogenity still looks slopey
+# normality looks a lot better
+# stick with this model so far
+
+# doing data analysis with chosen model 
+summary(exp2_egg_foodcondition_glm2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# visualising the data for egg analysis 
+
+#----###
+# same thing but doing the subset function 
+# probably do subset analysis if you want to analyse stuff previously 
+#hard_data_egg <- subset(long_egg_counting2, food_type == "hard")
+#soft_data_egg <- subset(long_egg_counting2, food_type == "soft")
+#eight_data_egg <- subset(long_egg_counting2, food_nutrition == "8:1")
+#onetwo_data_egg <- subset(long_egg_counting2, food_nutrition == "1:2")
+#-eggexp2_new <- rbind(hard_data_egg, soft_data_egg, eight_data_egg, onetwo_data_egg)
+#-eggexp2lm_new <-  lm(egg_numbers ~ food_type + food_nutrition, data = eggexp2_new)
+#--summary(eggexp2lm_new)
+
