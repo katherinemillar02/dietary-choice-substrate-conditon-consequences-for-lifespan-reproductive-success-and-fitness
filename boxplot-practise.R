@@ -114,8 +114,30 @@ a<-ggplot(exp2both, aes(x=food_nutrition, y=fly_numbers, fill=food_nutrition)) +
   geom_boxplot()+
   theme_classic()
 
-p + exp2both_plot
 
-exp2both_plot + egg_counting2_plot + p  + a + nutrientegg_plot + softhardegg_plot + p
+boxplot1 <- ggplot()+ 
+  geom_boxplot(exp2both, mapping=aes(x=food_nutrition, y=fly_numbers, fill=food_nutrition))+
+  theme_classic()+
+  scale_fill_manual(values=c( "gold", "pink"))+
+  theme(legend.position="bottom")
+
+boxplot2 <- ggplot()+ 
+  geom_boxplot(exp2both, mapping=aes(x=food_type, y=fly_numbers, fill=food_type))+ 
+  theme_classic()+
+  scale_fill_manual(values=c( "gold", "pink"))+
+  theme(legend.position="bottom")
+
+
+p + exp2both_plot 
+
+exp2both_plot + boxplot1 + boxplot2
+
+exp2both_plot + nutrient_plot_exp2 + softhard_plot_exp2
+
+
+boxplot2 <- ggplot()+ 
+  geom_boxplot(exp2both, mapping=aes(x=diet, y=fly_numbers, fill=diet))+
+  theme_classic()+
+  scale_fill_manual(values=c("blue", "gold", "pink", "green"))
 
  
