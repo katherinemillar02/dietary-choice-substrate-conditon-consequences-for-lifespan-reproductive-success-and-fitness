@@ -51,7 +51,6 @@ exp3feeding_plotd1 <- exp3feeding_summary_d1 %>%
        title = "")+
   theme_minimal() 
 
-
 #-------------- (Exp 3) Day 1 Data analysis  -----------
 
 #------- creating a linear model for day 1 
