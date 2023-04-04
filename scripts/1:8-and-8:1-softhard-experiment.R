@@ -52,7 +52,6 @@ exp3feeding_plotd1 <- exp3feeding_summary_d1 %>%
   theme_minimal() 
 
 #-------------- (Exp 3) Day 1 Data analysis  -----------
-
 #------- creating a linear model for day 1 
 exp3lm <- lm(fly_numbers ~ diet, data = long_feedinge3d1)
 #------- using summary function for the model 
@@ -62,8 +61,6 @@ emmeans::emmeans(exp3lm, specs = pairwise ~ diet)
 
 #--  1:8 soft and 1:8 hard is only just significant - prefer soft to feed on 
 #-- but don't really like 8:1 soft 
-
-
 #----- (Exp3) Day 2 ------
 #-------- Reading the data in
 feedinge3d2 <- read_excel("data/RPFemaleFeedingE3D2.xlsx")
@@ -113,7 +110,7 @@ emmeans::emmeans(exp3lm_d2, specs = pairwise ~ diet)
 #-------- visualising the feeding data for different days together using patchwork
 exp3feeding_plotd1 + exp3feeding_plotd2
 
-
+#--------------   ANALYSIS TO BE USED -----
 #--------------  Combined days data  ----
 
 #--- summarising the data with combined days 
@@ -152,16 +149,43 @@ exp3feeding_plot_both <- exp3feeding_summary_both %>%
 exp3d1 <- long_feedinge3d1 %>% mutate(day = "1")
 exp3d2 <- long_feedinge3d2 %>% mutate(day = "2")
 #--- combining the two days 
-exp3both <- rbind(exp3d1, exp3d2)
+exp3_combined <- rbind(exp3d1, exp3d2)
+
+#--- data analysis for combined data ----
+
+#-- making a linear model for day analysis 
+exp3_combined_day_lm <- lm(fly_numbers ~ day, data = exp3_combined)
+
+# checking the model 
+performance::check_model(exp3_combined_day_lm)
+performance::check_model(exp3_combined_day_lm, check = c("qq"))
+performance::check_model(exp3_combined_day_lm, check = c("linearity"))
+# linearity looks not great
+
+#-- making a gernealised linear model for day analysis 
+exp3_combined_day_glm <- glm(fly_numbers ~ day, family = poisson, data = exp3_combined)
+
+summary(exp3_combined_day_glm)
+
+exp3_combined_day_glm2 <- glm(fly_numbers ~ day, family = quasipoisson, data = exp3_combined)
 
 
-#-- making a linear model for the combined days model with day in the model 
-exp3bothlm <- lm(fly_numbers ~ diet + day, data = exp3both)
+# checking the model 
+performance::check_model(exp3_combined_day_glm2)
+performance::check_model(exp3_combined_day_glm2, check = c("qq"))
+# homogenity looks more normal
+# normality looks slightly worse but still okay 
+# stick with this exp3_combined_day_glm2
 
-#-- summaryb function of combined days linear model 
-summary(exp3bothlm)
+# analysing the data for the chosen model 
+
+#-- summary function of combined days linear model 
+summary(exp3_combined_day_glm2)
 #-- checking for the significance in day in the model
-drop1(exp3bothlm, test = "F")
+drop1(exp3_combined_day_glm2, test = "F")
+
+
+
 
 #--- summarising the data with combined days 
 exp3feeding_summary_both <- exp3both %>%  
