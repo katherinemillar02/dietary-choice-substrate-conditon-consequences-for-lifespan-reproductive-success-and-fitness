@@ -659,6 +659,7 @@ exp1_egg_combined_plot <- exp1_egg_combined_summary %>%
   labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of eggs laid on each patch")+
   theme_classic()
+
 # making a model to be looking for just the significance in experiment 
 exp1_egg_combined_experiment <- lm(egg_numbers ~ experiment, data = exp1_egg_combined)
 
@@ -729,6 +730,7 @@ exp1_egg_combined$food_nutrition <- ifelse(eggboth$diet %in% c("1:8", "1:2H", "1
 # viewing the new dataset 
 view(exp1_egg_combined)
 
+# visualising the data for data analysis 
 # summarising hard vs soft data 
 softhard_summary_exp1_egg <- exp1_egg_combined %>%  
   group_by(food_type) %>% 
@@ -791,24 +793,35 @@ nutrient_plot_exp1_egg <- nutrient_summary_exp1_egg %>%
 # using patchwork to compare soft/hardness and nutrient composition - data visualisation
 softhard_plot_exp1_egg + nutrient_plot_exp1_egg
 
-# OVIPOSITION TWO FACTOR DATA ANALYSIS 
+# OVIPOSITION TWO FACTOR DATA ANALYSIS -----
 
-exp1allegg <- lm(egg_numbers ~ food_type + food_nutrition + food_type * food_nutrition, data = eggboth)
-summary(exp1allegg)
+# trying a linear model
+exp1_combined_egg_foodcondition_lm <- lm(egg_numbers ~ food_type + food_nutrition + food_type : food_nutrition, data = exp1_egg_combined)
 
-exp1alleggglm <- glm(egg_numbers ~ food_type + food_nutrition + food_type * food_nutrition, family = quasipoisson(), data = eggboth)
-summary(exp1alleggglm)
+# checking the model 
+performance::check_model(exp1_combined_egg_foodcondition_lm)
+performance::check_model(exp1_combined_egg_foodcondition_lm, check = c("qq"))
+performance::check_model(exp1_combined_egg_foodcondition_lm, check = c("linearity"))
+# normality looks very poor 
+# for linearity the line is flat but there is a slope 
 
-performance::check_model(exp1allegg)
-performance::check_model(exp1alleggglm)
+# trying a glm
+exp1_combined_egg_foodcondition_glm <- glm(egg_numbers ~ food_type + food_nutrition + food_type : food_nutrition, family = poisson, data = exp1_egg_combined)
 
-performance::check_model(exp1allegg, check = c("qq"))
-performance::check_model(exp1alleggglm, check = c("qq"))
+# checking for overdispersion with the glm
+summary(exp1_combined_egg_foodcondition_glm)
+# overdispersed so using quasipoisson 
 
-install.packages("ggpubr")
-library(ggpubr)
+exp1_combined_egg_foodcondition_glm2 <- glm(egg_numbers ~ food_type + food_nutrition + food_type : food_nutrition, family = quasipoisson, data = exp1_egg_combined)
 
-egg_counting_plot_all + softhard_plot_exp1_egg + nutrient_plot_exp1_egg 
+# checking the model 
+performance::check_model(exp1_combined_egg_foodcondition_glm2)
+performance::check_model(exp1_combined_egg_foodcondition_glm2, check = c("qq"))
+# qq looks a lot better
+# homogenity loooks ok? 
+
+# analysing the chosen egg food condition model
+summary(exp1_combined_egg_foodcondition_glm2)
 
 
 
@@ -1026,5 +1039,9 @@ exp1all_plot + exp1ball_plot
 
 
 
+install.packages("ggpubr")
+library(ggpubr)
+
+egg_counting_plot_all + softhard_plot_exp1_egg + nutrient_plot_exp1_egg 
 
 
