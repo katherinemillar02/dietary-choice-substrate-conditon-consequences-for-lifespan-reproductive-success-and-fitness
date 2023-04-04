@@ -160,6 +160,7 @@ performance::check_model(exp2_combined_days_lm, check = c("linearity"))
 
 # trying a glm 
 exp2_combined_days_glm <- glm(fly_numbers ~ day, family = poisson, data = exp2_combined)
+
 #
 summary(exp2_combined_days_glm)
 # overdispersed 
