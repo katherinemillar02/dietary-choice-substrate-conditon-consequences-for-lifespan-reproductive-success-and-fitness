@@ -112,7 +112,6 @@ emmeans::emmeans(exp1lmd2, specs = pairwise ~ diet)
 
 exp1feeding_plotd1 + exp1feeding_plotd2
 
-
 #----- (Exp1a) Combined days data ---------
 
 # combining days 1 and 2 for overall data analysis 
@@ -846,7 +845,7 @@ summary(exp1_combined_egg_foodcondition_glm2)
 
 
 
-# THIS CODE IS NOT USED IN OVERALL ANALYSIS 
+# THIS CODE IS NOT USED IN OVERALL ANALYSIS ----------------------------------------------------------
 # CAN IGNORE FOR NOW
 ## JUST THERE FOR KNOWLEDGE 
 anova(exp1alllm)
