@@ -185,52 +185,36 @@ summary(exp3_combined_day_glm2)
 drop1(exp3_combined_day_glm2, test = "F")
 
 
+#- making a model for fly numbers and diet
+exp3_combined_lm <- lm(fly_numbers ~ diet, data = exp3_combined)
+
+# checking the model 
+performance::check_model(exp3_combined_lm)
+performance::check_model(exp3_combined_lm, check = c("qq"))
+performance::check_model(exp3_combined_lm, check = c("linearity"))
+# looks ok
+# stick with this as  chosen model 
+
+# data analysis for chosen model
+
+# using summary() which will show anova
+summary(exp3_combined_lm)
+
+# using emmeans tukey to test everything 
+emmeans::emmeans(exp3_combined_lm, specs = pairwise ~ diet)
 
 
-#--- summarising the data with combined days 
-exp3feeding_summary_both <- exp3both %>%  
-  group_by(diet) %>% 
-  summarise(mean = mean(fly_numbers),
-            sd = sd(fly_numbers),
-            n = n(),
-            se = sd/sqrt(n))
-
-
-exp3bothlm2 <- lm(fly_numbers ~ diet, data = exp3both)
-
-exp3bothglm2 <- glm(fly_numbers ~ diet, data = exp3both, family = poisson)
-
-exp3bothglm02 <- glm(fly_numbers ~ diet, data = exp3both, family = quasipoisson)
-
-exp3bothlm01 <- lm(fly_numbers ~ day, data = exp3both)
-
-summary(exp3bothlm01)
-
-summary(exp3bothglm2)
-
-summary(exp3bothglm02)
-
-
-performance::check_model(exp3bothglm02)
-performance::check_model(exp3bothlm2)
-
-performance::check_model(exp3bothglm02, check = c("qq"))
-performance::check_model(exp3bothlm2, check = c("qq"))
-
-
-emmeans::emmeans(exp3bothlm2, specs = pairwise ~ diet)
-
-
-#--- two-factor feeding analysis ------
+#--- TWO FACTOR FEEDING ANALYSIS --- FOOD CONDITIONS 
 
 # splitting up hard and soft diets and different nutrient diets 
-exp3both$food_type <- ifelse(exp3both$diet %in% c("8:1H", "1:8H"), "Hard", "Soft")
-
-exp3both$food_nutrition <- ifelse(exp3both$diet %in% c("8:1", "1:8H", "1:8S"), "1:8", "8:1")
+exp3_combined$food_type <- ifelse(exp3_combined$diet %in% c("8:1H", "1:8H"), "Hard", "Soft")
+exp3_combined$food_nutrition <- ifelse(exp3_combined$diet %in% c("8:1", "1:8H", "1:8S"), "1:8", "8:1")
 
 # viewing the new dataset
-view(exp3both)
+view(exp3_combined)
 
+
+#--- DATA ANALYSIS - TWO FACTOR FEEDING ANALYSIS --- FOOD CONDITIONS
 
 # creating a linear model based on food nutrition and food type 
 exp3bothlmnew <- lm(fly_numbers ~ food_type + food_nutrition, data = exp3both)
