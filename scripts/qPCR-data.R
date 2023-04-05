@@ -15,19 +15,14 @@ newlong_foxoqPCR <- newfoxoqpcr %>%
 
 
 
-
-
-
-
-
-foxoqPCR_summary <- long_foxoqPCR %>%  
+newfoxoqPCR_summary <- newlong_foxoqPCR %>%  
   group_by(sample) %>% 
   summarise(mean = mean(cq),
             sd = sd(cq),
             n = n(),
             se = sd/sqrt(n))
 
-foxoqPCR_plotd1 <- foxoqPCR_summary %>% 
+newfoxoqPCR_plotd1 <- newfoxoqPCR_summary %>% 
   ggplot(aes(x = sample, y = mean))+
   geom_bar(stat = "identity",
            fill = "skyblue",
