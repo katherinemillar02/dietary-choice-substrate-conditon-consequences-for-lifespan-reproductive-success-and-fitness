@@ -1,12 +1,13 @@
 
 
 # reading the foxo data in
-foxoqPCR <- read_excel("data/qPCR_foxo_data.xlsx")
+foxoqPCR <- read_excel("data/qPCR_foxo_data_2.xlsx")
 # removing the na values from the foxo data and changing the file name 
 newfoxoqpcr <- na.omit(foxoqPCR)
+view(newfoxoqpcr)
 # making the new foxo data long 
 newlong_foxoqPCR <- newfoxoqpcr %>% 
-  pivot_longer(cols = ("A1":"D3"), names_to = "sample", values_to = "cq")
+  pivot_longer(cols = ("A1":"D2"), names_to = "sample", values_to = "cq")
 view(newlong_foxoqPCR)
 #  making a summary of the foxo data 
 newfoxoqPCR_summary <- newlong_foxoqPCR %>%  
@@ -44,6 +45,7 @@ newfoxoqPCR_plotd1 <- newfoxoqPCR_summary %>%
 fd38qPCR <- read_excel("data/fd38_qPCR.xlsx")
 # removing the na values from the fd38 data 
 newfd38qpcr <- na.omit(fd38qPCR)
+view(newfd38qpcr)
 # making the fd38 data long
 newlong_fd38qPCR <- newfd38qpcr %>% 
   pivot_longer(cols = ("A1":"D2"), names_to = "sample", values_to = "cq")
