@@ -2,18 +2,13 @@ foxoqPCR <- read_excel("data/qPCR_foxo_data.xlsx")
 long_foxoqPCR <- foxoqPCR %>% 
   pivot_longer(cols = ("A1":"D3"), names_to = "sample", values_to = "cq")
 
-is.na(foxoqPCR)
-
 newlong_foxoqPCR <- newfoxoqpcr %>% 
   pivot_longer(cols = ("A1":"D3"), names_to = "sample", values_to = "cq")
-
 
 newfoxoqpcr <- na.omit(foxoqPCR)
 
 newlong_foxoqPCR <- newfoxoqpcr %>% 
   pivot_longer(cols = ("A1":"D3"), names_to = "sample", values_to = "cq")
-
-
 
 newfoxoqPCR_summary <- newlong_foxoqPCR %>%  
   group_by(sample) %>% 
@@ -44,6 +39,79 @@ newfoxoqPCR_plotd1 <- newfoxoqPCR_summary %>%
        title = "")+
   theme_minimal() 
 
+
+
+
+fd38qPCR <- read_excel("data/fd38_qPCR.xlsx")
+
+
+
+newfd38qpcr <- na.omit(fd38qPCR)
+
+
+newlong_fd38qPCR <- newfd38qpcr %>% 
+  pivot_longer(cols = ("A1":"D2"), names_to = "sample", values_to = "cq")
+
+
+newfd38qPCR_summary <- newlong_fd38qPCR %>%  
+  group_by(sample) %>% 
+  summarise(mean = mean(cq),
+            sd = sd(cq),
+            n = n(),
+            se = sd/sqrt(n))
+
+
+
+
+dilp3qPCR <- read_excel("data/qPCR_dilp3.xlsx")
+
+newdilp3 <- na.omit(dilp3qPCR)
+
+long_dilp3 <- newdilp3 %>% 
+  pivot_longer(cols = ("A1":"D3"), names_to = "sample", values_to = "cq")
+
+
+dilp3_summary <- long_dilp3 %>%  
+  group_by(sample) %>% 
+  summarise(mean = mean(cq),
+            sd = sd(cq),
+            n = n(),
+            se = sd/sqrt(n))
+
+
+
+rp20qPCR <- read_excel("data/qPCR_rp20.xlsx")
+
+newrp20 <- na.omit(rp20qPCR)
+
+long_rp20 <- newrp20 %>% 
+  pivot_longer(cols = ("A1":"D3"), names_to = "sample", values_to = "cq")
+
+
+rp20_summary <- long_rp20 %>%  
+  group_by(sample) %>% 
+  summarise(mean = mean(cq),
+            sd = sd(cq),
+            n = n(),
+            se = sd/sqrt(n))
+
+
+
+
+# average reference ct
+
+avg_ref_ct <- rbind(newlong_fd38qPCR, long_rp20)
+
+view(long_rp20)
+view(newlong_fd38qPCR)
+view(avg_ref_ct)
+
+avg_ref_ct_summary <- avg_ref_ct %>%  
+  group_by(sample) %>% 
+  summarise(mean = mean(cq),
+            sd = sd(cq),
+            n = n(),
+            se = sd/sqrt(n))
 
 is.na(foxoqPCR2)
 
