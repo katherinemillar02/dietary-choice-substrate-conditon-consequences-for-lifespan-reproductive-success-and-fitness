@@ -114,13 +114,31 @@ Cq <- c("0.01104854", "0.000644291", "0.07179365", "0.0007932152", "0.1767767", 
  
 qPCR_data <- data.frame(sample, Cq)
 
+
+foxoqPCR_plot2 <- qPCR_data %>% 
+  ggplot(aes(x = sample, y = Cq))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  theme_classic()
+
+
 view(qPCR_data)
+
+
+
+
+
+
+
 
 qPCR_over <- read_excel("data/qPCR_set.xlsx")
 
 long_qPCR <- qPCR_over %>% 
   pivot_longer(cols = ("1:8S(1)":"8:1H(2)"), names_to = "sample", values_to = "cq")
 
+qPCR_summary <- read_excel("data/qPCR_summary.xlsx")
 
 
 
