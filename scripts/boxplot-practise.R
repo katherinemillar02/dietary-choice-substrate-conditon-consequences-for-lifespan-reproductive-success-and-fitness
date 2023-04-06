@@ -140,4 +140,22 @@ boxplot2 <- ggplot()+
   theme_classic()+
   scale_fill_manual(values=c("blue", "gold", "pink", "green"))
 
+
+boxplot_egg_fc <- ggplot()+ 
+  geom_boxplot(exp2both, mapping=aes(x=food_type, y=fly_numbers, fill=food_type))+
+  theme_classic()+
+  scale_fill_manual(values=c("gold", "pink"))+
+  labs(x = "Nutrient Composition",
+       y = "Mean average flies per patch")+
+  theme(legend.position="none")
+
+boxplot_egg_fc_2 <- ggplot()+ 
+  geom_boxplot(exp2both, mapping=aes(x=food_nutrition, y=fly_numbers, fill=food_nutrition))+
+  theme_classic()+
+  scale_fill_manual(values=c("gold", "pink"))+
+  labs(x = "Food Hardness",
+       y = "Mean average flies per patch")+
+  theme(legend.position="none")
+
+boxplot_egg_fc + boxplot_egg_fc_2
  
