@@ -12,10 +12,7 @@ view(newlong_foxoqPCR)
 #  making a summary of the foxo data with na values removed 
 newfoxoqPCR_summary <- newlong_foxoqPCR %>%  
   group_by(sample) %>% 
-  summarise(mean = mean(cq),
-            sd = sd(cq),
-            n = n(),
-            se = sd/sqrt(n), na.rm = T)
+  summarise(mean = mean(cq, na.rm = T))
 
 
 
@@ -49,6 +46,23 @@ rp20_summary <- long_rp20 %>%
 # sd = sd(cq),
 # n=n())
 #           se = sd/sqrt(n), na.rm = T)
+
+#  reading the dilp3 data in
+dilp3qPCR <- read_excel("data/qPCR_dilp3.xlsx")
+# removing na values from dilp3
+# newdilp3 <- na.omit(dilp3qPCR)
+#  making the dilp3 data long
+long_dilp3 <- dilp3qPCR %>% 
+  pivot_longer(cols = ("A1":"D2"), names_to = "sample", values_to = "cq")
+view(long_dilp3)
+# making a summary of dilp3
+dilp3_summary <- long_dilp3 %>%  
+  group_by(sample) %>% 
+  summarise(mean = mean(cq),
+            sd = sd(cq),
+            n = n(),
+            se = sd/sqrt(n), na.rm = T)
+
 #------------------------------------------
 # binding the fd38 and rp20 data summaries 
 fd38_rp20 <- rbind(newfd38qPCR_summary2, rp20_summary)
@@ -57,6 +71,8 @@ fd38_rp20_summary <- fd38_rp20 %>%
   group_by(sample) %>% 
   summarise(mean = mean(mean))
 
+
+# dilp3 ---- 
 #A1
 (34.2 - 27.7)
 6.5
@@ -115,7 +131,7 @@ Cq <- c("0.01104854", "0.000644291", "0.07179365", "0.0007932152", "0.1767767", 
 qPCR_data <- data.frame(sample, Cq)
 
 
-foxoqPCR_plot2 <- qPCR_data %>% 
+qPCR_plot2 <- qPCR_data %>% 
   ggplot(aes(x = sample, y = Cq))+
   geom_bar(stat = "identity",
            fill = "skyblue",
@@ -144,26 +160,60 @@ qPCR_summary <- read_excel("data/qPCR_summary_3.xlsx")
 long_qPCR_sum <- qPCR_summary %>% 
   pivot_longer(cols = ("1:8S":"8:1H"), names_to = "sample", values_to = "cq")
 
+# foxo
+#A1
+(34.5 - 27.7)
+6.8
+2^- 6.8
+0.008974206
+#A2
+(32.6 - 24.8)
+7.8
+2^- 7.8
+0.004487103
+#A3
+(39.4 -  30.8)
+8.6
+2^-8.6
+0.002577164
+#B1
+(34.7 -  25.2)
+9.5
+2^-9.5
+0.002577164
+#B2
+(29.3  - 24.3 )
+5
+2^-5 
+0.03125
+#B3
+(32.8 - 26.4)
+6.4
+2^-6.4
+0.01184154
+#C1
+( 36.0 -  27.1)
+8.9
+2^-8.9
+0.002093308
+#C2
+(36.0 -26.4)
+9.6
+2^-9.6
+0.001288582
+#C3
+( 35.8 -  27.7 )
+8.1
+2^- 8.1
+0.00364466
+#D2
+(34.9- 27.3)
+7.6
+2^- 7.6
+0.005154328
 
 
 
-
-
- #  reading the dilp3 data in
-dilp3qPCR <- read_excel("data/qPCR_dilp3.xlsx")
-# removing na values from dilp3
-# newdilp3 <- na.omit(dilp3qPCR)
-#  making the dilp3 data long
-long_dilp3 <- dilp3qPCR %>% 
-  pivot_longer(cols = ("A1":"D2"), names_to = "sample", values_to = "cq")
-view(long_dilp3)
-# making a summary of dilp3
-dilp3_summary <- long_dilp3 %>%  
-  group_by(sample) %>% 
-  summarise(mean = mean(cq),
-            sd = sd(cq),
-            n = n(),
-            se = sd/sqrt(n), na.rm = T)
 
 
 
