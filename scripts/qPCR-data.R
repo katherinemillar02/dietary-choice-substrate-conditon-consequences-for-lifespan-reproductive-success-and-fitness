@@ -57,13 +57,78 @@ fd38_rp20_summary <- fd38_rp20 %>%
   group_by(sample) %>% 
   summarise(mean = mean(mean))
 
+#A1
+(34.2 - 27.7)
+6.5
+2^- 6.5
+0.01104854
+#A2
+(35.4 - 24.8)
+10.6 
+2^- 10.6
+0.000644291
+#A3
+(34.6 -  30.8)
+3.8
+2^-3.8
+0.07179365
+#B1
+(35.5 -  25.2)
+10.3 
+2^-10.3 
+0.0007932152
+#B2
+(26.8  - 24.3 )
+2.5 
+2^-2.5 
+0.1767767
+#B3
+(35.2 - 26.4)
+8.8
+2^-8.8
+0.002243551
+#C1
+( 35.3 -  27.1)
+8.2
+2^-8.2
+0.003400588
+#C2
+(33.7-26.4)
+7.3
+2^-7.3
+0.006345722
+#C3
+( 34.2 -  27.7 )
+ 6.5
+ 2^- 6.5
+ 0.01104854
+ #D2
+(35.5- 27.3)
+ 8.2
+ 2^- 8.2
+ 0.003400588
+ 
+ 
+sample <- c("1:8S(1)","1:8S(2)", "1:8S(3)", "1:8H(1)","1:8H(2)", "1:8H(3)", "8:1S(1)", "8:1S(2)", "8:1S(3)", "8:1H(2)")
+Cq <- c("0.01104854", "0.000644291", "0.07179365", "0.0007932152", "0.1767767", "0.002243551", "0.003400588", "0.006345722", " 0.01104854", " 0.003400588"  )
+ 
+qPCR_data <- data.frame(sample, Cq)
+
+view(qPCR_data)
+
+qPCR_over <- read_excel("data/qPCR_set.xlsx")
+
+long_qPCR <- qPCR_over %>% 
+  pivot_longer(cols = ("1:8S(1)":"8:1H(2)"), names_to = "sample", values_to = "cq")
 
 
 
 
 
 
-#  reading the dilp3 data in
+
+
+ #  reading the dilp3 data in
 dilp3qPCR <- read_excel("data/qPCR_dilp3.xlsx")
 # removing na values from dilp3
 # newdilp3 <- na.omit(dilp3qPCR)
@@ -117,8 +182,9 @@ newfoxoqPCR2_summary <- newlong_foxoqPCR2 %>%
             se = sd/sqrt(n))
 
 
-newfoxoqPCR_plot2 <- newfoxoqPCR2_summary %>% 
-  ggplot(aes(x = sample, y = mean))+
+
+
+
   geom_bar(stat = "identity",
            fill = "skyblue",
            colour = "#FF6863",
