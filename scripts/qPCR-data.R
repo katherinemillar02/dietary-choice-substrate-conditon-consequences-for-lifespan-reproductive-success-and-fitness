@@ -138,8 +138,11 @@ qPCR_over <- read_excel("data/qPCR_set.xlsx")
 long_qPCR <- qPCR_over %>% 
   pivot_longer(cols = ("1:8S(1)":"8:1H(2)"), names_to = "sample", values_to = "cq")
 
-qPCR_summary <- read_excel("data/qPCR_summary.xlsx")
+qPCR_summary <- read_excel("data/qPCR_summary_3.xlsx")
 
+
+long_qPCR_sum <- qPCR_summary %>% 
+  pivot_longer(cols = ("1:8S":"8:1H"), names_to = "sample", values_to = "cq")
 
 
 
