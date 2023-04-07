@@ -216,7 +216,7 @@ view(exp3_combined)
 
 
 # summarising hard vs soft data 
-softhard_summary_exp3 <- exp3both %>%  
+softhard_summary_exp3 <- exp3_combined %>%  
   group_by(food_type) %>% 
   summarise(mean = mean(fly_numbers),
             sd = sd(fly_numbers),
@@ -232,7 +232,7 @@ softhard_plot_exp3 <- softhard_summary_exp3 %>%
   geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
                 colour = "#FF6863",
                 width = 0.2)+
-  geom_jitter(data = exp3both,
+  geom_jitter(data = exp3_combined,
               aes(x = food_type,
                   y = fly_numbers),
               fill = "skyblue",
@@ -245,7 +245,7 @@ softhard_plot_exp3 <- softhard_summary_exp3 %>%
        title = "")+
   theme_classic() 
 # summarising nutrient composition data 
-nutrient_summary_exp3 <- exp3both %>%  
+nutrient_summary_exp3 <- exp3_combined %>%  
   group_by(food_nutrition) %>% 
   summarise(mean = mean(fly_numbers),
             sd = sd(fly_numbers),
@@ -261,7 +261,7 @@ nutrient_plot_exp3 <- nutrient_summary_exp3 %>%
   geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
                 colour = "#FF6863",
                 width = 0.2)+
-  geom_jitter(data = exp3both,
+  geom_jitter(data = exp3_combined,
               aes(x = food_nutrition,
                   y = fly_numbers),
               fill = "skyblue",
@@ -282,11 +282,60 @@ softhard_plot_exp3 + nutrient_plot_exp3
 exp3_combined_foodcondition_lm <- lm(fly_numbers ~ food_type + food_nutrition + food_type : food_nutrition, data = exp3_combined)
 
 performance::check_model(exp3_combined_foodcondition_lm)
-performance::check_model(exp3_combined_foodcondition_lm, check = c("qq"))
+performance::check_model(exp3_combined_foodcondition_lm, check = c("normality", "qq"))
 performance::check_model(exp3_combined_foodcondition_lm, check = c("linearity"))
 # looks ok? 
+# try a glm incase 
+# why is there just one point for linearity/ homogenity?
 
-#  using chosen model for data analysis 
+# looking at a qq plot 
+plot(exp3_combined_foodcondition_lm, which=c(1,3))
+# understanding what this means? sorry
+
+# variance inflation factor () 
+car::vif(type = "predictor", exp3_combined_foodcondition_lm)
+# no issues estimating the co-efficient? 
+
+# transforming the data 
+MASS::boxcox(exp3_combined_foodcondition_lm)
+# Error in boxcox : response variable must be positive? 
+
+#  cannot see whnat boxcox suggests but trying sqrt in the model
+exp3_combined_foodcondition_lm2 <- lm(sqrt(fly_numbers) ~ food_type  + food_nutrition + food_type : food_nutrition, data = exp3_combined)
+
+# checking the new model 
+performance::check_model(exp3_combined_foodcondition_lm2)
+performance::check_model(exp3_combined_foodcondition_lm2, check = c("normality", "qq"))
+performance::check_model(exp3_combined_foodcondition_lm2, check = c("linearity"))
+# linearity has opposite problems 
+# normality and qq looks better with sqrt model?
+# homogenity looks better with non sqrt model? 
+
+
+# trying a glm model
+exp3_combined_foodcondition_glm <- glm(fly_numbers ~ food_type + food_nutrition + food_type : food_nutrition, family = poisson, data = exp3_combined)
+
+# trying summary function to look for overdispersion in poisson
+summary(exp3_combined_foodcondition_glm)
+
+# overdispersed so trying quasipoisson
+exp3_combined_foodcondition_glm2 <- glm(fly_numbers ~ food_type + food_nutrition + food_type : food_nutrition, family = quasipoisson, data = exp3_combined)
+
+# checking the glm 2 model 
+performance::check_model(exp3_combined_foodcondition_glm2)
+performance::check_model(exp3_combined_foodcondition_glm2, check = c("qq"))
+# BEST TO CHECK THIS -- but looks okay? 
+# struggling to understand what is better 
+
+# still confused about what model to choose but maybe glm as not too sure about the points?
+
+
+# still not understanding if these are good models so going a bit further with the analysis? 
+
+
+
+
+#  using the chosen models for data analysis 
 summary(exp3_combined_foodcondition_lm)
 
 
