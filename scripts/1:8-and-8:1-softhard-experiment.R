@@ -165,17 +165,22 @@ performance::check_model(exp3_combined_day_lm, check = c("linearity"))
 #-- making a gernealised linear model for day analysis 
 exp3_combined_day_glm <- glm(fly_numbers ~ day, family = poisson, data = exp3_combined)
 
+# checking for overdispersion in the poisson generalised model
 summary(exp3_combined_day_glm)
 
+# model is overdispersed so using quasipoisson
 exp3_combined_day_glm2 <- glm(fly_numbers ~ day, family = quasipoisson, data = exp3_combined)
 
 
-# checking the model 
+# checking the new generalised model 2
 performance::check_model(exp3_combined_day_glm2)
-performance::check_model(exp3_combined_day_glm2, check = c("qq"))
-# homogenity looks more normal
-# normality looks slightly worse but still okay 
+performance::check_model(exp3_combined_day_glm2, check = c("homogeneity", "qq"))
+# homogenity looks more normal? 
+# normality looks slightly worse but still okay - bad at the beginning
 # stick with this exp3_combined_day_glm2
+
+# do I need to do binomial instead of quasipoisson? 
+
 
 # analysing the data for the chosen model 
 
