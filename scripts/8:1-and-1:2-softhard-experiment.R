@@ -297,7 +297,7 @@ tbl_regression(exp2_combined_foodcondition_lm)
 
 
 # summarising hard vs soft data 
-softhard_summary_exp2 <- exp2both %>%  
+softhard_summary_exp2 <- exp2_combined %>%  
   group_by(food_type) %>% 
   summarise(mean = mean(fly_numbers),
             sd = sd(fly_numbers),
@@ -314,7 +314,7 @@ softhard_plot_exp2 <- softhard_summary_exp2 %>%
   geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
                 colour = "#FF6863",
                 width = 0.2)+
-  geom_jitter(data = exp2both,
+  geom_jitter(data = exp2_combined,
               aes(x = food_type,
                   y = fly_numbers),
               fill = "skyblue",
@@ -327,7 +327,7 @@ softhard_plot_exp2 <- softhard_summary_exp2 %>%
        title = "")+
   theme_classic() 
 # summarising nutrient composition data 
-nutrient_summary_exp2 <- exp2both %>%  
+nutrient_summary_exp2 <- exp2_combined %>%  
   group_by(food_nutrition) %>% 
   summarise(mean = mean(fly_numbers),
             sd = sd(fly_numbers),
@@ -343,7 +343,7 @@ nutrient_plot_exp2 <- nutrient_summary_exp2 %>%
   geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
                 colour = "#FF6863",
                 width = 0.2)+
-  geom_jitter(data = exp2both,
+  geom_jitter(data = exp2_combined,
               aes(x = food_nutrition,
                   y = fly_numbers),
               fill = "skyblue",
