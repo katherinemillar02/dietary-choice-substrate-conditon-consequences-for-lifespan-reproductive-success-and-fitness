@@ -197,13 +197,14 @@ exp3_combined_lm <- lm(fly_numbers ~ diet, data = exp3_combined)
 performance::check_model(exp3_combined_lm)
 performance::check_model(exp3_combined_lm, check = c("qq"))
 performance::check_model(exp3_combined_lm, check = c("linearity"))
-# looks ok
-# stick with this as  chosen model 
+# looks ok? 
+# go back and expand on this 
+ 
 
 # data analysis for chosen model
 
 # using summary() which will show anova
-summary(exp3_combined_lm)
+summary(exp3_combined_day_glm2)
 
 # using emmeans tukey to test everything 
 emmeans::emmeans(exp3_combined_lm, specs = pairwise ~ diet)
@@ -383,6 +384,7 @@ egg_counting3_plot <- egg_counting3_summary %>%
 #-- linear model of egg counting 
 exp3_egg_lm <- lm(egg_numbers ~ diet, data = long_egg_counting3)
 
+# checking the model
 performance::check_model(exp3_egg_lm)
 performance::check_model(exp3_egg_lm, check = c("qq"))
 performance::check_model(exp3_egg_lm, check = c("linearity"))
@@ -391,11 +393,13 @@ performance::check_model(exp3_egg_lm, check = c("linearity"))
 # trying a glm 
 exp3_egg_glm <- glm(egg_numbers ~ diet, family = poisson, data = long_egg_counting3)
 
+# using summary to look for glm overdispersion
 summary(exp3_egg_glm)
 
+# model is overdispersed so using quasipoisson
 exp3_egg_glm2 <- glm(egg_numbers ~ diet, family = quasipoisson, data = long_egg_counting3)
 
-
+# checking the model 
 performance::check_model(exp3_egg_glm2)
 performance::check_model(exp3_egg_glm2, check = c("qq"))
 # qq looks better
