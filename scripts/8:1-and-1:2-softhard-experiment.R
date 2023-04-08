@@ -433,8 +433,10 @@ performance::check_model(exp2_egg_lm, check = c("linearity"))
 #-- Making a generalised linear model 
 exp2_egg_glm <- glm(egg_numbers ~ diet, family = poisson, data = long_egg_counting2)
 
+# using summary() to check for overdispersion
 summary(exp2_egg_glm)
 
+# using quasipoission as is overdispersed 
 exp2_egg_glm2 <- glm(egg_numbers ~ diet, family = quasipoisson, data = long_egg_counting2)
 
 #---- Checking the model 
