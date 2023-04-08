@@ -185,6 +185,7 @@ performance::check_model(exp1a_all_day_glm, check = c("qq"))
 # I think exp1a_all_day_glm is an okay model to use? 
 
 
+
 # Using drop1 to look for significance of day in day glm model 
 drop1(exp1a_all_day_glm, test = 'F')
 
@@ -621,6 +622,7 @@ performance::check_model(exp1_combined_foodconditions_lm3, check = c("qq"))
 summary(exp1_combined_foodconditions_lm3)
 
 
+
 #---- Combined experiments egg data ----
 #------- collating egg counting data to look for significance 
 #--- adding an experiment variable to egg counting data 
@@ -958,6 +960,9 @@ summary(eggcountinge1ls2)
 emmeans::emmeans(eggcountinge1ls2, specs = pairwise ~ diet) 
 # No significance between soft and hard diets for egg laying 
 # summary says there is a difference 
+
+
+
 --------# two factor analysis egg -----
 # THIS CODE IS NOT USED IN OVERALL ANALYSIS 
 # CAN IGNORE FOR NOW
