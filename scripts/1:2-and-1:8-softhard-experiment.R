@@ -175,20 +175,23 @@ performance::check_model(exp1a_all_day_lm, check = c("qq"))
 # making a glm model with just day in for analysis 
 exp1a_all_day_glm <- glm(fly_numbers ~ day, family = poisson, data = exp1a_all)
 
-# checking the experiment 1a just day model (glm)
-performance::check_model(exp1a_all_day_glm)
-performance::check_model(exp1a_all_day_glm, check = c("qq"))
+exp1a_all_day_glm_2 <- glm(fly_numbers ~ day, family = quasipoisson, data = exp1a_all)
 
+# checking the experiment 1a just day model (glm)
+performance::check_model(exp1a_all_day_glm_2)
+performance::check_model(exp1a_all_day_glm_2, check = c("qq", "homogeneity"))
 
 # qq looks similar but maybe glm one looks slightly better 
 # homogenity also looks better with glm 
-# I think exp1a_all_day_glm is an okay model to use? 
+# I think exp1a_all_day_glm_2 is an okay model to use? 
 
 
 
 # Using drop1 to look for significance of day in day glm model 
-drop1(exp1a_all_day_glm, test = 'F')
-
+drop1(exp1a_all_day_glm_2, test = 'F')
+summary(exp1a_all_day_glm_2)
+# if doing anova analysis for this 
+# why so  different p values ?? 
 
 # ---------------- Experiment 1b - repeating the experiment -----
 #----- (Exp1b) Day 1 ----
@@ -337,7 +340,7 @@ summary(exp1balllmdayglm)
 
 #  more than 1 so do quaspoisson 
 # trying a glm 2 
-exp1balllmdayglm2 <- glm(fly_numbers ~ day, family = quasipoisson, data = exp1ball)
+exp1balldayglm2 <- glm(fly_numbers ~ day, family = quasipoisson, data = exp1ball)
 
 # summarising glm 2
 summary(exp1balllmdayglm2)
@@ -358,11 +361,11 @@ performance::check_model(exp1ballglmday20, check = c("qq"))
 
 
 #trying drop1 of the right day model of experiment 1b to do day analysis 
-drop1(exp1ballglmday20, test = "F")
+drop1(exp1balldayglm2, test = "F")
 # is this okay 
 
 # summarising the new day glm 2
-summary(exp1ballglmday20)
+summary(exp1balldayglm2)
 
 # Combining experiments ----
 # combining the two repeat experiments
@@ -847,7 +850,8 @@ summary(exp1_combined_egg_foodcondition_glm2)
 
 
 
-# THIS CODE IS NOT USED IN OVERALL ANALYSIS ----------------------------------------------------------
+
+# THIS CODE IS NOT USED IN OVERALL ANALYSIS 
 # CAN IGNORE FOR NOW
 ## JUST THERE FOR KNOWLEDGE 
 anova(exp1alllm)
@@ -880,11 +884,11 @@ exp1allglm %>% broom::tidy(conf.int = T) %>%
 
 
 
-# -------- Exp1a - Two factor analysis feeding ------
+# -------- Exp1a - Two factor analysis feeding 
 
 # THIS CODE IS NOT USED IN OVERALL ANALYSIS 
 # CAN IGNORE FOR NOW
-## JUST THERE FOR KNOWLEDGE - ----- ----- --- ----- ----- ----- ----- ----- ------- ----- ----- ---------
+## JUST THERE FOR KNOWLEDGE 
 exp1all$food_type <- ifelse(exp1all$diet %in% c("1:8H", "1:2H"), "hard", "soft")
 exp1all$food_nutrition <- ifelse(exp1all$diet %in% c("1:8", "1:2H", "1:2S"), "1:2", "1:8")
 view(exp1all)
@@ -901,7 +905,7 @@ summary(exp1alglmnew2)
 # THIS CODE IS NOT USED IN OVERALL ANALYSIS 
 # CAN IGNORE FOR NOW
 ## JUST THERE FOR KNOWLEDGE 
-# -------- (Exp 1a) Egg counting  --------
+# -------- (Exp 1a) Egg counting  
 #____ Reading the data in 
 egg_counting_data <- (read_excel(path = "data/RPEggCountE1.xlsx", na = "NA"))
 #____ Making the data long 
@@ -939,7 +943,7 @@ egg_counting1_plot <- egg_counting1_summary %>%
 # THIS CODE IS NOT USED IN OVERALL ANALYSIS 
 # CAN IGNORE FOR NOW
 ## JUST THERE FOR KNOWLEDGE 
-#------- (Exp1a) Egg counting data analysis -----
+#------- (Exp1a) Egg counting data analysis 
 #-- Making a linear model 
 eggcountinge1ls1 <- lm(egg_numbers ~ diet, data = long_egg_counting1)
 #---- Checking the model 
@@ -963,7 +967,7 @@ emmeans::emmeans(eggcountinge1ls2, specs = pairwise ~ diet)
 
 
 
---------# two factor analysis egg -----
+--------# two factor analysis egg 
 # THIS CODE IS NOT USED IN OVERALL ANALYSIS 
 # CAN IGNORE FOR NOW
 ## JUST THERE FOR KNOWLEDGE 
@@ -979,7 +983,7 @@ exp1balllm2 <- lm(fly_numbers ~ diet, data = exp1ball)
 summary(exp1balllm2)
 
 
-# (Exp1b) Egg count data analysis ------
+# (Exp1b) Egg count data analysis 
 
 #____ Reading the data in 
 egg_counting_data_1b <- (read_excel(path = "data/RPEggCountE1b.xlsx", na = "NA"))
