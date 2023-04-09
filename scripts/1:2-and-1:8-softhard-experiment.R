@@ -826,7 +826,7 @@ performance::check_model(exp1_combined_egg_foodcondition_glm2, check = c("qq"))
 
 # analysing the chosen egg food condition model
 summary(exp1_combined_egg_foodcondition_glm2)
-
+drop1(exp1_combined_egg_foodcondition_glm2, test = "F")
 
 
 

@@ -176,7 +176,48 @@ boxplot_food_fc_e1_fn <- ggplot()+
        y = "Mean average flies per patch")+
   theme(legend.position="none")
 
+boxplot_egg_fc_e1 <- ggplot()+ 
+  geom_boxplot(exp1_egg_combined, mapping=aes(x=food_type, y=egg_numbers, fill=food_type))+
+  theme_classic()+
+  scale_fill_manual(values=c("lightgreen", "lightblue"))+
+  labs(x = "Food Hardness",
+       y = "Mean average eggs per patch")+
+  theme(legend.position="none")
+
+boxplot_food_fc_e1_fn <- ggplot()+ 
+  geom_boxplot(exp1_egg_combined, mapping=aes(x=food_nutrition, y=egg_numbers, fill=food_nutrition))+
+  theme_classic()+
+  scale_fill_manual(values=c("lightgreen", "lightblue"))+
+  labs(x = "Nutrient Composition",
+       y = "Mean average eggs per patch")+
+  theme(legend.position="none")
+
+exp1_egg_combined_plot + boxplot_egg_fc_e1 + boxplot_food_fc_e1_fn 
+
+
+
+
 exp1_combined_plot + boxplot_food_fc_e1 + boxplot_food_fc_e1_fn
+
+
+
+boxplot_food_fc_e2 <- ggplot()+ 
+  geom_boxplot(exp2_combined, mapping=aes(x=food_type, y=fly_numbers, fill=food_type))+
+  theme_classic()+
+  scale_fill_manual(values=c("gold", "pink"))+
+  labs(x = "Food Hardness",
+       y = "Mean average flies per patch")+
+  theme(legend.position="none")
+
+boxplot_food_fc_e2_fn <- ggplot()+ 
+  geom_boxplot(exp2_combined, mapping=aes(x=food_nutrition, y=fly_numbers, fill=food_nutrition))+
+  theme_classic()+
+  scale_fill_manual(values=c("gold", "pink"))+
+  labs(x = "Nutrient Composition",
+       y = "Mean average flies per patch")+
+  theme(legend.position="none")
+
+exp2_combined_plot + boxplot_food_fc_e2 + boxplot_food_fc_e2_fn
 
 # trying to read boxplots vs barplots 
 

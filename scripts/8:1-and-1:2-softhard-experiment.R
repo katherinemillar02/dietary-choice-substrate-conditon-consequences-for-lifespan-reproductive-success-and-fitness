@@ -187,6 +187,8 @@ performance::check_model(exp2_combined_days_glm_3, check = c("qq"))
 
 summary(exp2_combined_days_glm_3)
 
+drop1(exp2_combined_days_glm_3, test = "F")
+
 # analysing fly numbers and diet data 
 # trying a linear model
 exp2_combined_lm <- lm(fly_numbers ~ diet, data = exp2_combined)
