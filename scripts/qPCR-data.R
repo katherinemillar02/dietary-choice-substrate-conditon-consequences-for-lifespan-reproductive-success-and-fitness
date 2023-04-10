@@ -61,8 +61,8 @@ dilp3_plot <- dilp3_sum %>%
 
 foxo_plot + dilp3_plot
 
-newplot <- newnew %>% 
-  ggplot(aes(x = sample, y = cq))+
+newplot <- newsum %>% 
+  ggplot(aes(x = sample, y = mean))+
   geom_bar(stat = "identity",
            fill = "skyblue",
            colour = "#FF6863",
@@ -71,7 +71,26 @@ newplot <- newnew %>%
   labs(x = "Diet patch larvae grew on",
        y = "2^-ΔCt")
 
+lm <- glm(cq ~ sample, family = quasipoisson, data = newnew)
 
+summary(lm)
+
+emmeans::emmeans(lm, pairwise ~ sample)
+
+lm2 <- glm(cq ~ sample, family = quasipoisson, data = newlong_dilp3_calcs)
+
+summary(lm2)
+
+emmeans::emmeans(lm2, pairwise ~ sample)
+
+
+lm3 <- glm(cq ~ sample, family = quasipoisson, data = newlong_foxo_calcs)
+
+summary(lm3)
+
+emmeans::emmeans(lm3, pairwise ~ sample)
+
+newlong_foxo_calcs
 
 #  reading the fd38 data in 
 fd38qPCR <- read_excel("data/fd38_qPCR.xlsx")
