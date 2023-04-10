@@ -197,14 +197,45 @@ exp3_combined_lm <- lm(fly_numbers ~ diet, data = exp3_combined)
 performance::check_model(exp3_combined_lm)
 performance::check_model(exp3_combined_lm, check = c("qq"))
 performance::check_model(exp3_combined_lm, check = c("linearity"))
+performance::check_model(exp3_combined_lm, check = c("homogeneity"))
 # looks ok? 
-# go back and expand on this 
- 
+# go back and expand on this ?? maybe go beyond linear model
+
+# trying out other models 
+exp3_combined_glm <- glm(fly_numbers ~ diet, family = poisson, data = exp3_combined)
+
+summary(exp3_combined_glm)
+
+exp3_combined_glm_2 <- glm(fly_numbers ~ diet, family = quasipoisson, data = exp3_combined)
+
+performance::check_model(exp3_combined_glm_2)
+performance::check_model(exp3_combined_glm_2, check = c("qq"))
+performance::check_model(exp3_combined_glm_2, check = c("homogeneity"))
+# hard to compare homogeneity 
+
+# but linear looks better for qq 
+# stick with linear? 
+
+MASS::boxcox(exp3_combined_lm)
+
+# trying linear in log and + 1 
+exp3_combined_lm_2 <- lm(formula = log(fly_numbers + 1) ~ diet, data = exp3_combined)
+
+# checking the model 
+performance::check_model(exp3_combined_lm_2)
+performance::check_model(exp3_combined_lm_2, check = c("qq"))
+performance::check_model(exp3_combined_lm_2, check = c("linearity"))
+performance::check_model(exp3_combined_lm_2, check = c("homogeneity"))
+#  struggling to read this?
+#  homogeneity defo not flat 
+#  maybe stick with original linear model? 
 
 # data analysis for chosen model
 
 # using summary() which will show anova
-summary(exp3_combined_day_glm2)
+summary(exp3_combined_lm)
+
+anova(exp3_combined_lm)
 
 # using emmeans tukey to test everything 
 emmeans::emmeans(exp3_combined_lm, specs = pairwise ~ diet)
@@ -342,7 +373,10 @@ performance::check_model(exp3_combined_foodcondition_glm2, check = c("qq"))
 
 
 #  using the chosen models for data analysis 
-summary(exp3_combined_foodcondition_lm)
+summary(exp3_combined_foodcondition_glm2)
+
+# Uhe this for interaction effect? 
+drop1(exp3_combined_foodcondition_glm2, test = "F")
 
 
 # -------- (Exp 3) Egg counting  --------
@@ -409,6 +443,8 @@ performance::check_model(exp3_egg_glm2, check = c("qq"))
 #  using the chosen model for data analysis 
 # summary function to look at anova 
 summary(exp3_egg_glm2)
+
+anova(exp3_egg_glm2)
 
 #-- analysing all egg data using tukey emmeans 
 emmeans::emmeans(exp3_egg_glm2, specs = pairwise ~ diet)
@@ -514,6 +550,7 @@ performance::check_model(exp3_egg_foodcondition_glm2, check = c("qq"))
 summary(exp3_egg_foodcondition_glm2)
 
 
+drop1(exp3_egg_foodcondition_glm2, test = "F")
 
 
 
