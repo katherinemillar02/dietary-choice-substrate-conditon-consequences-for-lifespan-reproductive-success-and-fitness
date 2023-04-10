@@ -15,8 +15,61 @@ newfoxoqPCR_summary <- newlong_foxoqPCR %>%
   summarise(mean = mean(cq, na.rm = T))
 
 
+foxo_calcs <- read_excel("data/foxo_calcs.xlsx")
+
+newlong_foxo_calcs <- foxo_calcs %>% 
+  pivot_longer(cols = ("1:8S":"8:1H"), names_to = "sample", values_to = "cq")
+
+foxo_sum <- newlong_foxo_calcs%>%  
+  group_by(sample) %>% 
+  summarise(mean = mean(cq, na.rm = T))
+
+dilp3_calcs <- read_excel("data/dilp3_calcs.xlsx")
+
+newlong_dilp3_calcs <- dilp3_calcs %>% 
+  pivot_longer(cols = ("1:8S":"8:1H"), names_to = "sample", values_to = "cq")
+
+dilp3_sum <- newlong_dilp3_calcs %>%  
+  group_by(sample) %>% 
+  summarise(mean = mean(cq, na.rm = T))
+
+newnew <- rbind(newlong_foxo_calcs, newlong_dilp3_calcs)
+
+newsum <- newnew %>%  
+  group_by(sample) %>% 
+  summarise(mean = mean(cq, na.rm = T))
 
 
+foxo_plot <- foxo_sum %>% 
+  ggplot(aes(x = sample, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  theme_classic()+
+  labs(title = "foxo")
+
+dilp3_plot <- dilp3_sum %>% 
+  ggplot(aes(x = sample, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  theme_classic()+
+  labs(title = "dilp3")
+  
+
+foxo_plot + dilp3_plot
+
+newplot <- newnew %>% 
+  ggplot(aes(x = sample, y = cq))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  theme_classic()+
+  labs(x = "Diet patch larvae grew on",
+       y = "2^-ΔCt")
 
 
 
@@ -212,15 +265,32 @@ long_qPCR_sum <- qPCR_summary %>%
 2^- 7.6
 0.005154328
 
+sample <- c("1:8S(1)","1:8S(2)", "1:8S(3)", "1:8H(1)","1:8H(2)", "1:8H(3)", "8:1S(1)", "8:1S(2)", "8:1S(3)", "8:1H(2)")
+Cq <- c("0.008974206", "0.004487103", "0.002577164", "0.002577164", "0.03125", "0.01184154", "0.002093308", "0.001288582", " 0.00364466", "0.005154328"  )
+
+foxo_bind <- data.frame(sample, Cq)
+
+qPCR_plot3 <- foxo_bind %>% 
+  ggplot(aes(x = sample, y = Cq))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  theme_classic()
+
+qPCR_plot4 <- bothqpcr %>% 
+  ggplot(aes(x = sample, y = Cq))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  theme_classic()
 
 
 
+qPCR_plot2 + qPCR_plot3
 
-
-
-
-
-
+bothqpcr <- rbind(qPCR_data, foxo_bind)
 
 # average reference ct
 
@@ -256,25 +326,7 @@ newfoxoqPCR2_summary <- newlong_foxoqPCR2 %>%
 
 
 
-  geom_bar(stat = "identity",
-           fill = "skyblue",
-           colour = "#FF6863",
-           alpha = 0.6)+
-  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
-                colour = "#FF6863",
-                width = 0.2)+
-  geom_jitter(data = long_foxoqPCR2,
-              aes(x = sample,
-                  y = cq),
-              fill = "skyblue",
-              colour = "#3a3c3d",
-              width = 0.2,
-              shape = 21)+
-  ylim(0.0, 50)+
-  labs(x = "Diet larvae grew on \n(Protein: Carbohydrate)",
-       y = "Mean Cq", 
-       title = "Foxo")+
-  theme_classic()
+
 
 
 foxoqPCR2 <- read_excel("data/qPCR_foxo_data_2.xlsx", na = "NA")
