@@ -474,7 +474,7 @@ GGally::ggcoef_model(exp2_egg_glm2,
 
 # TWO FACTOR ANALYSIS - OVIPOSITION - 
 # changing the data to columns 
-long_egg_counting2$food_type <- ifelse(long_egg_counting2 $diet %in% c("8:1H", "1:2H"), "hard", "soft")
+long_egg_counting2$food_type <- ifelse(long_egg_counting2 $diet %in% c("8:1H", "1:2H"), "Hard", "Soft")
 long_egg_counting2$food_nutrition <- ifelse(long_egg_counting2 $diet %in% c("8:1", "1:2H", "1:2S"), "1:2", "8:1")
 
 # looking at the data 
@@ -572,7 +572,7 @@ performance::check_model(exp2_egg_foodcondition_glm2, check = c("qq"))
 # doing data analysis with chosen model 
 summary(exp2_egg_foodcondition_glm2)
 
-
+anova(exp2_egg_foodcondition_glm2)
 
 
 
