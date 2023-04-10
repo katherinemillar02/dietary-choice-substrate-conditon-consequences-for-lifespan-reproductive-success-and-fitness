@@ -4,135 +4,95 @@ library(tidyverse)
 library(hrbrthemes)
 library(viridis)
 
-# Create the boxplot
-ggplot(egg_counting1_summary, aes(x = diet, y = mean)) +
-  geom_boxplot() +
-  geom_point(aes(y = mean)) +
-  geom_errorbar(aes(ymin = mean - se, ymax = mean + se), width = 0.2) +
-  labs(title = "Boxplot of Egg Counts by Diet",
-       x = "Diet", y = "Mean Egg Count")+
-  theme_classic()
 
 
 
+# experiment 1 
+# overall food bar plot 
+exp1_combined_plot
 
-# Create the boxplot
-
-
-egg_counting1_boxplot <- egg_counting1_summary %>% 
-  ggplot(aes(x = diet, y = mean))+
-  geom_boxplot(stat = "identity",
-               fill = "skyblue",
-               colour = "orange",
-               alpha = 0.6)+
-  theme_classic()
+# food nutrition and food hardness bar plot 
+softhard_plot_exp1 + nutrient_plot_exp1
 
 
-exp2both%>%   group_by(Colour)%>%   dplyr::summarise(Mean=mean(food_type)) #calculatng means 
-Data$COLOUR<-as.factor(Data$Colour) #puts data into correct format Data$SECONDS<-as.numeric(Data$Seconds) 
-
-library(ggplot2) 
-
-boxplot<-ggplot()+ geom_boxplot(exp2both, mapping=aes(x=food_nutrition, y=mean,fill=food_nutrition))+ 
+# food nutrition and food hardness box plot 
+exp1_fh_boxplot <- ggplot()+ 
+  geom_boxplot(exp1_combined, mapping=aes(x=food_type, y=fly_numbers, fill=food_type))+
   theme_classic()+
-  scale_fill_manual(values=c("blue","gold","pink"))
+  scale_fill_manual(values=c("gold", "pink"))+
+  labs(x = "Food Hardness",
+       y = "Mean average flies per patch")+
+  theme(legend.position="none")+
+  ylim(0,9)
+
+exp1_fn_boxplot <- ggplot()+ 
+  geom_boxplot(exp1_combined, mapping=aes(x=food_nutrition, y=fly_numbers, fill=food_nutrition))+
+  theme_classic()+
+  scale_fill_manual(values=c("gold", "pink"))+
+  labs(x = "Nutrient Composition",
+       y = "Mean average flies per patch")+
+  theme(legend.position="none")+
+  ylim(0,9)
+
+exp1_fh_boxplot + exp1_fn_boxplot 
 
 
+# experiment 1 barplots together 
+exp1_combined_plot + softhard_plot_exp1 + nutrient_plot_exp1
+
+# experiment 1 boxplots together 
+exp1_combined_plot + exp1_fh_boxplot + exp1_fn_boxplot
+
+boxplot_egg_fc_e1_egg <- ggplot()+ 
+  geom_boxplot(exp1_egg_combined, mapping=aes(x=food_type, y=egg_numbers, fill=food_type))+
+  theme_classic()+
+  scale_fill_manual(values=c("lightgreen", "lightblue"))+
+  labs(x = "Food Hardness",
+       y = "Mean average eggs per patch")+
+  theme(legend.position="none")+
+  ylim(0,200)
+
+boxplot_food_fc_e1_fn_egg <- ggplot()+ 
+  geom_boxplot(exp1_egg_combined, mapping=aes(x=food_nutrition, y=egg_numbers, fill=food_nutrition))+
+  theme_classic()+
+  scale_fill_manual(values=c("lightgreen", "lightblue"))+
+  labs(x = "Nutrient Composition",
+       y = "Mean average eggs per patch")+
+  theme(legend.position="none")+
+  ylim(0,200)
 
 
+# experiment 1 egg bar plots together 
+exp1_egg_combined_plot + softhard_plot_exp1_egg + nutrient_plot_exp1_egg
 
-nutrient_boxplot_exp2 <- nutrient_summary_exp2 %>% 
-  ggplot(aes(x = food_nutrition, y = mean))+
-  geom_boxplot(stat = "identity",
-           fill = "skyblue",
-           colour = "#FF6863",
-           alpha = 0.6)
+exp1_egg_combined_plot + boxplot_egg_fc_e1_egg + boxplot_food_fc_e1_fn_egg 
 
 
-
-
-ggplot(exp2both, aes(x = diet, y = fly_numbers)) + 
-  geom_boxplot() + 
-  ggtitle("Boxplot of Four Diets with Varying Mean Averages") + 
-  xlab("Diet Type") + 
-  ylab("Average")+
-  COLOUR("orange")
-
-
-boxplot(fly_numbers~diet,
-        data=exp2both,
-        main="Different boxplots for each month",
-        xlab="Month Number",
-        ylab="Degree Fahrenheit",
-        col="orange",
-        border="brown"
-)
-
-
-
-p<-ggplot(exp2both, aes(x=diet, y=fly_numbers, color=diet)) +
-  geom_boxplot()+
-  theme_classic()
-p
-
-p+scale_color_manual(values=c("#999999", "#E69F00", "#56B4E9", "red"))
-p+scale_color_brewer(palette="Dark2")
-p + scale_color_grey() + theme_classic()
-
-
-ggplot(exp2both, aes(x=diet, y=fly_numbers)) +
-  geom_boxplot(fill='#A4A4A4', color="black")+
-  theme_classic()
-
-
-p<-ggplot(exp2both, aes(x=diet, y=fly_numbers, fill=diet)) +
-  geom_boxplot()+
-  theme_classic()
-p
-
-
-
-
-p+scale_fill_manual(values=c("#999999", "#E69F00", "#56B4E9", "red"))
-
-
-p + theme(legend.position="top")
-p + theme(legend.position="bottom")
-p + theme(legend.position="none") # Remove legend
-
-
-p + scale_fill_brewer(palette="Dark2") + theme_minimal()
-
-
-
-p<-ggplot(exp2both , aes(x=food_type, y=fly_numbers, fill=food_type)) +
-  geom_boxplot()+
-  theme_classic()
-p
-
-a<-ggplot(exp2both, aes(x=food_nutrition, y=fly_numbers, fill=food_nutrition)) +
-  geom_boxplot()+
-  theme_classic()
 
 
 boxplot1 <- ggplot()+ 
   geom_boxplot(exp2both, mapping=aes(x=food_nutrition, y=fly_numbers, fill=food_nutrition))+
   theme_classic()+
   scale_fill_manual(values=c( "gold", "pink"))+
-  theme(legend.position="bottom")
+  theme(legend.position="none")+
+  ylim(0,9)+
+  labs(x = "Nutrient Composition",
+       y = "Mean number of flies on a patch")
+
 
 boxplot2 <- ggplot()+ 
   geom_boxplot(exp2both, mapping=aes(x=food_type, y=fly_numbers, fill=food_type))+ 
   theme_classic()+
   scale_fill_manual(values=c( "gold", "pink"))+
-  theme(legend.position="bottom")
+  theme(legend.position="none")+
+  ylim(0,9)+
+  labs(x = "Food Hardness",
+       y = "Mean number of flies on a patch")
 
+exp2_combined_plot  + boxplot2 + boxplot1
 
-p + exp2both_plot 
+exp2_combined_plot + softhard_plot_exp2 + nutrient_plot_exp2
 
-exp2both_plot + boxplot1 + boxplot2
-
-exp2both_plot + nutrient_plot_exp2 + softhard_plot_exp2
 
 
 boxplot2 <- ggplot()+ 
@@ -147,7 +107,8 @@ boxplot_egg_fc <- ggplot()+
   scale_fill_manual(values=c("gold", "pink"))+
   labs(x = "Nutrient Composition",
        y = "Mean average flies per patch")+
-  theme(legend.position="none")
+  theme(legend.position="none")+
+  ylim(0,200)
 
 boxplot_egg_fc_2 <- ggplot()+ 
   geom_boxplot(exp2both, mapping=aes(x=food_nutrition, y=fly_numbers, fill=food_nutrition))+
@@ -155,7 +116,8 @@ boxplot_egg_fc_2 <- ggplot()+
   scale_fill_manual(values=c("gold", "pink"))+
   labs(x = "Food Hardness",
        y = "Mean average flies per patch")+
-  theme(legend.position="none")
+  theme(legend.position="none")+
+  ylim(0,200)
 
 boxplot_egg_fc + boxplot_egg_fc_2
 
@@ -166,31 +128,15 @@ boxplot_food_fc_e1 <- ggplot()+
   scale_fill_manual(values=c("gold", "pink"))+
   labs(x = "Food Hardness",
        y = "Mean average flies per patch")+
-  theme(legend.position="none")
+  theme(legend.position="none")+
+  ylim(0,9)
 
-boxplot_food_fc_e1_fn <- ggplot()+ 
-  geom_boxplot(exp1_combined, mapping=aes(x=food_nutrition, y=fly_numbers, fill=food_nutrition))+
-  theme_classic()+
-  scale_fill_manual(values=c("gold", "pink"))+
-  labs(x = "Nutrient Composition",
-       y = "Mean average flies per patch")+
-  theme(legend.position="none")
 
-boxplot_egg_fc_e1 <- ggplot()+ 
-  geom_boxplot(exp1_egg_combined, mapping=aes(x=food_type, y=egg_numbers, fill=food_type))+
-  theme_classic()+
-  scale_fill_manual(values=c("lightgreen", "lightblue"))+
-  labs(x = "Food Hardness",
-       y = "Mean average eggs per patch")+
-  theme(legend.position="none")
 
-boxplot_food_fc_e1_fn <- ggplot()+ 
-  geom_boxplot(exp1_egg_combined, mapping=aes(x=food_nutrition, y=egg_numbers, fill=food_nutrition))+
-  theme_classic()+
-  scale_fill_manual(values=c("lightgreen", "lightblue"))+
-  labs(x = "Nutrient Composition",
-       y = "Mean average eggs per patch")+
-  theme(legend.position="none")
+exp1_combined_plot + boxplot_food_fc_e1 + boxplot_food_fc_e1_fn
+exp1_combined_plot + softhard_plot_exp1 + nutrient_plot_exp1
+
+
 
 exp1_egg_combined_plot + boxplot_egg_fc_e1 + boxplot_food_fc_e1_fn 
 
@@ -199,7 +145,9 @@ exp1_egg_combined_plot + boxplot_egg_fc_e1 + boxplot_food_fc_e1_fn
 
 exp1_combined_plot + boxplot_food_fc_e1 + boxplot_food_fc_e1_fn
 
+exp1_combined_plot + softhard_plot_exp1 + nutrient_plot_exp1
 
+softhard_plot_exp1_egg + nutrient_plot_exp1_egg
 
 boxplot_food_fc_e2 <- ggplot()+ 
   geom_boxplot(exp2_combined, mapping=aes(x=food_type, y=fly_numbers, fill=food_type))+
@@ -245,6 +193,16 @@ boxplot_food_fc_e2_fn <- ggplot()+
        y = "Mean average eggs per patch")+
   theme(legend.position="none")+ 
   ylim(0,200)
+
+
+egg_counting2_plot + boxplot_egg_fc_e2 + boxplot_food_fc_e2_fn
+
+
+egg_counting2_plot + softhardegg_plot + nutrientegg_plot
+
+
+exp3feeding_plot_both + softhard_plot_exp3 + nutrient_plot_exp3
+
   
 
 
@@ -260,7 +218,7 @@ boxplot_egg_fc_e3 <- ggplot()+
   ylim(0,200)
 
 boxplot_food_fc_e3_fn <- ggplot()+ 
-  geom_boxplot(long_egg_counting2, mapping=aes(x=food_nutrition, y=egg_numbers, fill=food_nutrition))+
+  geom_boxplot(long_egg_counting3, mapping=aes(x=food_nutrition, y=egg_numbers, fill=food_nutrition))+
   theme_classic()+
   scale_fill_manual(values=c("lightgreen", "lightblue"))+
   labs(x = "Nutrient Composition",
@@ -275,7 +233,7 @@ egg_counting2_plot + boxplot_egg_fc_e2 + boxplot_food_fc_e2_fn
 
 exp3feeding_plot_both + boxplot_food_fc_e3 + boxplot_food_fc_e3_fn
   
-  
+
 
 
 boxplot_food_fc_e3 <- ggplot()+ 
@@ -285,7 +243,7 @@ boxplot_food_fc_e3 <- ggplot()+
   labs(x = "Food Hardness",
        y = "Mean average flies per patch")+
   theme(legend.position="none")+ 
-  ylim(0,4)
+  ylim(0,9)
 
 
 boxplot_food_fc_e3_fn <- ggplot()+ 
@@ -295,9 +253,11 @@ boxplot_food_fc_e3_fn <- ggplot()+
   labs(x = "Nutrient Composition",
        y = "Mean average flies per patch")+
   theme(legend.position="none")+ 
-  ylim(0,4)
+  ylim(0,9)
 
 
 
-egg_counting3_plot + boxplot_egg_fc_e3 + boxplot_food_fc_e3_fn
+egg_counting3_plot + softhardegg_plot_exp3 + nutrientegg_plot_exp3
+
+egg_counting3_plot + boxplot_egg_fc_e3 + boxplot_food_fc_e3_fn 
 
