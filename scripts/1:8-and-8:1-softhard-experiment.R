@@ -138,7 +138,7 @@ exp3feeding_plot_both <- exp3feeding_summary_both %>%
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)+
-  ylim(0.0, 4.0)+
+  ylim(0.0, 9)+
   labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "")+
@@ -276,7 +276,7 @@ softhard_plot_exp3 <- softhard_summary_exp3 %>%
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)+
-  ylim(0.0, 4.0)+
+  ylim(0.0, 9)+
   labs(x = "Diet \n(Protein; Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "")+
@@ -305,7 +305,7 @@ nutrient_plot_exp3 <- nutrient_summary_exp3 %>%
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)+
-  ylim(0.0, 4.0)+
+  ylim(0.0, 9)+
   labs(x = "Diet \n(Protein; Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "")+
@@ -471,10 +471,10 @@ softhardegg_plot_exp3 <- softhardegg_summary_exp3 %>%
   ggplot(aes(x = food_type, y = mean))+
   geom_bar(stat = "identity",
            fill = "skyblue",
-           colour = "#FF6863",
+           colour = "orange",
            alpha = 0.6)+
   geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
-                colour = "#FF6863",
+                colour = "orange",
                 width = 0.2)+
   geom_jitter(data = long_egg_counting3,
               aes(x = food_type,
@@ -483,11 +483,11 @@ softhardegg_plot_exp3 <- softhardegg_summary_exp3 %>%
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)+
-  ylim(0.0, 110)+
-  labs(x = "Diet \n(Protein; Carbohydrate)",
+  ylim(0.0, 200)+
+  labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of eggs on a patch",
        title = "")+
-  theme_minimal() 
+  theme_classic() 
 # summarising egg nutrient composition 
 nutrientegg_summary_exp3 <- long_egg_counting3%>%  
   group_by(food_nutrition) %>% 
@@ -500,10 +500,10 @@ nutrientegg_plot_exp3 <- nutrientegg_summary_exp3 %>%
   ggplot(aes(x = food_nutrition, y = mean))+
   geom_bar(stat = "identity",
            fill = "skyblue",
-           colour = "#FF6863",
+           colour = "orange",
            alpha = 0.6)+
   geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
-                colour = "#FF6863",
+                colour = "orange",
                 width = 0.2)+
   geom_jitter(data = long_egg_counting3,
               aes(x = food_nutrition,
@@ -512,11 +512,11 @@ nutrientegg_plot_exp3 <- nutrientegg_summary_exp3 %>%
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)+
-  ylim(0.0, 110)+
-  labs(x = "Diet \n(Protein; Carbohydrate)",
+  ylim(0.0, 200)+
+  labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of eggs on a patch",
        title = "")+
-  theme_minimal() 
+  theme_classic() 
 # combining the experiment hardness plot with the nutrient plot with patchwork 
 softhardegg_plot_exp3 + nutrientegg_plot_exp3
 
@@ -553,6 +553,25 @@ summary(exp3_egg_foodcondition_glm2)
 drop1(exp3_egg_foodcondition_glm2, test = "F")
 
 
+exp3_egg_foodcondition_glm3 <- glm(egg_numbers ~ food_type + food_nutrition, family = quasipoisson, data = long_egg_counting3)
+summary(exp3_egg_foodcondition_glm3)
+
+
+exp3_egg_foodcondition_glm4 <- glm(egg_numbers ~ food_type + food_nutrition, family = quasipoisson, data = long_egg_counting3)
+
+summary(exp3_egg_foodcondition_glm4)
+
+performance::check_model(exp3_egg_foodcondition_glm4)
+performance::check_model(exp3_egg_foodcondition_glm4, check = c("qq"))
+performance::check_model(exp3_egg_foodcondition_glm4, check = c("homogeneity"))
+
+
+exp3_egg_foodcondition_lm_2 <- lm(egg_numbers ~ food_type + food_nutrition, data = long_egg_counting3)
+
+
+performance::check_model(exp3_egg_foodcondition_lm_2)
+performance::check_model(exp3_egg_foodcondition_lm_2, check = c("qq"))
+performance::check_model(exp3_egg_foodcondition_lm_2, check = c("homogeneity"))
 
 
 
