@@ -138,7 +138,7 @@ exp2_combined_plot <- exp2_combined_summary %>%
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)+
-  ylim(0.0, 4.0)+
+  ylim(0.0, 9)+
   labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "")+
@@ -290,6 +290,7 @@ performance::check_model(exp2_combined_foodcondition_glm2, check = c("qq"))
 
 # summary function which will show anova 
 summary(exp2_combined_foodcondition_lm)
+drop1(exp2_combined_foodcondition_lm, test = "F")
 
 # confidence intervals
 confint(exp2_combined_foodcondition_lm)
@@ -323,7 +324,7 @@ softhard_plot_exp2 <- softhard_summary_exp2 %>%
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)+
-  ylim(0.0, 4.0)+
+  ylim(0.0, 9)+
   labs(x = "Diet \n(Protein; Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "")+
@@ -352,7 +353,7 @@ nutrient_plot_exp2 <- nutrient_summary_exp2 %>%
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)+
-  ylim(0.0, 4.0)+
+  ylim(0.0, 9)+
   labs(x = "Diet \n(Protein; Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "")+
@@ -493,10 +494,10 @@ softhardegg_plot <- softhardegg_summary %>%
   ggplot(aes(x = food_type, y = mean))+
   geom_bar(stat = "identity",
            fill = "skyblue",
-           colour = "#FF6863",
+           colour = "orange",
            alpha = 0.6)+
   geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
-                colour = "#FF6863",
+                colour = "orange",
                 width = 0.2)+
   geom_jitter(data = long_egg_counting2,
               aes(x = food_type,
@@ -505,11 +506,11 @@ softhardegg_plot <- softhardegg_summary %>%
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)+
-  ylim(0.0, 110)+
-  labs(x = "Diet \n(Protein; Carbohydrate)",
+  ylim(0.0, 200)+
+  labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of eggs on a patch",
        title = "")+
-  theme_minimal() 
+  theme_classic() 
 # summarising egg nutrient composition 
 nutrientegg_summary <- long_egg_counting2%>%  
   group_by(food_nutrition) %>% 
@@ -522,10 +523,10 @@ nutrientegg_plot <- nutrientegg_summary %>%
   ggplot(aes(x = food_nutrition, y = mean))+
   geom_bar(stat = "identity",
            fill = "skyblue",
-           colour = "#FF6863",
+           colour = "orange",
            alpha = 0.6)+
   geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
-                colour = "#FF6863",
+                colour = "orange",
                 width = 0.2)+
   geom_jitter(data = long_egg_counting2,
               aes(x = food_nutrition,
@@ -534,11 +535,11 @@ nutrientegg_plot <- nutrientegg_summary %>%
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)+
-  ylim(0.0, 110)+
-  labs(x = "Diet \n(Protein; Carbohydrate)",
+  ylim(0.0, 200)+
+  labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of eggs on a patch",
        title = "")+
-  theme_minimal() 
+  theme_classic() 
 
 #- visualising the data of egg counting nutrient composition vs soft/hard together
 softhardegg_plot + nutrientegg_plot
@@ -570,20 +571,42 @@ performance::check_model(exp2_egg_foodcondition_glm2, check = c("qq"))
 # stick with this model so far
 
 # doing data analysis with chosen model 
+drop1(exp2_egg_foodcondition_glm2, test = "F")
+
 summary(exp2_egg_foodcondition_glm2)
 
 anova(exp2_egg_foodcondition_glm2)
 
 
 
+exp2_egg_foodcondition_glm3 <- glm(egg_numbers ~ food_type + food_nutrition, family = poisson, data = long_egg_counting2)
+
+summary(exp2_egg_foodcondition_glm3)
+
+
+exp2_egg_foodcondition_glm4 <- glm(egg_numbers ~ food_type + food_nutrition, family = quasipoisson, data = long_egg_counting2)
+
+#---- Checking the model 
+performance::check_model(exp2_egg_foodcondition_glm4)
+performance::check_model(exp2_egg_foodcondition_glm4, check = c("qq"))
+performance::check_model(exp2_egg_foodcondition_glm4, check = c("homogeneity"))
+# qq looks ok
+# homogeneity could be better? 
 
 
 
 
+exp2_egg_foodcondition_lm2 <- lm(egg_numbers ~ food_type + food_nutrition, data = long_egg_counting2)
 
 
+performance::check_model(exp2_egg_foodcondition_lm2)
+performance::check_model(exp2_egg_foodcondition_lm2, check = c("qq"))
+performance::check_model(exp2_egg_foodcondition_lm2, check = c("linearity"))
+performance::check_model(exp2_egg_foodcondition_lm2, check = c("homogeneity"))
+# homogeneity looks better on glm 4 ? 
+# stick with that for now 
 
-
+summary(exp2_egg_foodcondition_glm4)
 
 
 
