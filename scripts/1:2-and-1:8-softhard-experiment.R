@@ -159,11 +159,11 @@ exp1all_plot <- exp1a_all_summary %>%
        y = "Mean (+/- S.E.) number of flies on a patch")+
   theme_minimal() 
 
+# ------ Exp 1a Combining Analysis -----
 
 # ------ -(Exp1a) Combined days data analysis ----------
 
-# Testing a model for feeding behaviour for both days with diet including 
-exp1a_all_lm <- lm(fly_numbers ~ diet + day, data = exp1a_all)
+
 
 # making a model with just day in for analysis 
 exp1a_all_day_lm <- lm(fly_numbers ~ day, data = exp1a_all)
@@ -175,6 +175,10 @@ performance::check_model(exp1a_all_day_lm, check = c("qq"))
 # making a glm model with just day in for analysis 
 exp1a_all_day_glm <- glm(fly_numbers ~ day, family = poisson, data = exp1a_all)
 
+# using summary to check for overdispersion
+summary(exp1a_all_day_glm)
+
+# model is overdispersed so using quasipoisson
 exp1a_all_day_glm_2 <- glm(fly_numbers ~ day, family = quasipoisson, data = exp1a_all)
 
 # checking the experiment 1a just day model (glm)
@@ -189,6 +193,8 @@ performance::check_model(exp1a_all_day_glm_2, check = c("qq", "homogeneity"))
 
 # Using drop1 to look for significance of day in day glm model 
 drop1(exp1a_all_day_glm_2, test = 'F')
+
+# using summary to look at significance of day
 summary(exp1a_all_day_glm_2)
 # if doing anova analysis for this 
 # why so  different p values ?? 
@@ -405,7 +411,7 @@ exp1_combined_plot <- exp1_combined_summary %>%
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)+
-  ylim(0.0, 4.0)+
+  ylim(0.0, 9)+
   labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "")+
@@ -538,7 +544,7 @@ softhard_plot_exp1 <- softhard_summary_exp1 %>%
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)+
-  ylim(0.0, 4.0)+
+  ylim(0.0, 9)+
   labs(x = "Diet \n(Protein; Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "")+
@@ -567,7 +573,7 @@ nutrient_plot_exp1 <- nutrient_summary_exp1 %>%
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)+
-  ylim(0.0, 4.0)+
+  ylim(0.0, 9)+
   labs(x = "Diet \n(Protein; Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "")+
@@ -692,6 +698,11 @@ performance::check_model(exp1_egg_combined_experiment_glm_2, check = c("qq"))
 # using drop1 to see significance of experiment 
 drop1(exp1_egg_combined_experiment_glm_2, test = "F")
 
+summary(exp1_egg_combined_experiment_glm_2)
+
+
+
+
 #---  linear model for collated egg counting data 
 exp1_egg_combined_lm <- lm(egg_numbers ~ diet, data = exp1_egg_combined)
 
@@ -747,10 +758,10 @@ softhard_plot_exp1_egg <- softhard_summary_exp1_egg %>%
   ggplot(aes(x = food_type, y = mean))+
   geom_bar(stat = "identity",
            fill = "skyblue",
-           colour = "#FF6863",
+           colour = "orange",
            alpha = 0.6)+
   geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
-                colour = "#FF6863",
+                colour = "orange",
                 width = 0.2)+
   geom_jitter(data = exp1_egg_combined,
               aes(x = food_type,
@@ -761,7 +772,7 @@ softhard_plot_exp1_egg <- softhard_summary_exp1_egg %>%
               shape = 21)+
   ylim(0.0, 200)+
   labs(x = "Diet \n(Protein: Carbohydrate)",
-       y = "Mean (+/- S.E.) number of flies on a patch",
+       y = "Mean (+/- S.E.) number of eggs laid on each patch",
        title = "")+
   theme_classic() 
 
@@ -791,9 +802,10 @@ nutrient_plot_exp1_egg <- nutrient_summary_exp1_egg %>%
               shape = 21)+
   ylim(0.0, 200)+
   labs(x = "Diet \n(Protein: Carbohydrate)",
-       y = "Mean (+/- S.E.) number of eggs on a patch",
+       y = "Mean (+/- S.E.) number of eggs laid on each patch",
        title = "")+
   theme_classic() 
+
 # using patchwork to compare soft/hardness and nutrient composition - data visualisation
 softhard_plot_exp1_egg + nutrient_plot_exp1_egg
 
