@@ -225,4 +225,79 @@ boxplot_food_fc_e1 + boxplot_food_fc_e1_fn
 softhard_plot_exp1 + nutrient_plot_exp1
 
 # same data but why do they look so different 
- 
+
+
+
+boxplot_egg_fc_e2 <- ggplot()+ 
+  geom_boxplot(long_egg_counting2, mapping=aes(x=food_type, y=egg_numbers, fill=food_type))+
+  theme_classic()+
+  scale_fill_manual(values=c("lightgreen", "lightblue"))+
+  labs(x = "Food Hardness",
+       y = "Mean average eggs per patch")+
+  theme(legend.position="none")+
+  ylim(0,200)
+
+boxplot_food_fc_e2_fn <- ggplot()+ 
+  geom_boxplot(long_egg_counting2, mapping=aes(x=food_nutrition, y=egg_numbers, fill=food_nutrition))+
+  theme_classic()+
+  scale_fill_manual(values=c("lightgreen", "lightblue"))+
+  labs(x = "Nutrient Composition",
+       y = "Mean average eggs per patch")+
+  theme(legend.position="none")+ 
+  ylim(0,200)
+  
+
+
+
+
+boxplot_egg_fc_e3 <- ggplot()+ 
+  geom_boxplot(long_egg_counting3, mapping=aes(x=food_type, y=egg_numbers, fill=food_type))+
+  theme_classic()+
+  scale_fill_manual(values=c("lightgreen", "lightblue"))+
+  labs(x = "Food Hardness",
+       y = "Mean average eggs per patch")+
+  theme(legend.position="none")+
+  ylim(0,200)
+
+boxplot_food_fc_e3_fn <- ggplot()+ 
+  geom_boxplot(long_egg_counting2, mapping=aes(x=food_nutrition, y=egg_numbers, fill=food_nutrition))+
+  theme_classic()+
+  scale_fill_manual(values=c("lightgreen", "lightblue"))+
+  labs(x = "Nutrient Composition",
+       y = "Mean average eggs per patch")+
+  theme(legend.position="none")+ 
+  ylim(0,200)
+
+
+egg_counting2_plot + softhardegg_plot + nutrientegg_plot
+
+egg_counting2_plot + boxplot_egg_fc_e2 + boxplot_food_fc_e2_fn 
+
+exp3feeding_plot_both + boxplot_food_fc_e3 + boxplot_food_fc_e3_fn
+  
+  
+
+
+boxplot_food_fc_e3 <- ggplot()+ 
+  geom_boxplot(exp3_combined, mapping=aes(x=food_type, y=fly_numbers, fill=food_type))+
+  theme_classic()+
+  scale_fill_manual(values=c("gold", "pink"))+
+  labs(x = "Food Hardness",
+       y = "Mean average flies per patch")+
+  theme(legend.position="none")+ 
+  ylim(0,4)
+
+
+boxplot_food_fc_e3_fn <- ggplot()+ 
+  geom_boxplot(exp3_combined, mapping=aes(x=food_nutrition, y=fly_numbers, fill=food_nutrition))+
+  theme_classic()+
+  scale_fill_manual(values=c("gold", "pink"))+
+  labs(x = "Nutrient Composition",
+       y = "Mean average flies per patch")+
+  theme(legend.position="none")+ 
+  ylim(0,4)
+
+
+
+egg_counting3_plot + boxplot_egg_fc_e3 + boxplot_food_fc_e3_fn
+
