@@ -572,7 +572,8 @@ softhardegg_plot + nutrientegg_plot
 #- TWO FACTOR // OVIPOSITION // DATA ANALYSIS ------
 # doing a linear model of egg two factor 
 exp2_egg_foodcondition_lm <- lm(egg_numbers ~ food_type + food_nutrition + food_type : food_nutrition, data = long_egg_counting2)
-
+summary(exp2_egg_foodcondition_lm)
+drop1(exp2_egg_foodcondition_lm, test = "F")
 #---- Checking the model 
 performance::check_model(exp2_egg_foodcondition_lm)
 performance::check_model(exp2_egg_foodcondition_lm, check = c("qq"))
