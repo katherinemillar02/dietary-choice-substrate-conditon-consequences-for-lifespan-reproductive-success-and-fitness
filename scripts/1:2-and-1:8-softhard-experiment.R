@@ -890,6 +890,9 @@ exp1allglm01 <- glm(fly_numbers ~ diet, data = exp1all, family = poisson)
 exp1allglm <- glm(fly_numbers ~ diet, data = exp1all, family = quasipoisson)
 summary(exp1allglm)
 summary(exp1allglm01)
+
+
+
 exp1allglm %>% broom::tidy(conf.int = T) %>% 
   select(-`std.error`) %>% 
   mutate_if(is.numeric, round, 2) %>% 
@@ -903,6 +906,25 @@ exp1allglm %>% broom::tidy(conf.int = T) %>%
       booktabs = T) %>% 
   kable_styling(full_width = FALSE, font_size=16)
 # why is p value 0? 
+
+
+broom::tidy(exp1_combined_glm_2)
+
+exp1_combined_glm_2 %>% broom::tidy(conf.int = T) %>% 
+  select(-`std.error`) %>% 
+  mutate_if(is.numeric, round, 2) %>% 
+  kbl(col.names = c("Predictors",
+                    "Estimates",
+                    "Z-value",
+                    "P",
+                    "Lower 95% CI",
+                    "Upper 95% CI"),
+      caption = "Generalised linear model coefficients", 
+      booktabs = T) %>% 
+  kable_styling(full_width = FALSE, font_size=16)
+# why is p value 0? 
+
+
 
 
 
