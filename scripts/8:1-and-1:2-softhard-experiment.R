@@ -106,8 +106,9 @@ emmeans::emmeans(exp2lmd2, specs = pairwise ~ diet)
 #--  using patchwork to combine the plots for day 1 and day 2 
 exp2feeding_plot_d1 + exp2feeding_plotd2
 
-#---- used data analysis -----
-#------------ Combined days -----
+
+#------------ Combined days ----------- USE FROM HERE  ----
+#------------ Combined days -- data visualisation -----
 #---- visualising the data
 #-- mutating a day variable
 exp2d1 <- long_feedinge2d1 %>% mutate(day = "1")
@@ -121,6 +122,15 @@ exp2_combined_summary <- exp2_combined %>%
             sd = sd(fly_numbers),
             n = n(),
             se = sd/sqrt(n))
+
+#  Table of the combined days data for experiment 2
+exp2table <- exp2_combined %>% 
+  group_by('Diet' = diet) %>% 
+  summarise(`Mean flies on a diet`= mean(fly_numbers, na.rm = T),
+            `SD`= sd(fly_numbers, na.rm = T)) %>% gt::gt()
+
+
+
 #- visualising the data for exp2 both days 
 exp2_combined_plot <- exp2_combined_summary %>% 
   ggplot(aes(x = diet, y = mean))+
@@ -147,7 +157,7 @@ exp2_combined_plot <- exp2_combined_summary %>%
 
 
 
-#------------ Combined days data analysis  -----
+#------------ Combined days -- data analysis  -----
 
 # testing for the significance in day
 exp2_combined_days_lm <- lm(fly_numbers ~ day, data = exp2_combined)
@@ -158,10 +168,11 @@ performance::check_model(exp2_combined_days_lm, check = c("qq"))
 performance::check_model(exp2_combined_days_lm, check = c("linearity"))
 # data doesn't look too great
 
+
 # trying a glm 
 exp2_combined_days_glm <- glm(fly_numbers ~ day, family = poisson, data = exp2_combined)
 
-#
+# using summary function to look for overdispersion
 summary(exp2_combined_days_glm)
 # overdispersed 
 
@@ -185,9 +196,11 @@ performance::check_model(exp2_combined_days_glm_3, check = c("qq"))
 
 # from this the best model is exp2_combined_days_glm_3
 
-summary(exp2_combined_days_glm_3)
-
+# looking for significance in day
 drop1(exp2_combined_days_glm_3, test = "F")
+
+# summary shows completley different results? 
+summary(exp2_combined_days_glm_3)
 
 # analysing fly numbers and diet data 
 # trying a linear model
@@ -199,6 +212,7 @@ performance::check_model(exp2_combined_lm, check = c("qq"))
 performance::check_model(exp2_combined_lm, check = c("linearity"))
 # qq looks sort of okay but linearity very uneven
 
+# adding +1 to fly numbers as some are 0? 
 exp2_combined_lm2 <- lm(formula = (fly_numbers + 1) ~ diet, data = exp2_combined)
 
 
@@ -211,14 +225,16 @@ performance::check_model(exp2_combined_lm2, check = c("linearity"))
 # trying a glm 
 exp2_combined_glm <- glm(fly_numbers ~ diet, family = poisson, data = exp2_combined)
 
+# using summary to look for overdispersion in the model
 summary(exp2_combined_glm)
 
-
+# model is overdispersed so doing quasipoisson
 exp2_combined_glm2 <- glm(fly_numbers ~ diet, family = quasipoisson, data = exp2_combined)
 
-# checking the glm model 2 
+# checking the new glm model 2 
 performance::check_model(exp2_combined_glm2)
 performance::check_model(exp2_combined_glm2, check = c("qq"))
+# doesn't look any better
 
 # from this exp2_combined_lm2 is the best model but linearity dodgy on both
 
@@ -253,7 +269,7 @@ exp2_combined %>% ggplot(aes(x=fly_numbers, y=diet, colour = diet, fill = diet, 
   )
 
 
-# ------------  TWO FACTOR ANALYSIS -- FEEDING
+# ------------ Two factor/ food condition analysis / feeding ----
 
 # splitting up hard and soft diets and differernt nutrient diets 
 exp2_combined$food_type <- ifelse(exp2_combined$diet %in% c("8:1H", "1:2H"), "Hard", "Soft")
@@ -261,43 +277,7 @@ exp2_combined$food_nutrition <- ifelse(exp2_combined$diet %in% c("8:1", "1:2H", 
 # viewing the new dataset
 view(exp2_combined)
 
-# ------------  TWO FACTOR ANALYSIS - DATA ANALYSIS --- FEEDING
-
-# creating a linear model based on food nutrition and food type 
-exp2_combined_foodcondition_lm <- lm(fly_numbers ~ food_type + food_nutrition + food_type : food_nutrition, data = exp2_combined)
-
-# checking the model 
-performance::check_model(exp2_combined_foodcondition_lm)
-performance::check_model(exp2_combined_foodcondition_lm, check = c("qq"))
-performance::check_model(exp2_combined_foodcondition_lm, check = c("linearity"))
-# qq looks okay but linearity not good
-# trying a glm
-exp2_combined_foodcondition_glm <- glm(fly_numbers ~ food_type + food_nutrition + food_type : food_nutrition, family = poisson, data = exp2_combined)
-
-summary(exp2_combined_foodcondition_glm)
-
-exp2_combined_foodcondition_glm2 <- glm(fly_numbers ~ food_type + food_nutrition + food_type : food_nutrition, family = quasipoisson, data = exp2_combined)
-
-
-# checking the model 
-performance::check_model(exp2_combined_foodcondition_glm2)
-performance::check_model(exp2_combined_foodcondition_glm2, check = c("qq"))
-# qq and homogenity look worse than the lm 
-# stick with exp2_combined_foodcondition_lm
-
-
-# doing data analysis with the chosen model
-
-# summary function which will show anova 
-summary(exp2_combined_foodcondition_lm)
-adrop1(exp2_combined_foodcondition_lm, test = "F")
-
-# confidence intervals
-confint(exp2_combined_foodcondition_lm)
-
-# table of data 
-tbl_regression(exp2_combined_foodcondition_lm)
-
+# Two factor/ food condition analysis / data visualisation ----
 
 # summarising hard vs soft data 
 softhard_summary_exp2 <- exp2_combined %>%  
@@ -306,7 +286,6 @@ softhard_summary_exp2 <- exp2_combined %>%
             sd = sd(fly_numbers),
             n = n(),
             se = sd/sqrt(n))
-
 # a soft vs hard plot 
 softhard_plot_exp2 <- softhard_summary_exp2 %>% 
   ggplot(aes(x = food_type, y = mean))+
@@ -361,6 +340,51 @@ nutrient_plot_exp2 <- nutrient_summary_exp2 %>%
 # using patchwork to compare soft/hardness and nutrient composition - data visualisation
 softhard_plot_exp2 + nutrient_plot_exp2
 
+# ------------  Two factor/ food condition analysis / data analysis ----
+
+# creating a linear model based on food nutrition and food type 
+exp2_combined_foodcondition_lm <- lm(fly_numbers ~ food_type + food_nutrition + food_type : food_nutrition, data = exp2_combined)
+
+# checking the model 
+performance::check_model(exp2_combined_foodcondition_lm)
+performance::check_model(exp2_combined_foodcondition_lm, check = c("qq"))
+performance::check_model(exp2_combined_foodcondition_lm, check = c("linearity"))
+# qq looks okay but linearity not good
+# trying a glm
+exp2_combined_foodcondition_glm <- glm(fly_numbers ~ food_type + food_nutrition + food_type : food_nutrition, family = poisson, data = exp2_combined)
+
+# using summary to look for overdispersion
+summary(exp2_combined_foodcondition_glm)
+
+# overdispersed so adding quasipoisson 
+exp2_combined_foodcondition_glm2 <- glm(fly_numbers ~ food_type + food_nutrition + food_type : food_nutrition, family = quasipoisson, data = exp2_combined)
+
+
+# checking the model 
+performance::check_model(exp2_combined_foodcondition_glm2)
+performance::check_model(exp2_combined_foodcondition_glm2, check = c("qq"))
+# qq and homogenity look worse than the lm 
+
+# stick with exp2_combined_foodcondition_lm
+
+# doing data analysis with the chosen model
+
+# using drop1 to look for significance of interaction effect 
+drop1(exp2_combined_foodcondition_lm, test = "F")
+
+
+# summary function which will show anova 
+summary(exp2_combined_foodcondition_lm)
+
+
+# confidence intervals
+confint(exp2_combined_foodcondition_lm)
+
+# table of data 
+tbl_regression(exp2_combined_foodcondition_lm)
+
+
+
 
 # splitting the data into hard and soft groups and into nutrient groups 
 #hard_data <- subset(exp2both, food_type == "hard")
@@ -388,7 +412,7 @@ softhard_plot_exp2 + nutrient_plot_exp2
 #emmeans::emmeans(typestogetherlm, specs = pairwise ~ food_nutrition + food_type)
 
 
-# -------- EXPERIMENT 2 OVIPOSITION PREFERENCE  --------
+# -------- OVIPOSITION PREFERENCE  --------
 
 #____ Reading the data in 
 egg_counting_data_e2 <- (read_excel(path = "data/RPEggCountE2.xlsx", na = "NA"))
@@ -424,7 +448,7 @@ egg_counting2_plot <- egg_counting2_summary %>%
        y = "Mean (+/- S.E.) number of eggs laid on each patch")+
   theme_classic()
 
-#------- (Exp2) Egg counting data analysis ---------
+#------- Ovipoistion Preference -- data analysis ---------
 #-- Making a linear model 
 exp2_egg_lm <- lm(egg_numbers ~ diet, data = long_egg_counting2)
 #---- Checking the model 
@@ -473,7 +497,7 @@ GGally::ggcoef_model(exp2_egg_glm2,
 
 
 
-# TWO FACTOR ANALYSIS - OVIPOSITION - 
+# TWO FACTOR ANALYSIS / food condition / OVIPOSITION PREFERENCE ----
 # changing the data to columns 
 long_egg_counting2$food_type <- ifelse(long_egg_counting2 $diet %in% c("8:1H", "1:2H"), "Hard", "Soft")
 long_egg_counting2$food_nutrition <- ifelse(long_egg_counting2 $diet %in% c("8:1", "1:2H", "1:2S"), "1:2", "8:1")
@@ -481,7 +505,7 @@ long_egg_counting2$food_nutrition <- ifelse(long_egg_counting2 $diet %in% c("8:1
 # looking at the data 
 view(long_egg_counting2)
 
-
+# TWO FACTOR ANALYSIS / food condition / OVIPOSITION PREFERENCE / Data visualisation  ----
 #- Making a summary of egg counting// soft and hard 
 softhardegg_summary <- long_egg_counting2 %>%  
   group_by(food_type) %>% 
@@ -545,7 +569,7 @@ nutrientegg_plot <- nutrientegg_summary %>%
 softhardegg_plot + nutrientegg_plot
 
 
-#- TWO FACTOR OVIPOSITION DATA ANALYSIS ------
+#- TWO FACTOR // OVIPOSITION // DATA ANALYSIS ------
 # doing a linear model of egg two factor 
 exp2_egg_foodcondition_lm <- lm(egg_numbers ~ food_type + food_nutrition + food_type : food_nutrition, data = long_egg_counting2)
 
@@ -558,9 +582,10 @@ performance::check_model(exp2_egg_foodcondition_lm, check = c("linearity"))
 # trying a glm 
 exp2_egg_foodcondition_glm <- glm(egg_numbers ~ food_type + food_nutrition + food_type : food_nutrition, family = poisson, data = long_egg_counting2)
 
-
+# looking for overdispersion
 summary(exp2_egg_foodcondition_glm)
 
+# overdispersed so using quasipoisson
 exp2_egg_foodcondition_glm2 <- glm(egg_numbers ~ food_type + food_nutrition + food_type : food_nutrition, family = quasipoisson, data = long_egg_counting2)
 
 #---- Checking the model 
@@ -571,42 +596,54 @@ performance::check_model(exp2_egg_foodcondition_glm2, check = c("qq"))
 # stick with this model so far
 
 # doing data analysis with chosen model 
-drop1(exp2_egg_foodcondition_glm2, test = "F")
 
+# drop1 function to look for signifiance
+drop1(exp2_egg_foodcondition_glm2, test = "F")
+# interaction effect is not significant 
+
+# summary function to get analysis 
 summary(exp2_egg_foodcondition_glm2)
 
+# anova for F values?
 anova(exp2_egg_foodcondition_glm2)
 
-
-
+# model without an interaction effect
+# trying generalised linear model
 exp2_egg_foodcondition_glm3 <- glm(egg_numbers ~ food_type + food_nutrition, family = poisson, data = long_egg_counting2)
 
+# looking for overdisperion in new glm model 
 summary(exp2_egg_foodcondition_glm3)
 
-
+# overdispersed so using quasipoisson
 exp2_egg_foodcondition_glm4 <- glm(egg_numbers ~ food_type + food_nutrition, family = quasipoisson, data = long_egg_counting2)
 
-#---- Checking the model 
+#---- Checking the new glm model 
 performance::check_model(exp2_egg_foodcondition_glm4)
 performance::check_model(exp2_egg_foodcondition_glm4, check = c("qq"))
 performance::check_model(exp2_egg_foodcondition_glm4, check = c("homogeneity"))
 # qq looks ok
 # homogeneity could be better? 
 
-
-
-
+# trying a linear model without interaction effect 
 exp2_egg_foodcondition_lm2 <- lm(egg_numbers ~ food_type + food_nutrition, data = long_egg_counting2)
 
-
+# checking the new lm model 
 performance::check_model(exp2_egg_foodcondition_lm2)
 performance::check_model(exp2_egg_foodcondition_lm2, check = c("qq"))
 performance::check_model(exp2_egg_foodcondition_lm2, check = c("linearity"))
 performance::check_model(exp2_egg_foodcondition_lm2, check = c("homogeneity"))
 # homogeneity looks better on glm 4 ? 
-# stick with that for now 
+# stick with glm 4 for now 
+# this isn't as good 
 
+# getting analysis of new mnodel with summary function
 summary(exp2_egg_foodcondition_glm4)
+
+
+
+
+
+
 
 
 
