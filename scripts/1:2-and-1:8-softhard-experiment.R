@@ -112,7 +112,7 @@ emmeans::emmeans(exp1lmd2, specs = pairwise ~ diet)
 
 exp1feeding_plotd1 + exp1feeding_plotd2
 
-#----- (Exp1a) Combined days data ---------
+#----- (Exp1a) Combined days data --------- FROM HERE ----
 
 # combining days 1 and 2 for overall data analysis 
 #------- Combining the data for feeding behaviour 
@@ -131,9 +131,9 @@ exp1a_all_summary <- exp1a_all %>%
             se = sd/sqrt(n))
 
 #  Table of the combined days data for experiment 1a
-exp1a_all %>% 
-  group_by(diet) %>% 
-  summarise(`Mean fly numbers`= mean(fly_numbers, na.rm = T),
+exp1table <- exp1a_all %>% 
+  group_by('Diet' = diet) %>% 
+  summarise(`Mean flies on a diet`= mean(fly_numbers, na.rm = T),
             `SD`= sd(fly_numbers, na.rm = T)) %>% gt::gt()
 
 
@@ -159,7 +159,6 @@ exp1all_plot <- exp1a_all_summary %>%
        y = "Mean (+/- S.E.) number of flies on a patch")+
   theme_minimal() 
 
-# ------ Exp 1a Combining Analysis -----
 
 # ------ -(Exp1a) Combined days data analysis ----------
 
@@ -321,7 +320,7 @@ exp1ball_plot <- exp1ball_summary %>%
   theme_minimal() 
 
 
-
+#- Data analysis of combined days (experiment 1b) ----
 # creating a model with just day in for analysis 
 exp1balllmday <- lm(fly_numbers ~ day, data = exp1ball)
 # using performance::check for the new model
@@ -341,15 +340,13 @@ performance::check_model(exp1balllmday2, check = c("qq"))
 # trying a glm
 exp1balllmdayglm <- glm(fly_numbers ~ day, family = poisson, data = exp1ball)
 
-# summarising glm
+# summarising glm to look for overdispersion 
 summary(exp1balllmdayglm)
 
 #  more than 1 so do quaspoisson 
 # trying a glm 2 
 exp1balldayglm2 <- glm(fly_numbers ~ day, family = quasipoisson, data = exp1ball)
 
-# summarising glm 2
-summary(exp1balllmdayglm2)
 
 # usng performance::check on the glm2
 performance::check_model(exp1balllmdayglm2)
@@ -373,7 +370,10 @@ drop1(exp1balldayglm2, test = "F")
 # summarising the new day glm 2
 summary(exp1balldayglm2)
 
-# Combining experiments ----
+# here drop1 and summary actually show same p value which is good 
+
+
+# Combining repeat experiments ----
 # combining the two repeat experiments
 
 # adding a variable for experments 1a and 1b 
@@ -474,14 +474,16 @@ summary(exp1_combined_experiment_glm_3)
 
 
 # doing data analysis with experiment not included in a model 
+
+# data analysis for just fly numbers to diet
 exp1_combined_lm <- lm(fly_numbers ~ diet, data = exp1_combined)
 
 
-# performance checking model 4 
+# performance checking model 
 performance::check_model(exp1_combined_lm)
 performance::check_model(exp1_combined_lm, check = c("qq"))
-
 # model doesn't look the best
+
 # trying glm 
 exp1_combined_glm <- glm(fly_numbers ~ diet, family = poisson(), data = exp1_combined)
 # checking if glm is dispersed or not
@@ -494,6 +496,7 @@ performance::check_model(exp1_combined_glm_2)
 performance::check_model(exp1_combined_glm_2, check = c("qq"))
 # issues at the beginning and end 
 
+# trying a quasipoisson glm with fly numbers + 1 
 exp1_combined_glm_3 <- glm(formula = (fly_numbers + 1) ~ diet, family = quasipoisson, data = exp1_combined)
 
 # performance checking with the new model
@@ -512,7 +515,7 @@ emmeans::emmeans(exp1_combined_glm_2, specs = pairwise ~ diet)
 
 
 
-# Two factor analysis - overall experiments for experiment 1 two factor analysis -------
+# Two factor analysis / food condition / combined experiments ----
 
 
 # adding the variables to add new columns to the dataset 
@@ -583,7 +586,7 @@ nutrient_plot_exp1 <- nutrient_summary_exp1 %>%
 softhard_plot_exp1 + nutrient_plot_exp1
 
 
-#  Data analysis --- two factor analysis - food conditions 
+#  Data analysis --- two factor analysis - food conditions / combined experiments ----
 
 
 # making a linear model for food conditions 
@@ -640,7 +643,7 @@ exp1begg <- long_egg_counting1b %>% mutate(experiment = "exp1b")
 #---  combining the data 
 exp1_egg_combined <- rbind(exp1aegg, exp1begg)
 
-#---- Combined experiments egg data analysis ----
+
 # summary of all combined egg data 
 exp1_egg_combined_summary <- exp1_egg_combined %>%  
   group_by(diet) %>% 
@@ -670,6 +673,8 @@ exp1_egg_combined_plot <- exp1_egg_combined_summary %>%
        y = "Mean (+/- S.E.) number of eggs laid on each patch")+
   theme_classic()
 
+#---- Combined experiments egg data analysis ----
+
 # making a model to be looking for just the significance in experiment 
 exp1_egg_combined_experiment <- lm(egg_numbers ~ experiment, data = exp1_egg_combined)
 
@@ -686,6 +691,7 @@ exp1_egg_combined_experiment_glm <- glm(egg_numbers ~ experiment, family = poiss
 summary(exp1_egg_combined_experiment_glm)
 # very very overdispersed
 
+# trying glm with quasipoisson 
 exp1_egg_combined_experiment_glm_2 <- glm(egg_numbers ~ experiment, family = quasipoisson, data = exp1_egg_combined)
 
 #  checking the model 
@@ -698,8 +704,10 @@ performance::check_model(exp1_egg_combined_experiment_glm_2, check = c("qq"))
 # using drop1 to see significance of experiment 
 drop1(exp1_egg_combined_experiment_glm_2, test = "F")
 
+# also looking at the signficance of experiment 
 summary(exp1_egg_combined_experiment_glm_2)
 
+# not significant 
 
 
 
@@ -714,8 +722,10 @@ performance::check_model(exp1_egg_combined_lm, check = c("qq"))
 #---  generalised linear model for collated egg counting data 
 exp1_egg_combined_glm <- glm(egg_numbers ~ diet, family = poisson, data = exp1_egg_combined)
 
+# using summary function to look for overdispersion in the glm 
 summary(exp1_egg_combined_glm)
 
+# using quasipoisson because model is overdispersed 
 exp1_egg_combined_glm_2 <- glm(egg_numbers ~ diet, family = quasipoisson, data = exp1_egg_combined)
 
 #  checking the model 
@@ -739,7 +749,7 @@ summary(exp1_egg_combined_glm_3)
 emmeans::emmeans(exp1_egg_combined_glm_3, specs = pairwise ~ diet) 
 
 
-# OVIPOSTION DATA - TWO FACTOR ANALYSIS 
+# OVIPOSTION DATA - TWO FACTOR ANALYSIS ----
 exp1_egg_combined$food_type <- ifelse(eggboth$diet %in% c("1:8H", "1:2H"), "Hard", "Soft")
 exp1_egg_combined$food_nutrition <- ifelse(eggboth$diet %in% c("1:8", "1:2H", "1:2S"), "1:2", "1:8")
 # viewing the new dataset 
@@ -836,12 +846,12 @@ performance::check_model(exp1_combined_egg_foodcondition_glm2, check = c("qq"))
 # qq looks a lot better
 # homogenity loooks ok? 
 
-# analysing the chosen egg food condition model
-summary(exp1_combined_egg_foodcondition_glm2)
+# analysing the chosen egg food condition model and testing for the significance of the interaction effect
 drop1(exp1_combined_egg_foodcondition_glm2, test = "F")
+# interaction effect so keep in the model 
 
-
-
+# using summary to analyse the chosen model 
+summary(exp1_combined_egg_foodcondition_glm2)
 
 
 
