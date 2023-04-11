@@ -14,32 +14,38 @@ newfoxoqPCR_summary <- newlong_foxoqPCR %>%
   group_by(sample) %>% 
   summarise(mean = mean(cq, na.rm = T))
 
-
+# reading the summarised foxo data in 
 foxo_calcs <- read_excel("data/foxo_calcs.xlsx")
 
+# making the summarised foxo data long 
 newlong_foxo_calcs <- foxo_calcs %>% 
   pivot_longer(cols = ("1:8S":"8:1H"), names_to = "sample", values_to = "cq")
 
+# making a summary of the foxo data 
 foxo_sum <- newlong_foxo_calcs%>%  
   group_by(sample) %>% 
   summarise(mean = mean(cq, na.rm = T))
 
+# reading the summarised dilp3 data in 
 dilp3_calcs <- read_excel("data/dilp3_calcs.xlsx")
 
+# making the foxo data long 
 newlong_dilp3_calcs <- dilp3_calcs %>% 
   pivot_longer(cols = ("1:8S":"8:1H"), names_to = "sample", values_to = "cq")
-
+# making the foxo data long summary
 dilp3_sum <- newlong_dilp3_calcs %>%  
   group_by(sample) %>% 
   summarise(mean = mean(cq, na.rm = T))
 
-newnew <- rbind(newlong_foxo_calcs, newlong_dilp3_calcs)
+# binding the foxo and dilp3 calcs together
+foxo_dilp3_calcs <- rbind(newlong_foxo_calcs, newlong_dilp3_calcs)
 
-newsum <- newnew %>%  
+# making a summary of the foxo and dilp 3 calcs 
+foxo_dilp3_summary <- foxo_dilp3_calcs %>%  
   group_by(sample) %>% 
   summarise(mean = mean(cq, na.rm = T))
 
-
+# foxo plot 
 foxo_plot <- foxo_sum %>% 
   ggplot(aes(x = sample, y = mean))+
   geom_bar(stat = "identity",
@@ -48,7 +54,7 @@ foxo_plot <- foxo_sum %>%
            alpha = 0.6)+
   theme_classic()+
   labs(title = "foxo")
-
+# dilp3 plot 
 dilp3_plot <- dilp3_sum %>% 
   ggplot(aes(x = sample, y = mean))+
   geom_bar(stat = "identity",
@@ -58,39 +64,58 @@ dilp3_plot <- dilp3_sum %>%
   theme_classic()+
   labs(title = "dilp3")
   
-
+# patchwork to look at foxo and dilp3 together 
 foxo_plot + dilp3_plot
 
-newplot <- newsum %>% 
+
+foxo_dilp3_plot <- foxo_dilp3_summary %>% 
   ggplot(aes(x = sample, y = mean))+
   geom_bar(stat = "identity",
-           fill = "skyblue",
-           colour = "#FF6863",
+           fill = "#009E73",
+           colour = "#cc79a7",
            alpha = 0.6)+
   theme_classic()+
   labs(x = "Diet patch larvae grew on",
        y = "2^-ΔCt")
 
-lm <- glm(cq ~ sample, family = quasipoisson, data = newnew)
 
-summary(lm)
+# data analysis of qPCR results 
+qpcr_results_lm <- lm(cq ~ sample, data = newnew)
 
-emmeans::emmeans(lm, pairwise ~ sample)
+# checking the model
+performance::check_model(qpcr_results_lm)
+performance::check_model(qpcr_results_lm, check = c("qq"))
+performance::check_model(qpcr_results_lm, check = c("linearity"))
+performance::check_model(qpcr_results_lm, check = c("homogeneity"))
 
-lm2 <- glm(cq ~ sample, family = quasipoisson, data = newlong_dilp3_calcs)
+# trying a glm 
+qpcr_results_glm <- glm(cq ~ sample, family = quasipoisson, data = newnew)
 
-summary(lm2)
+# checking the model
+performance::check_model(qpcr_results_glm)
+performance::check_model(qpcr_results_glm, check = c("qq"))
+performance::check_model(qpcr_results_glm, check = c("homogeneity"))
+# qq looks better 
 
-emmeans::emmeans(lm2, pairwise ~ sample)
+# summary function to look at results 
+summary(qpcr_results_glm)
+
+# tukey test
+emmeans::emmeans(qpcr_results_glm, pairwise ~ sample)
 
 
-lm3 <- glm(cq ~ sample, family = quasipoisson, data = newlong_foxo_calcs)
 
-summary(lm3)
 
-emmeans::emmeans(lm3, pairwise ~ sample)
 
-newlong_foxo_calcs
+
+
+
+
+
+
+
+
+
 
 #  reading the fd38 data in 
 fd38qPCR <- read_excel("data/fd38_qPCR.xlsx")
