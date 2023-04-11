@@ -381,6 +381,7 @@ summary(exp3_combined_foodcondition_glm2)
 drop1(exp3_combined_foodcondition_glm2, test = "F")
 
 
+
 # -------- (Exp 3) Egg counting  --------
 
 #____ Reading the data in 
