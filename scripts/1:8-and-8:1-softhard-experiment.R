@@ -375,6 +375,8 @@ performance::check_model(exp3_combined_foodcondition_glm2, check = c("qq"))
 #  using the chosen models for data analysis 
 summary(exp3_combined_foodcondition_glm2)
 
+
+
 # Uhe this for interaction effect? 
 drop1(exp3_combined_foodcondition_glm2, test = "F")
 

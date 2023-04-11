@@ -290,7 +290,7 @@ performance::check_model(exp2_combined_foodcondition_glm2, check = c("qq"))
 
 # summary function which will show anova 
 summary(exp2_combined_foodcondition_lm)
-drop1(exp2_combined_foodcondition_lm, test = "F")
+adrop1(exp2_combined_foodcondition_lm, test = "F")
 
 # confidence intervals
 confint(exp2_combined_foodcondition_lm)
