@@ -228,6 +228,8 @@ Cq <- c("0.01104854", "0.000644291", "0.07179365", "0.0007932152", "0.1767767", 
 qPCR_data <- data.frame(sample, Cq)
 
 
+
+
 qPCR_plot2 <- qPCR_data %>% 
   ggplot(aes(x = sample, y = Cq))+
   geom_bar(stat = "identity",
