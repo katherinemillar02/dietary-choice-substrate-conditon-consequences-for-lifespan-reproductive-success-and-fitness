@@ -609,6 +609,7 @@ exp1_combined_foodconditions_glm2 <- glm(fly_numbers ~ food_type + food_nutritio
 performance::check_model(exp1_combined_foodconditions_glm2)
 performance::check_model(exp1_combined_foodconditions_glm2, check = c("qq"))
 
+
 # linear model is probably better so far 
 
 # adding 1 to fly numbers to change the lm 
@@ -632,6 +633,9 @@ performance::check_model(exp1_combined_foodconditions_lm3, check = c("qq"))
 
 # using summary to do data analysis 
 summary(exp1_combined_foodconditions_lm3)
+
+AIC(exp1_combined_foodconditions_lm3)
+
 
 
 
