@@ -180,7 +180,13 @@ dilp3_foxo_new_calcs_plot <- dilp3_foxo_new_calcs_summary %>%
        y = "2^-ΔCt")
 
 
+qpcr_foxo_lm <- lm(cq ~ sample, data = newlong_foxo_calcs)
 
+summary(qpcr_foxo_lm)
+
+qpcr_dilp3_lm <- lm(cq ~ sample, data = newlong_dilp3_calcs)
+
+summary(qpcr_dilp3_lm)
 
 # data analysis of qPCR results 
 qpcr_results_new_lm <- lm(cq ~ sample, data = dilp3_foxo_new_calcs_long)
