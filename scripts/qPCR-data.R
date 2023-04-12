@@ -14,9 +14,6 @@ library(gtsummary)
 library(knitr)
 library(rphylopic)
 
-
-
-
 # reading the foxo data in
 foxoqPCR <- read_excel("data/qPCR_foxo_data_2.xlsx")
 # removing the na values from the foxo data and changing the file name 
@@ -41,7 +38,10 @@ newlong_foxo_calcs <- foxo_calcs %>%
 # making a summary of the foxo data 
 foxo_sum <- newlong_foxo_calcs%>%  
   group_by(sample) %>% 
-  summarise(mean = mean(cq, na.rm = T))
+  summarise(mean = mean(cq, na.rm = T),
+            sd = sd(cq, na.rm = T),
+            n = n(),
+            se = sd/sqrt(n))
 
 # reading the summarised dilp3 data in 
 dilp3_calcs <- read_excel("data/dilp3_calcs.xlsx")
@@ -52,7 +52,10 @@ newlong_dilp3_calcs <- dilp3_calcs %>%
 # making the data long summary
 dilp3_sum <- newlong_dilp3_calcs %>%  
   group_by(sample) %>% 
-  summarise(mean = mean(cq, na.rm = T))
+  summarise(mean = mean(cq, na.rm = T),
+sd = sd(cq, na.rm = T),
+n = n(),
+se = sd/sqrt(n))
 
 # binding the foxo and dilp3 calcs together
 foxo_dilp3_calcs <- rbind(newlong_foxo_calcs, newlong_dilp3_calcs)
@@ -60,7 +63,10 @@ foxo_dilp3_calcs <- rbind(newlong_foxo_calcs, newlong_dilp3_calcs)
 # making a summary of the foxo and dilp 3 calcs 
 foxo_dilp3_summary <- foxo_dilp3_calcs %>%  
   group_by(sample) %>% 
-  summarise(mean = mean(cq, na.rm = T))
+  summarise(mean = mean(cq, na.rm = T),
+            sd = sd(cq, na.rm = T),
+            n = n(),
+            se = sd/sqrt(n))
 
 # foxo plot 
 foxo_plot <- foxo_sum %>% 
@@ -70,7 +76,22 @@ foxo_plot <- foxo_sum %>%
            colour = "#FF6863",
            alpha = 0.6)+
   theme_classic()+
-  labs(title = "foxo")
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "#FF6863",
+                width = 0.2)+
+  labs(title = "foxo",
+       x = "Diet larvae were reared on \n(Protein: Carbohydrate/ Food Hardness)",
+       y = "2^-ΔCt")+
+  geom_jitter(data = newlong_foxo_calcs,
+              aes(x = sample,
+                  y = cq),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)
+
+
+
 # dilp3 plot 
 dilp3_plot <- dilp3_sum %>% 
   ggplot(aes(x = sample, y = mean))+
@@ -79,8 +100,20 @@ dilp3_plot <- dilp3_sum %>%
            colour = "#FF6863",
            alpha = 0.6)+
   theme_classic()+
-  labs(title = "dilp3")
-  
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "#FF6863",
+                width = 0.2)+
+  labs(title = "dilp3",
+       x = "Diet larvae were reared on \n(Protein: Carbohydrate/ Food Hardness)",
+       y = "2^-ΔCt")+
+  geom_jitter(data = newlong_dilp3_calcs,
+              aes(x = sample,
+                  y = cq),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)
+
 # patchwork to look at foxo and dilp3 together 
 foxo_plot + dilp3_plot
 
@@ -93,7 +126,7 @@ foxo_dilp3_plot <- foxo_dilp3_summary %>%
            alpha = 0.6)+
   theme_classic()+
   labs(x = "Protein: Carbohydrate Diet larvae were reared on",
-       y = "2^-ΔCt")
+       y = "2^-ΔCt")+
 
 
 # data analysis of qPCR results 
