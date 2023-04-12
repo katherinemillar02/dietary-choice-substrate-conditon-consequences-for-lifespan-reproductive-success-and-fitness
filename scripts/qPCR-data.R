@@ -1,3 +1,20 @@
+library(tidyverse)
+library(readxl)
+library(kableExtra)
+library(performance)
+library(see)
+library(patchwork)
+library(usethis)
+library(devtools)
+library(knitr)
+library(emmeans)
+library(here)
+library(sjPlot)
+library(gtsummary)
+library(knitr)
+library(rphylopic)
+
+
 
 
 # reading the foxo data in
@@ -199,7 +216,7 @@ dilp3_foxo_calcs_summary <- both_summary %>%
   group_by(sample) %>% 
   summarise(mean = mean(mean))
 
-
+(6670 - 6600) 
 
 # (the average of dilp3 and foxo) - (the average of fd38 and rp20) ---- 
 #A1
@@ -264,6 +281,7 @@ fd38_rp20_summary <- fd38_rp20 %>%
   group_by(sample) %>% 
   summarise(mean = mean(mean))
 
+7018 - 6600
 
 # dilp3 ---- 
 #A1
