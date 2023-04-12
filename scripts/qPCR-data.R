@@ -29,10 +29,10 @@ foxo_sum <- newlong_foxo_calcs%>%
 # reading the summarised dilp3 data in 
 dilp3_calcs <- read_excel("data/dilp3_calcs.xlsx")
 
-# making the foxo data long 
+# making the  data long 
 newlong_dilp3_calcs <- dilp3_calcs %>% 
   pivot_longer(cols = ("1:8S":"8:1H"), names_to = "sample", values_to = "cq")
-# making the foxo data long summary
+# making the data long summary
 dilp3_sum <- newlong_dilp3_calcs %>%  
   group_by(sample) %>% 
   summarise(mean = mean(cq, na.rm = T))
@@ -71,16 +71,16 @@ foxo_plot + dilp3_plot
 foxo_dilp3_plot <- foxo_dilp3_summary %>% 
   ggplot(aes(x = sample, y = mean))+
   geom_bar(stat = "identity",
-           fill = "#009E73",
+           fill = "skyblue",
            colour = "#cc79a7",
            alpha = 0.6)+
   theme_classic()+
-  labs(x = "Diet patch larvae grew on",
+  labs(x = "Protein: Carbohydrate Diet larvae were reared on",
        y = "2^-ΔCt")
 
 
 # data analysis of qPCR results 
-qpcr_results_lm <- lm(cq ~ sample, data = newnew)
+qpcr_results_lm <- lm(cq ~ sample, data = foxo_dilp3_calcs)
 
 # checking the model
 performance::check_model(qpcr_results_lm)
@@ -105,15 +105,51 @@ emmeans::emmeans(qpcr_results_glm, pairwise ~ sample)
 
 
 
+# reading the summarised dilp3 data in 
+dilp3_foxo_new_calcs <- read_excel("data/calculations_qPCR.xlsx")
+
+# making the  data long 
+dilp3_foxo_new_calcs_long <- dilp3_foxo_new_calcs %>% 
+  pivot_longer(cols = ("1:8S":"8:1H"), names_to = "sample", values_to = "cq")
+# making the data long summary
+dilp3_foxo_new_calcs_summary <- dilp3_foxo_new_calcs_long %>%  
+  group_by(sample) %>% 
+  summarise(mean = mean(cq, na.rm = T))
 
 
 
 
+dilp3_foxo_new_calcs_plot <- dilp3_foxo_new_calcs_summary %>% 
+  ggplot(aes(x = sample, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#cc79a7",
+           alpha = 0.6)+
+  theme_classic()+
+  labs(x = "Protein: Carbohydrate Diet larvae were reared on",
+       y = "2^-ΔCt")
 
 
 
 
+# data analysis of qPCR results 
+qpcr_results_new_lm <- lm(cq ~ sample, data = dilp3_foxo_new_calcs_long)
+qpcr_results_new_glm <- glm(cq ~ sample, family = quasipoisson(), data = dilp3_foxo_new_calcs_long)
 
+performance::check_model(qpcr_results_new_glm)
+
+
+# checking the model
+performance::check_model(qpcr_results_new_lm)
+performance::check_model(qpcr_results_new_lm , check = c("qq"))
+performance::check_model(qpcr_results_lm, check = c("linearity"))
+performance::check_model(qpcr_results_lm, check = c("homogeneity"))
+
+summary(qpcr_results_new_lm)
+
+
+
+AIC(qpcr_results_new_lm)
 
 
 
@@ -155,10 +191,70 @@ view(long_dilp3)
 # making a summary of dilp3
 dilp3_summary <- long_dilp3 %>%  
   group_by(sample) %>% 
-  summarise(mean = mean(cq),
-            sd = sd(cq),
-            n = n(),
-            se = sd/sqrt(n), na.rm = T)
+  summarise(mean = mean(cq))
+
+both_summary <- rbind(dilp3_summary, foxoqPCR2_summary)
+
+dilp3_foxo_calcs_summary <- both_summary %>%  
+  group_by(sample) %>% 
+  summarise(mean = mean(mean))
+
+
+
+# (the average of dilp3 and foxo) - (the average of fd38 and rp20) ---- 
+#A1
+(34.4 - 27.7)
+6.7
+2^- 6.7
+0.009618316
+#A2
+(34.0 - 24.8)
+9.2
+2^- 9.2
+0.001700294
+#A3
+(37 -  30.8)
+6.2
+2^-6.2
+0.01360235
+#B1
+(35.1 -  25.2)
+9.9 
+2^-9.9
+0.001046654
+#B2
+(28.0  - 24.3 )
+3.7
+2^-3.7
+0.07694653
+#B3
+(34.0 - 26.4)
+7.6
+2^-7.6
+0.005154328
+#C1
+( 35.6 -  27.1)
+8.5
+2^-8.5
+0.002762136
+#C2
+(34.9-26.4)
+8.5
+2^-8.5
+0.002762136
+#C3
+( 35.0 -  27.7 )
+7.3
+2^- 7.3
+0.006345722
+#D2
+(35.2- 27.3)
+7.9
+2^- 7.9
+0.004186615
+
+
+
 
 #------------------------------------------
 # binding the fd38 and rp20 data summaries 
@@ -244,7 +340,7 @@ view(qPCR_data)
 
 
 
-
+2^- 6.65
 
 
 
@@ -376,15 +472,20 @@ newfoxoqPCR2_summary <- newlong_foxoqPCR2 %>%
 
 
 foxoqPCR2 <- read_excel("data/qPCR_foxo_data_2.xlsx", na = "NA")
+
+
 long_foxoqPCR2 <- foxoqPCR2 %>% 
-  pivot_longer(cols = ("A":"D"), names_to = "sample", values_to = "cq")
+  pivot_longer(cols = ("A1":"D2"), names_to = "sample", values_to = "cq")
+
+
 
 foxoqPCR2_summary <- long_foxoqPCR2 %>%  
   group_by(sample) %>% 
-  summarise(mean = mean(cq),
-            sd = sd(cq),
-            n = n(),
-            se = sd/sqrt(n))
+  summarise(mean = mean(cq, na.rm = T))
+            
+
+
+  
 
 foxoqPCR_plot2 <- foxoqPCR2_summary %>% 
   ggplot(aes(x = sample, y = mean))+
