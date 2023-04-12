@@ -110,11 +110,19 @@ emmeans::emmeans(exp3lm_d2, specs = pairwise ~ diet)
 #-------- visualising the feeding data for different days together using patchwork
 exp3feeding_plotd1 + exp3feeding_plotd2
 
-#--------------   ANALYSIS TO BE USED -----
+#--------------   ANALYSIS TO BE USED ----------------
 #--------------  Combined days data  ----
 
+#--- mutating a day variable 
+exp3d1 <- long_feedinge3d1 %>% mutate(day = "1")
+exp3d2 <- long_feedinge3d2 %>% mutate(day = "2")
+#--- combining the two days 
+exp3_combined <- rbind(exp3d1, exp3d2)
+
+
+
 #--- summarising the data with combined days 
-exp3feeding_summary_both <- exp3both %>%  
+exp3feeding_summary_both <- exp3_combined %>%  
   group_by(diet) %>% 
   summarise(mean = mean(fly_numbers),
             sd = sd(fly_numbers),
@@ -131,7 +139,7 @@ exp3feeding_plot_both <- exp3feeding_summary_both %>%
   geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
                 colour = "#FF6863",
                 width = 0.2)+
-  geom_jitter(data = exp3both,
+  geom_jitter(data = exp3_combined,
               aes(x = diet,
                   y = fly_numbers),
               fill = "skyblue",
@@ -145,13 +153,9 @@ exp3feeding_plot_both <- exp3feeding_summary_both %>%
   theme_classic() 
 
 
-#--- mutating a day variable 
-exp3d1 <- long_feedinge3d1 %>% mutate(day = "1")
-exp3d2 <- long_feedinge3d2 %>% mutate(day = "2")
-#--- combining the two days 
-exp3_combined <- rbind(exp3d1, exp3d2)
 
-#--- data analysis for combined data ----
+
+#--- Data analysis for combined days data ----
 
 #-- making a linear model for day analysis 
 exp3_combined_day_lm <- lm(fly_numbers ~ day, data = exp3_combined)
@@ -204,22 +208,39 @@ performance::check_model(exp3_combined_lm, check = c("homogeneity"))
 # trying out other models 
 exp3_combined_glm <- glm(fly_numbers ~ diet, family = poisson, data = exp3_combined)
 
+# using summary to look for overdispersion in the glm
 summary(exp3_combined_glm)
 
+# overdispersed so using quasipoisson
 exp3_combined_glm_2 <- glm(fly_numbers ~ diet, family = quasipoisson, data = exp3_combined)
 
+# checking the model
 performance::check_model(exp3_combined_glm_2)
 performance::check_model(exp3_combined_glm_2, check = c("qq"))
 performance::check_model(exp3_combined_glm_2, check = c("homogeneity"))
 # hard to compare homogeneity 
 
 # but linear looks better for qq 
+
+# trying other performance::check 
+
+ model_performance(exp3_combined_lm)
+ model_performance(exp3_combined_glm_2)
+ 
+ compare_performance(exp3_combined_lm, exp3_combined_glm_2, verbose = FALSE )
+ 
+ test_performance(exp3_combined_lm, exp3_combined_glm_2)
+ 
+ 
+ # trying to do a MASS::boxcox
+ MASS::boxcox(exp3_combined_lm)
+ # error? 
+ 
+ # trying linear in log and + 1 
+ exp3_combined_lm_2 <- lm(formula = log(fly_numbers + 1) ~ diet, data = exp3_combined)
 # stick with linear? 
 
-MASS::boxcox(exp3_combined_lm)
 
-# trying linear in log and + 1 
-exp3_combined_lm_2 <- lm(formula = log(fly_numbers + 1) ~ diet, data = exp3_combined)
 
 # checking the model 
 performance::check_model(exp3_combined_lm_2)
@@ -235,13 +256,14 @@ performance::check_model(exp3_combined_lm_2, check = c("homogeneity"))
 # using summary() which will show anova
 summary(exp3_combined_lm)
 
+# anova for chosen model 
 anova(exp3_combined_lm)
 
 # using emmeans tukey to test everything 
 emmeans::emmeans(exp3_combined_lm, specs = pairwise ~ diet)
 
 
-#--- TWO FACTOR FEEDING ANALYSIS --- FOOD CONDITIONS 
+#--- TWO FACTOR FEEDING ANALYSIS --- FOOD CONDITIONS ----
 
 # splitting up hard and soft diets and different nutrient diets 
 exp3_combined$food_type <- ifelse(exp3_combined$diet %in% c("8:1H", "1:8H"), "Hard", "Soft")
@@ -249,7 +271,6 @@ exp3_combined$food_nutrition <- ifelse(exp3_combined$diet %in% c("8:1", "1:8H", 
 
 # viewing the new dataset
 view(exp3_combined)
-
 
 
 # summarising hard vs soft data 
@@ -318,6 +339,7 @@ softhard_plot_exp3 + nutrient_plot_exp3
 # creating a linear model based on food nutrition and food type 
 exp3_combined_foodcondition_lm <- lm(fly_numbers ~ food_type + food_nutrition + food_type : food_nutrition, data = exp3_combined)
 
+# checking the model 
 performance::check_model(exp3_combined_foodcondition_lm)
 performance::check_model(exp3_combined_foodcondition_lm, check = c("normality", "qq"))
 performance::check_model(exp3_combined_foodcondition_lm, check = c("linearity"))
@@ -337,7 +359,7 @@ car::vif(type = "predictor", exp3_combined_foodcondition_lm)
 MASS::boxcox(exp3_combined_foodcondition_lm)
 # Error in boxcox : response variable must be positive? 
 
-#  cannot see whnat boxcox suggests but trying sqrt in the model
+#  cannot see whnat boxcox suggests but trying sqrt in the model to see if it changes 
 exp3_combined_foodcondition_lm2 <- lm(sqrt(fly_numbers) ~ food_type  + food_nutrition + food_type : food_nutrition, data = exp3_combined)
 
 # checking the new model 
@@ -346,7 +368,7 @@ performance::check_model(exp3_combined_foodcondition_lm2, check = c("normality",
 performance::check_model(exp3_combined_foodcondition_lm2, check = c("linearity"))
 # linearity has opposite problems 
 # normality and qq looks better with sqrt model?
-# homogenity looks better with non sqrt model? 
+# BUT homogenity looks better with non sqrt model? 
 
 
 # trying a glm model
@@ -370,15 +392,14 @@ performance::check_model(exp3_combined_foodcondition_glm2, check = c("qq"))
 # still not understanding if these are good models so going a bit further with the analysis? 
 
 
-
+# Use this for interaction effect? 
+drop1(exp3_combined_foodcondition_glm2, test = "F")
 
 #  using the chosen models for data analysis 
 summary(exp3_combined_foodcondition_glm2)
 
 
 
-# Uhe this for interaction effect? 
-drop1(exp3_combined_foodcondition_glm2, test = "F")
 
 
 
@@ -418,6 +439,8 @@ egg_counting3_plot <- egg_counting3_summary %>%
        y = "Mean (+/- S.E.) number of eggs laid on each patch")+
   theme_classic()
 
+
+#-- Exp 3 - egg - data analysis ----
 #-- linear model of egg counting 
 exp3_egg_lm <- lm(egg_numbers ~ diet, data = long_egg_counting3)
 
@@ -447,6 +470,7 @@ performance::check_model(exp3_egg_glm2, check = c("qq"))
 # summary function to look at anova 
 summary(exp3_egg_glm2)
 
+# trying anova code 
 anova(exp3_egg_glm2)
 
 #-- analysing all egg data using tukey emmeans 
@@ -454,7 +478,7 @@ emmeans::emmeans(exp3_egg_glm2, specs = pairwise ~ diet)
 
 
 
-#--------- TWO-FACTOR DATA ANALYSIS -- EGG COUNTING - EXPERIMENT 3 
+#--------- TWO-FACTOR -- EGG COUNTING - EXPERIMENT 3 ----
 # changing the data to columns 
 long_egg_counting3$food_type <- ifelse(long_egg_counting3 $diet %in% c("8:1H", "1:8H"), "Hard", "Soft")
 long_egg_counting3$food_nutrition <- ifelse(long_egg_counting3 $diet %in% c("8:1", "1:8H", "1:8S"), "1:8", "8:1")
@@ -525,7 +549,7 @@ softhardegg_plot_exp3 + nutrientegg_plot_exp3
 
 
 # TWO FACTOR ANALYSIS - OVIPOSITION PREFERENCE 
-# TWO FACTOR ANALYSIS - OVIPOSITION PREFERENCE - DATA ANALYSIS 
+# TWO FACTOR ANALYSIS -EGG COUNTING - DATA ANALYSIS ----
 
 # trying a linear model
 exp3_egg_foodcondition_lm <- lm(egg_numbers ~ food_type + food_nutrition + food_type * food_nutrition, data = long_egg_counting3)
@@ -549,32 +573,43 @@ performance::check_model(exp3_egg_foodcondition_glm2, check = c("qq"))
 # homogenity looks similar but maybe better 
 # go with this model? 
 
+# significance of interaction effect 
+drop1(exp3_egg_foodcondition_glm2, test = "F")
+
 # data analysis for the chosen model 
 summary(exp3_egg_foodcondition_glm2)
 
 
-drop1(exp3_egg_foodcondition_glm2, test = "F")
 
-
+# interaction effect is not significant 
+# trying new without interaction effect
 exp3_egg_foodcondition_glm3 <- glm(egg_numbers ~ food_type + food_nutrition, family = quasipoisson, data = long_egg_counting3)
+# looking for overdispersion in the new glm
 summary(exp3_egg_foodcondition_glm3)
-
-
+# glm is overdispersed so using quasipoisson
 exp3_egg_foodcondition_glm4 <- glm(egg_numbers ~ food_type + food_nutrition, family = quasipoisson, data = long_egg_counting3)
 
-summary(exp3_egg_foodcondition_glm4)
 
+
+# checking the new generalised linear model 
 performance::check_model(exp3_egg_foodcondition_glm4)
 performance::check_model(exp3_egg_foodcondition_glm4, check = c("qq"))
 performance::check_model(exp3_egg_foodcondition_glm4, check = c("homogeneity"))
+# qq looks okay
+# homogeneity looks a bit slopey 
 
-
+# trying a linear model 
 exp3_egg_foodcondition_lm_2 <- lm(egg_numbers ~ food_type + food_nutrition, data = long_egg_counting3)
 
-
+# checking the new linear model 
 performance::check_model(exp3_egg_foodcondition_lm_2)
 performance::check_model(exp3_egg_foodcondition_lm_2, check = c("qq"))
 performance::check_model(exp3_egg_foodcondition_lm_2, check = c("homogeneity"))
+# the generalised linear model looks a lot better 
+
+# final choice is the NEW generalised linear model with quassipoisson
+summary(exp3_egg_foodcondition_glm4)
+
 
 
 
