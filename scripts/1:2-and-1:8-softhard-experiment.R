@@ -30,6 +30,8 @@ exp1feeding_summary <- long_feedinge1d1 %>%
             sd = sd(fly_numbers),
             n = n(),
             se = sd/sqrt(n))
+exp(0.759)
+exp(0.950)
 #------- Visualising the data for feeding day 1 ----------------#
 exp1feeding_plotd1 <- exp1feeding_summary %>% 
   ggplot(aes(x = diet, y = mean))+
@@ -181,6 +183,7 @@ performance::check_model(exp1a_all_day_lm, check = c("outliers"))
 performance::check_model(exp1a_all_day_lm_2, check = c("qq"))
 performance::check_model(exp1a_all_day_lm_2, check = c("outliers"))
 performance::check_model(exp1a_all_day_lm_2, check = c("linearity"))
+performance::check_model(exp1a_all_day_lm_2, check = c("homogeneity"))
 
 MASS::boxcox(exp1a_all_day_lm_2)
 
@@ -191,12 +194,12 @@ exp1a_all_day_glm <- glm(fly_numbers ~ day, family = poisson, data = exp1a_all)
 summary(exp1a_all_day_glm)
 
 # model is overdispersed so using quasipoisson
-exp1a_all_day_glm_2 <- glm(fly_numbers ~ day * diet, family = quasipoisson, data = exp1a_all)
+exp1a_all_day_glm_2 <- glm(formula = (fly_numbers + 1)  ~ day + diet + day:diet, family = quasipoisson, data = exp1a_all)
 
 # checking the experiment 1a just day model (glm)
 performance::check_model(exp1a_all_day_glm_2)
 performance::check_model(exp1a_all_day_glm_2, check = c("qq", "homogeneity"))
-
+performance::check_model(exp1a_all_day_glm_2, check = c("outliers"))
 # qq looks similar but maybe glm one looks slightly better 
 # homogenity also looks better with glm 
 # I think exp1a_all_day_glm_2 is an okay model to use? 
@@ -210,6 +213,8 @@ drop1(exp1a_all_day_glm_2, test = 'F')
 summary(exp1a_all_day_glm_2)
 # if doing anova analysis for this 
 # why so  different p values ?? 
+
+emmeans::emmeans(exp1a_all_day_glm_2, pairwise ~ diet * day)
 
 # ---------------- Experiment 1b - repeating the experiment -----
 #----- (Exp1b) Day 1 ----
