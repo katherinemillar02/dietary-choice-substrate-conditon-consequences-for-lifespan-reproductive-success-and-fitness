@@ -165,11 +165,23 @@ exp1all_plot <- exp1a_all_summary %>%
 
 
 # making a model with just day in for analysis 
-exp1a_all_day_lm <- lm(fly_numbers ~ day, data = exp1a_all)
+exp1a_all_day_lm <- lm(fly_numbers ~ day * diet , data = exp1a_all)
+exp1a_all_day_lm_2 <- lm(formula = log(fly_numbers + 1) ~ day * diet , data = exp1a_all)
+
+summary(exp1a_all_day_lm_2)
+
+
 
 # checking the experiment 1a just day model
 performance::check_model(exp1a_all_day_lm)
 performance::check_model(exp1a_all_day_lm, check = c("qq"))
+performance::check_model(exp1a_all_day_lm, check = c("outliers"))
+
+performance::check_model(exp1a_all_day_lm_2, check = c("qq"))
+performance::check_model(exp1a_all_day_lm_2, check = c("outliers"))
+performance::check_model(exp1a_all_day_lm_2, check = c("linearity"))
+
+MASS::boxcox(exp1a_all_day_lm_2)
 
 # making a glm model with just day in for analysis 
 exp1a_all_day_glm <- glm(fly_numbers ~ day, family = poisson, data = exp1a_all)
@@ -178,7 +190,7 @@ exp1a_all_day_glm <- glm(fly_numbers ~ day, family = poisson, data = exp1a_all)
 summary(exp1a_all_day_glm)
 
 # model is overdispersed so using quasipoisson
-exp1a_all_day_glm_2 <- glm(fly_numbers ~ day, family = quasipoisson, data = exp1a_all)
+exp1a_all_day_glm_2 <- glm(fly_numbers ~ day * diet, family = quasipoisson, data = exp1a_all)
 
 # checking the experiment 1a just day model (glm)
 performance::check_model(exp1a_all_day_glm_2)
@@ -358,6 +370,20 @@ exp1ball_plot <- exp1ball_summary %>%
 #- Data analysis of combined days (experiment 1b) ----
 # creating a model with just day in for analysis 
 exp1balllmday <- lm(fly_numbers ~ day, data = exp1ball)
+
+
+
+exp1b_all_day_lm_2 <- lm(formula = log(fly_numbers + 1) ~ day * diet , data = exp1ball)
+
+summary(exp1b_all_day_lm_2)
+
+
+
+performance::check_model(exp1b_all_day_lm_2, check = c("qq"))
+performance::check_model(exp1b_all_day_lm_2, check = c("outliers"))
+performance::check_model(exp1b_all_day_lm_2, check = c("homogeneity"))
+
+
 # using performance::check for the new model
 performance::check_model(exp1balllmday)
 performance::check_model(exp1balllmday, check = c("qq"))
@@ -380,12 +406,13 @@ summary(exp1balllmdayglm)
 
 #  more than 1 so do quaspoisson 
 # trying a glm 2 
-exp1balldayglm2 <- glm(fly_numbers ~ day, family = quasipoisson, data = exp1ball)
+exp1balldayglm2 <- glm(fly_numbers ~ day * diet, family = quasipoisson, data = exp1ball)
 
 
 # usng performance::check on the glm2
 performance::check_model(exp1balllmdayglm2)
 performance::check_model(exp1balllmdayglm2, check = c("qq"))
+performance::check_model(exp1balllmdayglm2, check = c("homogeneity"))
 
 # trying to fix the glm model which checks for day 
 exp1ballglmday20 <- glm(formula = (fly_numbers + 1) ~ day, family = quasipoisson, data = exp1ball)
@@ -458,7 +485,9 @@ exp1_combined_plot <- exp1_combined_summary %>%
 
 # Testing a model for feeding behaviour
 # JUST experiment model for data analysis - so i can make sense of it and using it 
-exp1_combined_experiment <- lm(fly_numbers ~ experiment, data = exp1_combined)
+exp1_combined_experiment <- lm(fly_numbers ~ experiment * diet, data = exp1_combined)
+
+
 
 # performance check for experiment linear model of combined experiments data 
 performance::check_model(exp1_combined_experiment)
