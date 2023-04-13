@@ -246,18 +246,87 @@ boxplot_food_fc_e3 <- ggplot()+
   ylim(0,9)
 
 
-boxplot_food_fc_e3_fn <- ggplot()+ 
-  geom_boxplot(exp3_combined, mapping=aes(x=food_nutrition, y=fly_numbers, fill=food_nutrition))+
+boxplot_food_fc_e3_fn_d2 <- ggplot()+ 
+  geom_boxplot(long_feedinge3d2, mapping=aes(x=food_nutrition, y=fly_numbers, fill=food_nutrition))+
   theme_classic()+
   scale_fill_manual(values=c("gold", "pink"))+
   labs(x = "Nutrient Composition",
-       y = "Mean average flies per patch")+
+       y = "Mean average flies per patch", 
+       title = "Day 2")+
   theme(legend.position="none")+ 
-  ylim(0,9)
+  ylim(0,9)+
+  geom_jitter(data = long_feedinge3d2,
+              aes(x = food_nutrition,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)
+
+boxplot_food_fc_e3_fn_d1 <- ggplot()+ 
+  geom_boxplot(long_feedinge3d1, mapping=aes(x=food_nutrition, y=fly_numbers, fill=food_nutrition))+
+  theme_classic()+
+  scale_fill_manual(values=c("gold", "pink"))+
+  labs(x = "Nutrient Composition",
+       y = "Mean average flies per patch", 
+       title = "Day 1")+
+  theme(legend.position="none")+ 
+  ylim(0,9)+
+  geom_jitter(data = long_feedinge3d1,
+              aes(x = food_nutrition,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)
 
 
 
-egg_counting3_plot + softhardegg_plot_exp3 + nutrientegg_plot_exp3
+
+boxplot_food_fc_e3_fh_d2 <- ggplot()+ 
+  geom_boxplot(long_feedinge3d2, mapping=aes(x=food_type, y=fly_numbers, fill=food_type))+
+  theme_classic()+
+  scale_fill_manual(values=c("gold", "pink"))+
+  labs(x = "Food Hardness",
+       y = "Mean average flies per patch", 
+       title = "Day 2")+
+  theme(legend.position="none")+ 
+  ylim(0,9)+
+  geom_jitter(data = long_feedinge3d2,
+              aes(x = food_type,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)
+
+boxplot_food_fc_e3_fh_d1 <- ggplot()+ 
+  geom_boxplot(long_feedinge3d1, mapping=aes(x=food_type, y=fly_numbers, fill=food_type))+
+  theme_classic()+
+  scale_fill_manual(values=c("gold", "pink"))+
+  labs(x = "Food Hardness",
+       y = "Mean average flies per patch", 
+       title = "Day 1")+
+  theme(legend.position="none")+ 
+  ylim(0,9)+
+  geom_jitter(data = long_feedinge3d1,
+              aes(x = food_type,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)
+
+  
+
+
+boxplot_food_fc_e3_fh_d1 + boxplot_food_fc_e3_fn_d1 + boxplot_food_fc_e3_fh_d2  + boxplot_food_fc_e3_fn_d2
+  
+exp3feeding_plotd1  + exp3feeding_plotd2
+
+
+
+ egg_counting3_plot + softhardegg_plot_exp3 + nutrientegg_plot_exp3
 
 egg_counting3_plot + boxplot_egg_fc_e3 + boxplot_food_fc_e3_fn 
 
