@@ -183,6 +183,8 @@ exp3feeding_plot_both <- exp3feeding_summary_both %>%
 # playing around 
 exp3_combined <- exp3_combined %>% filter(fly_numbers <60)
 
+performance::check_model(exp3_combined_day_lm, check = c("outliers"))
+
 #-- making a linear model for day analysis 
 exp3_combined_day_lm <- lm(fly_numbers ~ day, data = exp3_combined)
 
