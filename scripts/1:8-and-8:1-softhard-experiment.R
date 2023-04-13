@@ -49,7 +49,7 @@ exp3feeding_plotd1 <- exp3feeding_summary_d1 %>%
   labs(x = "Diet \n(Protein; Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "")+
-  theme_minimal() 
+  theme_classic() 
 
 #-------------- (Exp 3) Day 1 Data analysis  -----------
 #------- creating a linear model for day 1 
@@ -95,7 +95,30 @@ exp3feeding_plotd2 <- exp3feeding_summary_d2 %>%
   labs(x = "Diet \n(Protein; Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "")+
-  theme_minimal() 
+  theme_classic() 
+
+
+
+
+long_feedinge3d2$food_type <- ifelse(long_feedinge3d2$diet %in% c("8:1H", "1:8H"), "Hard", "Soft")
+long_feedinge3d2$food_nutrition <- ifelse(long_feedinge3d2$diet %in% c("8:1", "1:8H", "1:8S"), "1:8", "8:1")
+
+long_feedinge3d1$food_type <- ifelse(long_feedinge3d1$diet %in% c("8:1H", "1:8H"), "Hard", "Soft")
+long_feedinge3d1$food_nutrition <- ifelse(long_feedinge3d1$diet %in% c("8:1", "1:8H", "1:8S"), "1:8", "8:1")
+
+
+
+
+long_feedinge3d1
+
+exp3feeding_summary_d2_fh <- long_feedinge3d2 %>%  
+  group_by(food_type) %>% 
+  summarise(mean = mean(fly_numbers),
+            sd = sd(fly_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+
+
 
 #-------------- (Exp 3) Day 2 Data analysis  -----------
 
@@ -157,8 +180,38 @@ exp3feeding_plot_both <- exp3feeding_summary_both %>%
 
 #--- Data analysis for combined days data ----
 
+# playing around 
+exp3_combined <- exp3_combined %>% filter(fly_numbers <60)
+
 #-- making a linear model for day analysis 
 exp3_combined_day_lm <- lm(fly_numbers ~ day, data = exp3_combined)
+
+exp3_combined_day_lm_2 <- lm(fly_numbers ~ day * diet, data = exp3_combined)
+
+#
+performance::check_model(exp3_combined_day_lm_2)
+performance::check_model(exp3_combined_day_lm_2, check = c("qq"))
+performance::check_model(exp3_combined_day_lm_2, check = c("linearity"))
+performance::check_model(exp3_combined_day_lm_2, check = c("outliers"))
+# cooks distance = 0.9 - 
+# slope - something hasn't been measured 
+# more error at high than low values
+
+MASS::boxcox(exp3_combined_day_lm_3)
+
+exp3_combined_day_lm_3 <- lm(formula = (fly_numbers + 1) ~ day * diet, data = exp3_combined)
+
+exp3_combined_day_lm_4 <- lm(formula = log(fly_numbers + 1) ~ day * diet, data = exp3_combined)
+
+performance::check_model(exp3_combined_day_lm_4)
+performance::check_model(exp3_combined_day_lm_4, check = c("qq"))
+performance::check_model(exp3_combined_day_lm_4, check = c("linearity"))
+performance::check_model(exp3_combined_day_lm_4, check = c("outliers"))
+
+
+summary(exp3_combined_day_lm_4)
+
+emmeans::emmeans(exp3_combined_day_lm_4, pairwise ~ day * diet)
 
 # checking the model 
 performance::check_model(exp3_combined_day_lm)
@@ -167,7 +220,15 @@ performance::check_model(exp3_combined_day_lm, check = c("linearity"))
 # linearity looks not great
 
 #-- making a gernealised linear model for day analysis 
-exp3_combined_day_glm <- glm(fly_numbers ~ day, family = poisson, data = exp3_combined)
+exp3_combined_day_glm <- glm(fly_numbers ~ day * diet, family = poisson(link = "log"), data = exp3_combined)
+
+# checking the new generalised model 2
+performance::check_model(exp3_combined_day_glm)
+performance::check_model(exp3_combined_day_glm, check = c("homogeneity", "qq"))
+
+AIC(exp3_combined_day_lm_4, exp3_combined_day_glm)
+
+# model not good 
 
 # checking for overdispersion in the poisson generalised model
 summary(exp3_combined_day_glm)
@@ -339,6 +400,23 @@ softhard_plot_exp3 + nutrient_plot_exp3
 # creating a linear model based on food nutrition and food type 
 exp3_combined_foodcondition_lm <- lm(fly_numbers ~ food_type + food_nutrition + food_type : food_nutrition, data = exp3_combined)
 
+
+
+
+exp3_combined_foodcondition_lm_2 <- lm(formula = log(fly_numbers + 1) ~ food_type + food_nutrition + day + food_type:food_nutrition + food_type:day + day:food_nutrition, data = exp3_combined)
+
+
+
+# checking the model 
+performance::check_model(exp3_combined_foodcondition_lm_2)
+performance::check_model(exp3_combined_foodcondition_lm_2, check = c("normality", "qq"))
+performance::check_model(exp3_combined_foodcondition_lm_2, check = c("linearity"))
+performance::check_model(exp3_combined_foodcondition_lm_2, check = c("outliers"))
+
+summary(exp3_combined_foodcondition_lm_2)
+
+emmeans::emmeans(exp3_combined_foodcondition_lm_2, pairwise ~ food_type + food_nutrition + day + food_type:food_nutrition + food_type:day + day:food_nutrition)
+
 # checking the model 
 performance::check_model(exp3_combined_foodcondition_lm)
 performance::check_model(exp3_combined_foodcondition_lm, check = c("normality", "qq"))
@@ -379,6 +457,15 @@ summary(exp3_combined_foodcondition_glm)
 
 # overdispersed so trying quasipoisson
 exp3_combined_foodcondition_glm2 <- glm(fly_numbers ~ food_type + food_nutrition + food_type : food_nutrition, family = quasipoisson, data = exp3_combined)
+
+
+exp3_combined_foodcondition_glm_3 <- glm(formula = (fly_numbers + 1) ~ food_type + food_nutrition + day + food_type:food_nutrition + food_type:day + day:food_nutrition, family = poisson, data = exp3_combined)
+
+performance::check_model(exp3_combined_foodcondition_glm_3)
+performance::check_model(exp3_combined_foodcondition_glm_3, check = c("qq"))
+
+
+
 
 # checking the glm 2 model 
 performance::check_model(exp3_combined_foodcondition_glm2)
