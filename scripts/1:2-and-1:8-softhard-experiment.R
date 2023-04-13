@@ -156,8 +156,9 @@ exp1all_plot <- exp1a_all_summary %>%
               shape = 21)+
   ylim(0.0, 4.0)+
   labs(x = "Diet \n(Protein: Carbohydrate)",
-       y = "Mean (+/- S.E.) number of flies on a patch")+
-  theme_minimal() 
+       y = "Mean (+/- S.E.) number of flies on a patch",
+       title = "Experiment 1a")+
+  theme_classic() 
 
 
 # ------ -(Exp1a) Combined days data analysis ----------
@@ -361,10 +362,10 @@ exp1ball_plot <- exp1ball_summary %>%
               width = 0.2,
               shape = 21)+
   ylim(0.0, 4.0)+
-  labs(x = "Diet \n(Protein; Carbohydrate)",
+  labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
-       title = "")+
-  theme_minimal() 
+       title = "Experiment 1b")+
+  theme_classic() 
 
 
 #- Data analysis of combined days (experiment 1b) ----
@@ -1050,8 +1051,8 @@ egg_counting1_plot <- egg_counting1_summary %>%
   ylim(0,200)+
   labs(x = "Diet \n(Protein; Carbohydrate)",
        y = "Mean (+/- S.E.) number of eggs laid on each patch", 
-       title = "Mated Female Oviposition Preference")+
-  theme_minimal()
+       title = "Experiment 1a")+
+  theme_classic()
 # THIS CODE IS NOT USED IN OVERALL ANALYSIS 
 # CAN IGNORE FOR NOW
 ## JUST THERE FOR KNOWLEDGE 
@@ -1060,6 +1061,7 @@ egg_counting1_plot <- egg_counting1_summary %>%
 eggcountinge1ls1 <- lm(egg_numbers ~ diet, data = long_egg_counting1)
 #---- Checking the model 
 performance::check_model(eggcountinge1ls1)
+performance::check_model(eggcountinge1ls1, check = c("qq"))
 #---- summarising the data 
 summary(eggcountinge1ls1)
 #----  doing tests 
@@ -1128,8 +1130,9 @@ egg_counting1b_plot <- egg_counting1_summary_1b %>%
               shape = 21)+
   ylim(0,200)+
   labs(x = "Diet \n(Protein; Carbohydrate)",
-       y = "Mean (+/- S.E.) number of eggs laid on each patch")+
-  theme_minimal()
+       y = "Mean (+/- S.E.) number of eggs laid on each patch",
+       title = "Experiment 1b")+
+  theme_classic()
 
 #-- using patchwork to compare the egg plots 
 
