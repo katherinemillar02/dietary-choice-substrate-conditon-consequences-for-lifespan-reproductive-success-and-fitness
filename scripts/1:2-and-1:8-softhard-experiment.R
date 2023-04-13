@@ -238,7 +238,42 @@ exp1bfeeding_plotd1 <- exp1bfeeding_summary %>%
 
 
 #----- Day 2 
-#-------- Reading the data in
+
+
+long_feedinge1bd2$food_type <- ifelse(long_feedinge1bd2$diet %in% c("1:8H", "1:2H"), "Hard", "Soft")
+long_feedinge1bd2$food_nutrition <- ifelse(long_feedinge1bd2$diet %in% c("1:8", "1:2H", "1:2S"), "1:2", "1:8")
+
+softhard_summary_exp1b <- long_feedinge1bd2 %>% 
+  group_by(food_type) %>% 
+  summarise(mean = mean(fly_numbers),
+            sd = sd(fly_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+
+# a soft vs hard plot 
+softhard_plot_exp1b <- softhard_summary_exp1b %>% 
+  ggplot(aes(x = food_type, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "#FF6863",
+                width = 0.2)+
+  geom_jitter(data = long_feedinge1bd2,
+              aes(x = food_type,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)+
+  ylim(0.0, 9)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of flies on a patch", 
+       title = "Exp1b")+
+  theme_classic()
+
+#------- Reading the data in
 feedinge1bd2 <- read_excel("data/RPFemaleFeedingE1bD2.xlsx")
 #---- Making the data long
 long_feedinge1bd2 <- feedinge1bd2 %>% 
