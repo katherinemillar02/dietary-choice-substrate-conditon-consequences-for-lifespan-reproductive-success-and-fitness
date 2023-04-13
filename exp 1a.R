@@ -2,6 +2,8 @@ exp1a_all_day_lm_2 <- lm(formula = log(fly_numbers + 1) ~ day * diet , data = ex
 
 summary(exp1a_all_day_lm_2)
 
+drop1(exp1a_all_day_lm_2, test = "F")
+
 exp1a_all_day_lm_3 <- lm(formula = log(fly_numbers + 1) ~  diet , data = exp1a_all)
 
 summary(exp1a_all_day_lm_3)
@@ -23,7 +25,7 @@ performance::check_model(exp1_combined_foodconditions_lm, check = c("qq"))
 performance::check_model(exp1_combined_foodconditions_lm, check = c("homogeneity"))
 
 
-exp1_combined_foodconditions_lm_2 <- lm(formula = log(fly_numbers + 1) ~ food_type + food_nutrition + food_type : food_nutrition, data = exp1a_all)
+exp1_combined_foodconditions_lm_2 <- lm(formula = log(fly_numbers + 1) ~ food_type * food_nutrition * day, data = exp1a_all)
 
 performance::check_model(exp1_combined_foodconditions_lm_2)
 performance::check_model(exp1_combined_foodconditions_lm_2, check = c("qq"))
