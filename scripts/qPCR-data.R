@@ -28,6 +28,8 @@ newfoxoqPCR_summary <- newlong_foxoqPCR %>%
   group_by(sample) %>% 
   summarise(mean = mean(cq, na.rm = T))
 
+# USE FROM HERE ------------
+
 # reading the summarised foxo data in 
 foxo_calcs <- read_excel("data/foxo_calcs.xlsx")
 
@@ -43,30 +45,6 @@ foxo_sum <- newlong_foxo_calcs%>%
             n = n(),
             se = sd/sqrt(n))
 
-# reading the summarised dilp3 data in 
-dilp3_calcs <- read_excel("data/dilp3_calcs.xlsx")
-
-# making the  data long 
-newlong_dilp3_calcs <- dilp3_calcs %>% 
-  pivot_longer(cols = ("1:8S":"8:1H"), names_to = "sample", values_to = "cq")
-# making the data long summary
-dilp3_sum <- newlong_dilp3_calcs %>%  
-  group_by(sample) %>% 
-  summarise(mean = mean(cq, na.rm = T),
-sd = sd(cq, na.rm = T),
-n = n(),
-se = sd/sqrt(n))
-
-# binding the foxo and dilp3 calcs together
-foxo_dilp3_calcs <- rbind(newlong_foxo_calcs, newlong_dilp3_calcs)
-
-# making a summary of the foxo and dilp 3 calcs 
-foxo_dilp3_summary <- foxo_dilp3_calcs %>%  
-  group_by(sample) %>% 
-  summarise(mean = mean(cq, na.rm = T),
-            sd = sd(cq, na.rm = T),
-            n = n(),
-            se = sd/sqrt(n))
 
 # foxo plot 
 foxo_plot <- foxo_sum %>% 
@@ -91,7 +69,51 @@ foxo_plot <- foxo_sum %>%
               shape = 21)
 
 
+# DATA ANALYSIS -----
 
+# linear model 
+qpcr_foxo_lm <- lm(cq ~ sample, data = newlong_foxo_calcs)
+
+# performance check 
+performance::check_model(qpcr_foxo_lm)
+performance::check_model(qpcr_foxo_lm, check = c("qq"))
+performance::check_model(qpcr_foxo_lm, check = c("linearity"))
+performance::check_model(qpcr_foxo_lm, check = c("homogeneity"))
+
+# summary for analysis 
+summary(qpcr_foxo_lm)
+
+# generalised linear model 
+qpcr_foxo_glm <- glm(cq ~ sample, family = poisson, data = newlong_foxo_calcs)
+# looks like it is overdispersed
+# trying with quasipoisson 
+qpcr_foxo_glm_2 <- glm(cq ~ sample, family = quasipoisson, data = newlong_foxo_calcs)
+
+# performance check 
+performance::check_model(qpcr_foxo_glm_2)
+performance::check_model(qpcr_foxo_glm_2, check = c("qq"))
+
+# summary for analysis 
+summary(qpcr_foxo_glm_2)
+
+# tukey test with emmeans 
+emmeans::emmeans(qpcr_foxo_glm_2, pairwise ~ sample)
+
+
+
+# reading the summarised dilp3 data in 
+dilp3_calcs <- read_excel("data/dilp3_calcs.xlsx")
+
+# making the  data long 
+newlong_dilp3_calcs <- dilp3_calcs %>% 
+  pivot_longer(cols = ("1:8S":"8:1H"), names_to = "sample", values_to = "cq")
+# making the data long summary
+dilp3_sum <- newlong_dilp3_calcs %>%  
+  group_by(sample) %>% 
+  summarise(mean = mean(cq, na.rm = T),
+sd = sd(cq, na.rm = T),
+n = n(),
+se = sd/sqrt(n))
 # dilp3 plot 
 dilp3_plot <- dilp3_sum %>% 
   ggplot(aes(x = sample, y = mean))+
@@ -113,6 +135,26 @@ dilp3_plot <- dilp3_sum %>%
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)
+
+
+
+
+
+# binding the foxo and dilp3 calcs together
+foxo_dilp3_calcs <- rbind(newlong_foxo_calcs, newlong_dilp3_calcs)
+
+# making a summary of the foxo and dilp 3 calcs 
+foxo_dilp3_summary <- foxo_dilp3_calcs %>%  
+  group_by(sample) %>% 
+  summarise(mean = mean(cq, na.rm = T),
+            sd = sd(cq, na.rm = T),
+            n = n(),
+            se = sd/sqrt(n))
+
+
+
+
+
 
 # patchwork to look at foxo and dilp3 together 
 foxo_plot + dilp3_plot
