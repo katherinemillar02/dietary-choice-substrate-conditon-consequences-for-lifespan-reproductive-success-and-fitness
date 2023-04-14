@@ -50,10 +50,10 @@ exp1feeding_plotd1 <- exp1feeding_summary %>%
               width = 0.2,
               shape = 21)+
   ylim(0.0, 4.0)+
-  labs(x = "Diet \n(Protein; Carbohydrate)",
+  labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
-       title = "")+
-  theme_minimal() 
+       title = "Day 1")+
+  theme_classic() 
 
 #-------------- Data analysis (Exp 1a) Day 1   -----------
 #------- creating a linear model for day 1 
@@ -96,10 +96,10 @@ exp1feeding_plotd2 <- exp1d2feeding_summary %>%
               width = 0.2,
               shape = 21)+
   ylim(0.0, 4.0)+
-  labs(x = "Diet \n(Protein; Carbohydrate)",
+  labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
-       title = "")+
-  theme_minimal() 
+       title = "Day 2")+
+  theme_classic() 
 
 # (Exp1a) ------- Day 2 Data analysis 
 # Data analysis for just day 2 
@@ -248,10 +248,10 @@ exp1bfeeding_plotd1 <- exp1bfeeding_summary %>%
               width = 0.2,
               shape = 21)+
   ylim(0.0, 4.0)+
-  labs(x = "Diet \n(Protein; Carbohydrate)",
+  labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
-       title = "")+
-  theme_minimal() 
+       title = "Day 1")+
+  theme_classic() 
 
 
 
@@ -322,10 +322,10 @@ exp1bfeeding_plotd2 <- exp1bd2feeding_summary %>%
               width = 0.2,
               shape = 21)+
   ylim(0.0, 4.0)+
-  labs(x = "Diet \n(Protein; Carbohydrate)",
+  labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
-       title = "")+
-  theme_minimal() 
+       title = "Day 2")+
+  theme_classic() 
 
 
 #------- comparing the days using patchwork
