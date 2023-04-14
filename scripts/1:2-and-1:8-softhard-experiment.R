@@ -1076,6 +1076,8 @@ confint(eggcountinge1ls1)
 broom::tidy(eggcountinge1ls1,  
             exponentiate=T, 
             conf.int=T)
+exp(2.760 )
+exp(3.204)
 # Data analysis of egg counting from experiment 1 
 emmeans::emmeans(eggcountinge1ls1, specs = pairwise ~ diet) 
 eggcountinge1ls2 <- glm(egg_numbers ~ diet, data = long_egg_counting1, family = quasipoisson)
