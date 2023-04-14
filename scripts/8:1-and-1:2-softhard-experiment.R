@@ -151,7 +151,7 @@ exp2_combined_plot <- exp2_combined_summary %>%
   ylim(0.0, 9)+
   labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
-       title = "")+
+       title = "Overall Diets")+
   theme_classic() 
 
 
@@ -177,7 +177,7 @@ summary(exp2_combined_days_glm)
 # overdispersed 
 
 # trying a glm  with quasipoisson
-exp2_combined_days_glm_2 <- glm(fly_numbers ~ day, family = quasipoisson, data = exp2_combined)
+exp2_combined_days_glm_2 <- glm(fly_numbers ~ day * diet, family = quasipoisson, data = exp2_combined)
 
 
 # checking the model
@@ -186,15 +186,19 @@ performance::check_model(exp2_combined_days_glm_2, check = c("qq"))
 # still doesn't look great but homogenity looks better 
 
 # trying a glm + 1 
-exp2_combined_days_glm_3 <- glm(formula = (fly_numbers + 1) ~ day, family = quasipoisson, data = exp2_combined)
+exp2_combined_days_glm_3 <- glm(formula = (fly_numbers + 1) ~ day * diet, family = quasipoisson, data = exp2_combined)
 
 # checking the model
 performance::check_model(exp2_combined_days_glm_3)
 performance::check_model(exp2_combined_days_glm_3, check = c("qq"))
+performance::check_model(exp2_combined_days_glm_3, check = c("outliers"))
+performance::check_model(exp2_combined_days_glm_3, check = c("homogeneity"))
 # normality still looks bad at the beginning 
 # ways to fix this? 
 
 # from this the best model is exp2_combined_days_glm_3
+
+
 
 # looking for significance in day
 drop1(exp2_combined_days_glm_3, test = "F")
@@ -215,6 +219,7 @@ performance::check_model(exp2_combined_lm, check = c("linearity"))
 # adding +1 to fly numbers as some are 0? 
 exp2_combined_lm2 <- lm(formula = (fly_numbers + 1) ~ diet, data = exp2_combined)
 
+summary(exp2_combined_lm2)
 
 # checking the model 2 
 performance::check_model(exp2_combined_lm2)
@@ -243,6 +248,8 @@ summary(exp2_combined_lm2)
 
 #- using emmeans to test the linear model in experiment 2 (without day in the model)
 emmeans::emmeans(exp2_combined_lm2, specs = pairwise ~ diet)
+
+
 
 # tidyverse version of a summary of data 
 broom::tidy(exp2_combined_lm2, conf.int = T)
@@ -445,7 +452,8 @@ egg_counting2_plot <- egg_counting2_summary %>%
               shape = 21)+
   ylim(0,200)+
   labs(x = "Diet \n(Protein: Carbohydrate)",
-       y = "Mean (+/- S.E.) number of eggs laid on each patch")+
+       y = "Mean (+/- S.E.) number of eggs laid on each patch", 
+       title = "Overall Diets")+
   theme_classic()
 
 #------- Ovipoistion Preference -- data analysis ---------
