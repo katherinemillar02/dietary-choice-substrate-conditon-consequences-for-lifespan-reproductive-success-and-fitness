@@ -1,7 +1,12 @@
 exp1ball 
 
 
-exp1b_all_day_lm_3 <- lm(formula = log(fly_numbers + 1) ~  diet , data = exp1ball)
+
+exp1bfeeding_summary
+
+exp1bd2feeding_summary
+
+exp1b_all_day_lm_3 <- lm(formula = log(fly_numbers + 1) ~  diet * day , data = exp1ball)
 
 performance::check_model(exp1b_all_day_lm_3)
 performance::check_model(exp1b_all_day_lm_3, check = c("qq"))
@@ -11,21 +16,27 @@ performance::check_model(exp1b_all_day_lm_3, check = c("outliers"))
 
 MASS::boxcox(exp1b_all_day_lm_3 )
 
-emmeans::emmeans(exp1b_all_day_lm_3, pairwise ~ diet)
+emmeans::emmeans(exp1b_all_day_lm_3, pairwise ~ diet * day)
 
+exp(1.397 )
+exp(0.479)
+exp(0.199)
 
-exp1b_all_day_glm_3 <- glm(formula = (fly_numbers) ~  diet, family = quasipoisson(link = "log"), data = exp1ball)
+exp1b_all_day_glm_3 <- glm(formula = sqrt(fly_numbers + 1) ~  diet * day, family = quasipoisson(link = "log"), data = exp1ball)
 
 performance::check_model(exp1b_all_day_glm_3)
 performance::check_model(exp1b_all_day_glm_3, check = c("qq"))
 performance::check_model(exp1b_all_day_glm_3, check = c("homogeneity"))
 
+drop1(exp1b_all_day_glm_3,test = "F")
+summary(exp1b_all_day_glm_3)
 
+emmeans::emmeans(exp1b_all_day_glm_3, pairwise ~ diet * day)
 
 exp1ball$food_type <- ifelse(exp1ball$diet %in% c("1:8H", "1:2H"), "Hard", "Soft")
 exp1ball$food_nutrition <- ifelse(exp1ball$diet %in% c("1:8", "1:2H", "1:2S"), "1:2", "1:8")
 
-exp1b_combined_foodconditions_lm <- lm(fly_numbers ~ food_type + food_nutrition + food_type : food_nutrition, data = exp1ball)
+exp1b_combined_foodconditions_lm <- lm(fly_numbers ~ food_type * food_nutrition * day, data = exp1ball)
 
 
 performance::check_model(exp1b_combined_foodconditions_lm )
@@ -38,7 +49,7 @@ performance::check_model(exp1b_combined_foodconditions_lm, check = c("outliers")
 
 
 
-exp1b_combined_foodconditions_glm <- glm(fly_numbers ~ food_type + food_nutrition + food_type : food_nutrition, family=quasipoisson, data = exp1ball)
+exp1b_combined_foodconditions_glm <- glm(fly_numbers ~ food_type * food_nutrition * day, family=quasipoisson, data = exp1ball)
 
 summary(exp1b_combined_foodconditions_glm )
 
@@ -51,7 +62,7 @@ performance::check_model(exp1b_combined_foodconditions_glm, check = c("outliers"
 
 
 
-exp1b_combined_foodconditions_lm_2 <- lm(formula = log(fly_numbers + 1) ~ food_type + food_nutrition + food_type : food_nutrition, data = exp1ball)
+exp1b_combined_foodconditions_lm_2 <- lm(formula = log(fly_numbers + 1) ~ food_type * food_nutrition * day, data = exp1ball)
 
 
 performance::check_model(exp1b_combined_foodconditions_lm_2 )
