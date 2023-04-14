@@ -268,19 +268,39 @@ boxplot_egg_fc_e3 <- ggplot()+
   geom_boxplot(long_egg_counting3, mapping=aes(x=food_type, y=egg_numbers, fill=food_type))+
   theme_classic()+
   scale_fill_manual(values=c("lightgreen", "lightblue"))+
-  labs(x = "Food Hardness",
-       y = "Mean average eggs per patch")+
+  labs(x = "Substrate condition of diet",
+       y = "Eggs per food patch", 
+       title = "Food Hardness")+
   theme(legend.position="none")+
-  ylim(0,200)
+  ylim(0,200)+
+  geom_jitter(data = long_egg_counting3,
+              aes(x = food_type,
+                  y = egg_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)
+
+egg_counting2_plot + boxplot_egg_fc_e3 + boxplot_food_fc_e3_fn
 
 boxplot_food_fc_e3_fn <- ggplot()+ 
   geom_boxplot(long_egg_counting3, mapping=aes(x=food_nutrition, y=egg_numbers, fill=food_nutrition))+
   theme_classic()+
   scale_fill_manual(values=c("lightgreen", "lightblue"))+
-  labs(x = "Nutrient Composition",
-       y = "Mean average eggs per patch")+
+  labs(x = "Protein: Carbohydrate content of diet",
+       y = "Eggs per food patch",
+       title = "Nutrient Composition")+
   theme(legend.position="none")+ 
-  ylim(0,200)
+  ylim(0,200)+
+  geom_jitter(data = long_egg_counting3,
+              aes(x = food_nutrition,
+                  y = egg_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)
+
+(7018-6600)
 
 
 egg_counting2_plot + softhardegg_plot + nutrientegg_plot
@@ -373,10 +393,14 @@ boxplot_food_fc_e3_fh_d1 <- ggplot()+
               width = 0.2,
               shape = 21)
 
+
+
+egg_counting1_plot 
+
   
 
 
-boxplot_food_fc_e3_fh_d1 + boxplot_food_fc_e3_fn_d1 + boxplot_food_fc_e3_fh_d2  + boxplot_food_fc_e3_fn_d2
+egg_counting1_plot + egg_counting1b_plot + boxplot_food_fc_e3_fh_d1 + boxplot_food_fc_e3_fn_d1 + boxplot_food_fc_e3_fh_d2  + boxplot_food_fc_e3_fn_d2
   
 exp3feeding_plotd1  + exp3feeding_plotd2
 
