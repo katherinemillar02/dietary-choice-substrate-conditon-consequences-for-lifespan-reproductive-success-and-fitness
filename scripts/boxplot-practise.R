@@ -76,22 +76,47 @@ boxplot1 <- ggplot()+
   scale_fill_manual(values=c( "gold", "pink"))+
   theme(legend.position="none")+
   ylim(0,9)+
-  labs(x = "Nutrient Composition",
-       y = "Mean number of flies on a patch")
+  labs(x = "Protein: Carbohydrate content of diet",
+       y = "Flies per food patch",
+       title = "Nutrient Composition")+
+  geom_jitter(data = exp2_combined,
+              aes(x = food_nutrition,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)
+  
 
 
 boxplot2 <- ggplot()+ 
-  geom_boxplot(exp2both, mapping=aes(x=food_type, y=fly_numbers, fill=food_type))+ 
+  geom_boxplot(exp2_combined, mapping=aes(x=food_type, y=fly_numbers, fill=food_type))+ 
   theme_classic()+
   scale_fill_manual(values=c( "gold", "pink"))+
   theme(legend.position="none")+
   ylim(0,9)+
-  labs(x = "Food Hardness",
-       y = "Mean number of flies on a patch")
+  labs(x = "Substrate condition of diet",
+       y = "Flies per food patch", 
+       title = "Food Hardness")+
+  geom_jitter(data = exp2_combined,
+              aes(x = food_type,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)
 
-exp2_combined_plot  + boxplot2 + boxplot1
 
-exp2_combined_plot + softhard_plot_exp2 + nutrient_plot_exp2
+
+
+ boxplot2 + boxplot1
+
+exp2_combined_plot +  boxplot2 + boxplot1
+
+  
+  
+  softhard_plot_exp2 + nutrient_plot_exp2
+
 
 
 
@@ -108,7 +133,14 @@ boxplot_egg_fc <- ggplot()+
   labs(x = "Nutrient Composition",
        y = "Mean average flies per patch")+
   theme(legend.position="none")+
-  ylim(0,200)
+  ylim(0,200)+ 
+  geom_jitter(data = exp2_combined,
+              aes(x = food_type,
+                  y = egg_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)
 
 boxplot_egg_fc_2 <- ggplot()+ 
   geom_boxplot(exp2both, mapping=aes(x=food_nutrition, y=fly_numbers, fill=food_nutrition))+
@@ -117,7 +149,14 @@ boxplot_egg_fc_2 <- ggplot()+
   labs(x = "Food Hardness",
        y = "Mean average flies per patch")+
   theme(legend.position="none")+
-  ylim(0,200)
+  ylim(0,200)+
+  geom_jitter(data = exp2_combined,
+              aes(x = food_type,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)
 
 boxplot_egg_fc + boxplot_egg_fc_2
 
@@ -176,26 +215,43 @@ softhard_plot_exp1 + nutrient_plot_exp1
 
 
 
-boxplot_egg_fc_e2 <- ggplot()+ 
+exp2_egg_foodtype <- ggplot()+ 
   geom_boxplot(long_egg_counting2, mapping=aes(x=food_type, y=egg_numbers, fill=food_type))+
   theme_classic()+
   scale_fill_manual(values=c("lightgreen", "lightblue"))+
-  labs(x = "Food Hardness",
-       y = "Mean average eggs per patch")+
+  labs(x = "Substrate condition of diet",
+       y = "Mean average eggs per patch",
+       title = "Food Hardness")+
   theme(legend.position="none")+
-  ylim(0,200)
+  ylim(0,200)+
+  geom_jitter(data = long_egg_counting2,
+              aes(x = food_type,
+                  y = egg_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)
+  
 
-boxplot_food_fc_e2_fn <- ggplot()+ 
+exp2_egg_foodnutrition <- ggplot()+ 
   geom_boxplot(long_egg_counting2, mapping=aes(x=food_nutrition, y=egg_numbers, fill=food_nutrition))+
   theme_classic()+
   scale_fill_manual(values=c("lightgreen", "lightblue"))+
-  labs(x = "Nutrient Composition",
-       y = "Mean average eggs per patch")+
+  labs(x = "Protein: Carbohydrate content of diet",
+       y = "Eggs per food patch", 
+       title = "Nutrient Composition")+
   theme(legend.position="none")+ 
-  ylim(0,200)
+  ylim(0,200)+
+  geom_jitter(data = long_egg_counting2,
+              aes(x = food_nutrition,
+                  y = egg_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)
 
 
-egg_counting2_plot + boxplot_egg_fc_e2 + boxplot_food_fc_e2_fn
+egg_counting2_plot + exp2_egg_foodtype + exp2_egg_foodnutrition
 
 
 egg_counting2_plot + softhardegg_plot + nutrientegg_plot
