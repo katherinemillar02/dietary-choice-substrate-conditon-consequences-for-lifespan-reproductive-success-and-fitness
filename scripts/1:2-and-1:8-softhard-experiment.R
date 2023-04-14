@@ -30,8 +30,13 @@ exp1feeding_summary <- long_feedinge1d1 %>%
             sd = sd(fly_numbers),
             n = n(),
             se = sd/sqrt(n))
-exp(0.759)
-exp(0.950)
+
+test <- lm(fly_numbers ~ diet, data = long_feedinge1d1)
+emmeans::emmeans(test, pairwise ~ diet)
+
+test2 <- lm(fly_numbers ~ diet, data = long_feedinge1d2)
+emmeans::emmeans(test2, pairwise ~ diet)
+
 #------- Visualising the data for feeding day 1 ----------------#
 exp1feeding_plotd1 <- exp1feeding_summary %>% 
   ggplot(aes(x = diet, y = mean))+
@@ -49,7 +54,7 @@ exp1feeding_plotd1 <- exp1feeding_summary %>%
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)+
-  ylim(0.0, 4.0)+
+  ylim(0.0, 9.0)+
   labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "Day 1")+
@@ -95,7 +100,7 @@ exp1feeding_plotd2 <- exp1d2feeding_summary %>%
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)+
-  ylim(0.0, 4.0)+
+  ylim(0.0, 9.0)+
   labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "Day 2")+
@@ -156,7 +161,7 @@ exp1all_plot <- exp1a_all_summary %>%
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)+
-  ylim(0.0, 4.0)+
+  ylim(0.0, 9.0)+
   labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "Experiment 1a")+
@@ -230,6 +235,12 @@ exp1bfeeding_summary <- long_feedinge1bd1 %>%
             sd = sd(fly_numbers),
             n = n(),
             se = sd/sqrt(n))
+
+test3 <- lm(fly_numbers ~ diet, data = long_feedinge1bd1 )
+emmeans::emmeans(test3, pairwise ~ diet)
+
+test4 <- lm(fly_numbers ~ diet, data = long_feedinge1bd2 )
+emmeans::emmeans(test4, pairwise ~ diet)
 #------- Visualising the data for feeding day 1 ----------------#
 exp1bfeeding_plotd1 <- exp1bfeeding_summary %>% 
   ggplot(aes(x = diet, y = mean))+
@@ -247,7 +258,7 @@ exp1bfeeding_plotd1 <- exp1bfeeding_summary %>%
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)+
-  ylim(0.0, 4.0)+
+  ylim(0.0, 9.0)+
   labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "Day 1")+
@@ -321,7 +332,7 @@ exp1bfeeding_plotd2 <- exp1bd2feeding_summary %>%
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)+
-  ylim(0.0, 4.0)+
+  ylim(0.0, 9.0)+
   labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "Day 2")+
@@ -330,7 +341,7 @@ exp1bfeeding_plotd2 <- exp1bd2feeding_summary %>%
 
 #------- comparing the days using patchwork
 
-exp1bfeeding_plotd1 + exp1bfeeding_plotd2
+exp1bfeeding_plotd1 + exp1bfeeding_plotd2 
 
 #-----  (Exp1b) data analysis -----
 #- Data analysis of combined days (experiment 1b)
@@ -375,7 +386,8 @@ exp1ball_plot <- exp1ball_summary %>%
 
 #- Data analysis of combined days (experiment 1b) ----
 # creating a model with just day in for analysis 
-exp1balllmday <- lm(fly_numbers ~ day, data = exp1ball)
+exp1balllmday <- lm(fly_numbers ~ diet, data = exp1ball)
+
 
 
 
