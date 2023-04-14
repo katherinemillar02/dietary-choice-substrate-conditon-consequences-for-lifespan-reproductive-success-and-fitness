@@ -46,9 +46,9 @@ exp3feeding_plotd1 <- exp3feeding_summary_d1 %>%
               width = 0.2,
               shape = 21)+
   ylim(0.0, 4.0)+
-  labs(x = "Diet \n(Protein; Carbohydrate)",
-       y = "Mean (+/- S.E.) number of flies on a patch",
-       title = "")+
+  labs(x = "Diet \n(Protein: Carbohydrate)",
+       y = "Mean (+/- S.E.) number of flies on a patch", 
+       title = "Day 1")+
   theme_classic() 
 
 #-------------- (Exp 3) Day 1 Data analysis  -----------
@@ -92,12 +92,12 @@ exp3feeding_plotd2 <- exp3feeding_summary_d2 %>%
               width = 0.2,
               shape = 21)+
   ylim(0.0, 4.0)+
-  labs(x = "Diet \n(Protein; Carbohydrate)",
+  labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
-       title = "")+
+       title = "Day 2")+
   theme_classic() 
 
-
+exp3feeding_plotd1 + exp3feeding_plotd2
 
 
 long_feedinge3d2$food_type <- ifelse(long_feedinge3d2$diet %in% c("8:1H", "1:8H"), "Hard", "Soft")
@@ -210,6 +210,7 @@ performance::check_model(exp3_combined_day_lm_4, check = c("qq"))
 performance::check_model(exp3_combined_day_lm_4, check = c("linearity"))
 performance::check_model(exp3_combined_day_lm_4, check = c("outliers"))
 
+drop1(exp3_combined_day_lm_4, test = "F")
 
 summary(exp3_combined_day_lm_4)
 
@@ -404,8 +405,7 @@ exp3_combined_foodcondition_lm <- lm(fly_numbers ~ food_type + food_nutrition + 
 
 
 
-
-exp3_combined_foodcondition_lm_2 <- lm(formula = log(fly_numbers + 1) ~ food_type + food_nutrition + day + food_type:food_nutrition + food_type:day + day:food_nutrition, data = exp3_combined)
+exp3_combined_foodcondition_lm_2 <- lm(formula = log(fly_numbers + 1) ~ food_type * food_nutrition * day, data = exp3_combined)
 
 
 
