@@ -105,10 +105,15 @@ performance::check_model(exp1_egg_combined_foodconditions_glm_2, check = c("qq")
 performance::check_model(exp1_egg_combined_foodconditions_glm_2, check = c("homogeneity"))
 performance::check_model(exp1_egg_combined_foodconditions_glm_2, check = c("outliers"))
 
+exp(2.67) -1
+exp(1.43) -1
 
 summary(exp1_egg_combined_foodconditions_glm_2)
 
+emmeans::emmeans(exp1_egg_combined_foodconditions_glm_2, pairwise ~ food_nutrition * food_type)
+exp1_egg_combined_foodconditions_lm_prac <- lm(egg_numbers  ~ food_type * food_nutrition, data = long_egg_counting1)
 
+emmeans::emmeans(exp1_egg_combined_foodconditions_lm_prac, pairwise ~ food_nutrition * food_type)
 
 performance::check_model(exp1_egg_combined_foodconditions_glm_2, check = c("homogeneity"))
 
@@ -235,8 +240,12 @@ boxplot_food_fc_e1b_fn_e1a_egg <- ggplot()+
               shape = 21)
 
 
- boxplot_food_fc_e1b_fh_e1a_egg + boxplot_food_fc_e1b_fn_e1a_egg  + boxplot_food_fc_e1b_fh_e1_egg + boxplot_food_fc_e1b_fn_e1_egg
+hey  <- egg_counting1_plot + egg_counting1b_plot 
 
+ boxplot_food_fc_e1b_fh_e1a_egg + boxplot_food_fc_e1b_fn_e1a_egg + boxplot_food_fc_e1b_fh_e1_egg + boxplot_food_fc_e1b_fn_e1_egg  
+
+ 
+ 
  boxplot_food_fc_e1b_fh_e1a_egg + boxplot_food_fc_e1b_fh_e1_egg
  
  
