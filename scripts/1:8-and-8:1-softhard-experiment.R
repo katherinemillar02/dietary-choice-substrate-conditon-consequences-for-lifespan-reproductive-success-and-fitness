@@ -74,6 +74,8 @@ exp3feeding_summary_d2 <- long_feedinge3d2 %>%
             sd = sd(fly_numbers),
             n = n(),
             se = sd/sqrt(n))
+exp3feeding_summary_d1
+
 #------- Visualising the data for feeding day 2 ----------------#
 exp3feeding_plotd2 <- exp3feeding_summary_d2 %>% 
   ggplot(aes(x = diet, y = mean))+
@@ -525,7 +527,8 @@ egg_counting3_plot <- egg_counting3_summary %>%
               shape = 21)+
   ylim(0,200)+
   labs(x = "Diet \n(Protein: Carbohydrate)",
-       y = "Mean (+/- S.E.) number of eggs laid on each patch")+
+       y = "Mean (+/- S.E.) number of eggs laid on each patch",
+       title = "Overall Diets")+
   theme_classic()
 
 
