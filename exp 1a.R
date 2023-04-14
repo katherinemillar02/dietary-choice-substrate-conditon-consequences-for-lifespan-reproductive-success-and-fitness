@@ -36,7 +36,7 @@ MASS::boxcox(exp1_combined_foodconditions_lm_2 )
 summary(exp1_combined_foodconditions_lm_2)
 
 
-exp1_combined_foodconditions_glm <- glm((fly_numbers +1) ~ food_type + food_nutrition + food_type : food_nutrition, family = quasipoisson(link = "log"), data = exp1a_all)
+exp1_combined_foodconditions_glm <- glm((fly_numbers +1) ~ food_type * food_nutrition , family = quasipoisson(link = "log"), data = exp1a_all)
 
 performance::check_model(exp1_combined_foodconditions_glm)
 performance::check_model(exp1_combined_foodconditions_glm, check = c("qq"))
@@ -44,6 +44,9 @@ performance::check_model(exp1_combined_foodconditions_glm, check = c("outliers")
 performance::check_model(exp1_combined_foodconditions_glm, check = c("homogeneity"))
 
 
+drop1(exp1_combined_foodconditions_glm, test = "F")
+
+summary(exp1_combined_foodconditions_glm)
 
 
 
@@ -93,6 +96,8 @@ performance::check_model(exp1_egg_combined_foodconditions_glm, check = c("qq"))
 performance::check_model(exp1_egg_combined_foodconditions_glm, check = c("homogeneity"))
 
 exp1_egg_combined_foodconditions_glm_2 <- glm(formula = log(egg_numbers + 1) ~ food_type + food_nutrition + food_type : food_nutrition, family = quasipoisson, data = long_egg_counting1)
+
+exp1_egg_combined_foodconditions_glm_3 <- glm(formula = log(egg_numbers + 1) ~ food_type + food_nutrition + food_type : food_nutrition, family = quasipoisson, data = long_egg_counting1)
 
 
 performance::check_model(exp1_egg_combined_foodconditions_glm_2)
@@ -252,6 +257,29 @@ boxplot_food_fc_e1b_fn_e1_egg <- ggplot()+
               colour = "#3a3c3d",
               width = 0.2,
               shape = 21)
+
+
+
+
+
+
+boxplot_foodcondition_e1a_d2 <- ggplot()+ 
+  geom_boxplot(long_feedinge1d2, mapping=aes(x=food_nutrition, y=fly_numbers, fill=food_nutrition))+
+  theme_classic()+
+  scale_fill_manual(values=c("lightgreen", "lightblue"))+
+  labs(x = "Food Nutrition",
+       y = "Mean average flies per patch", 
+       title = "Experiment 1b")+
+  theme(legend.position="none")+ 
+  ylim(0,200)+
+  geom_jitter(data =  long_feedinge1d2,
+              aes(x = food_nutrition,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)
+
 
 
 
