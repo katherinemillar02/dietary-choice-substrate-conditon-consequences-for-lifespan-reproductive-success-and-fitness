@@ -64,6 +64,8 @@ performance::check_model(exp1b_combined_foodconditions_glm, check = c("outliers"
 
 exp1b_combined_foodconditions_lm_2 <- lm(formula = log(fly_numbers + 1) ~ food_type * food_nutrition * day, data = exp1ball)
 
+exp1b_combined_foodconditions_lm_3 <- lm(formula = log(fly_numbers + 1) ~ food_type + food_nutrition + day, data = exp1ball)
+
 
 performance::check_model(exp1b_combined_foodconditions_lm_2 )
 performance::check_model(exp1b_combined_foodconditions_lm_2, check = c("qq"))
@@ -74,9 +76,9 @@ performance::check_model(exp1b_combined_foodconditions_lm, check = c("linearity"
 performance::check_model(exp1b_combined_foodconditions_lm, check = c("outliers"))
 
 MASS::boxcox(exp1b_combined_foodconditions_lm_2)
-
-
 summary(exp1b_combined_foodconditions_lm_2)
+
+summary(exp1b_combined_foodconditions_lm_3)
 
 
 exp1all_plot + exp1ball_plot 
@@ -86,9 +88,9 @@ boxplot_food_fc_e1b_fh_e1 <- ggplot()+
   geom_boxplot(exp1ball, mapping=aes(x=food_type, y=fly_numbers, fill=food_type))+
   theme_classic()+
   scale_fill_manual(values=c("gold", "pink"))+
-  labs(x = "Food Hardness",
-       y = "Mean average flies per patch", 
-       title = "Experiment 1b")+
+  labs(x = "Substrate condition of diet",
+       y = "Flies per food patch", 
+       title = "Food Hardness")+
   theme(legend.position="none")+ 
   ylim(0,9)+
   geom_jitter(data =  exp1ball,
@@ -104,9 +106,9 @@ boxplot_food_fc_e1b_fn_e1 <- ggplot()+
   geom_boxplot(exp1ball, mapping=aes(x=food_nutrition, y=fly_numbers, fill=food_nutrition))+
   theme_classic()+
   scale_fill_manual(values=c("gold", "pink"))+
-  labs(x = "Food Hardness",
-       y = "Mean average flies per patch", 
-       title = "Experiment 1b")+
+  labs(x = "Protein: Carbohydrate content of diet",
+       y = "Flies per food patch", 
+       title = "Nutrient Composition")+
   theme(legend.position="none")+ 
   ylim(0,9)+
   geom_jitter(data =  exp1ball,
@@ -118,7 +120,9 @@ boxplot_food_fc_e1b_fn_e1 <- ggplot()+
               shape = 21)
 
 
-boxplot_food_fc_e1a_fh_e1 + boxplot_food_fc_e1a_fn_e1 + boxplot_food_fc_e1b_fh_e1 + boxplot_food_fc_e1b_fn_e1
+boxplot_food_fc_e1a_fh_e1 + boxplot_food_fc_e1a_fn_e1 
+
+boxplot_food_fc_e1b_fh_e1 + boxplot_food_fc_e1b_fn_e1
 
 
 
@@ -126,9 +130,9 @@ boxplot_food_fc_e1a_fh_e1 <- ggplot()+
   geom_boxplot(exp1a_all, mapping=aes(x=food_type, y=fly_numbers, fill=food_type))+
   theme_classic()+
   scale_fill_manual(values=c("gold", "pink"))+
-  labs(x = "Food Hardness",
-       y = "Mean average flies per patch", 
-       title = "Experiment 1a")+
+  labs(x = "Substrate condition of diet",
+       y = "Flies per food patch", 
+       title = "Food Hardness")+
   theme(legend.position="none")+ 
   ylim(0,9)+
   geom_jitter(data =  exp1a_all,
@@ -144,9 +148,9 @@ boxplot_food_fc_e1a_fn_e1 <- ggplot()+
   geom_boxplot(exp1a_all, mapping=aes(x=food_nutrition, y=fly_numbers, fill=food_nutrition))+
   theme_classic()+
   scale_fill_manual(values=c("gold", "pink"))+
-  labs(x = "Food Hardness",
-       y = "Mean average flies per patch", 
-       title = "Experiment 1a")+
+  labs(x = "Protein: Carbohydrate content of diet",
+       y = "Flies per food patch", 
+       title = "Nutrient Composition")+
   theme(legend.position="none")+ 
   ylim(0,9)+
   geom_jitter(data =  exp1a_all,
