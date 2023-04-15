@@ -59,7 +59,7 @@ foxo_plot <- foxo_sum %>%
                 width = 0.2)+
   labs(title = "foxo",
        x = "Diet larvae were reared on \n(Protein: Carbohydrate/ Food Hardness)",
-       y = "2^-ΔCt")+
+       y = "Mean average relative expression 2^-ΔCt +/- S.E. fd38 + rp20")+
   geom_jitter(data = newlong_foxo_calcs,
               aes(x = sample,
                   y = cq),
