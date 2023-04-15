@@ -49,7 +49,7 @@ exp2feeding_plot_d1<- exp2feeding_summary_d1 %>%
   labs(x = "Diet \n(Protein; Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
        title = "")+
-  theme_minimal() 
+  theme_classic() 
 #-------------- (Exp 2) Day 1 Data analysis  -----------
 #------- creating a linear model for day 1 
 exp2lm <- lm(fly_numbers ~ diet, data = long_feedinge2d1) 
@@ -595,7 +595,7 @@ exp2_egg_foodcondition_glm <- glm(egg_numbers ~ food_type + food_nutrition + foo
 summary(exp2_egg_foodcondition_glm)
 
 # overdispersed so using quasipoisson
-exp2_egg_foodcondition_glm2 <- glm(egg_numbers ~ food_type + food_nutrition + food_type : food_nutrition, family = quasipoisson, data = long_egg_counting2)
+exp2_egg_foodcondition_glm2 <- glm(egg_numbers ~ food_type + food_nutrition, family = quasipoisson, data = long_egg_counting2)
 
 #---- Checking the model 
 performance::check_model(exp2_egg_foodcondition_glm2)
