@@ -62,6 +62,8 @@ performance::check_model(eggcountinge1_lm, check = c("qq"))
 
 eggcountinge1_glm <- glm(formula = log(egg_numbers + 1) ~ diet, family = quasipoisson, data = long_egg_counting1)
 
+summary(eggcountinge1_glm)
+
 emmeans::emmeans(eggcountinge1_glm, pairwise ~ diet)
 
 performance::check_model(eggcountinge1_glm)
