@@ -191,7 +191,7 @@ boxplot_food_fc_e1b_fh_e1_egg <- ggplot()+
   theme_classic()+
   scale_fill_manual(values=c("lightgreen", "lightblue"))+
   labs(x = "Food Hardness",
-       y = "Mean average flies per patch", 
+       y = "Flies per food patch", 
        title = "Experiment 1b")+
   theme(legend.position="none")+ 
   ylim(0,200)+
@@ -210,7 +210,7 @@ boxplot_food_fc_e1b_fh_e1a_egg <- ggplot()+
   theme_classic()+
   scale_fill_manual(values=c("lightgreen", "lightblue"))+
   labs(x = "Food Hardness",
-       y = "Mean average flies per patch", 
+       y = "Flies per food patch", 
        title = "Experiment 1a")+
   theme(legend.position="none")+ 
   ylim(0,200)+
@@ -229,7 +229,7 @@ boxplot_food_fc_e1b_fn_e1a_egg <- ggplot()+
   theme_classic()+
   scale_fill_manual(values=c("lightgreen", "lightblue"))+
   labs(x = "Food Nutrition",
-       y = "Mean average flies per patch", 
+       y = "Flies per patch", 
        title = "Experiment 1a")+
   theme(legend.position="none")+ 
   ylim(0,200)+
@@ -242,14 +242,20 @@ boxplot_food_fc_e1b_fn_e1a_egg <- ggplot()+
               shape = 21)
 
 
-hey  <- egg_counting1_plot + egg_counting1b_plot 
+egg_counting1_plot + egg_counting1b_plot 
 
  boxplot_food_fc_e1b_fh_e1a_egg + boxplot_food_fc_e1b_fn_e1a_egg + boxplot_food_fc_e1b_fh_e1_egg + boxplot_food_fc_e1b_fn_e1_egg  
 
- 
+ wrap_plots( egg_counting1_plot + egg_counting1b_plot + boxplot_food_fc_e1b_fh_e1a_egg + boxplot_food_fc_e1b_fn_e1a_egg + boxplot_food_fc_e1b_fh_e1_egg + boxplot_food_fc_e1b_fn_e1_egg   )
  
  boxplot_food_fc_e1b_fh_e1a_egg + boxplot_food_fc_e1b_fh_e1_egg
  
+ 
+ hey <- egg_counting1_plot + egg_counting1b_plot 
+ 
+yone <-  boxplot_food_fc_e1b_fh_e1a_egg + boxplot_food_fc_e1b_fn_e1a_egg + boxplot_food_fc_e1b_fh_e1_egg + boxplot_food_fc_e1b_fn_e1_egg
+ 
+hey / yone
  
  
 boxplot_food_fc_e1b_fn_e1_egg <- ggplot()+ 
@@ -257,7 +263,7 @@ boxplot_food_fc_e1b_fn_e1_egg <- ggplot()+
   theme_classic()+
   scale_fill_manual(values=c("lightgreen", "lightblue"))+
   labs(x = "Food Nutrition",
-       y = "Mean average flies per patch", 
+       y = "Flies per food patch", 
        title = "Experiment 1b")+
   theme(legend.position="none")+ 
   ylim(0,200)+
@@ -279,7 +285,7 @@ boxplot_foodcondition_e1a_d2 <- ggplot()+
   theme_classic()+
   scale_fill_manual(values=c("lightgreen", "lightblue"))+
   labs(x = "Food Nutrition",
-       y = "Mean average flies per patch", 
+       y = "Flies per food patch", 
        title = "Experiment 1b")+
   theme(legend.position="none")+ 
   ylim(0,200)+
