@@ -397,7 +397,9 @@ boxplot_food_fc_e3_fh_d1 <- ggplot()+
 
 egg_counting1_plot 
 
+(6914 - 6600)
   
+(322-161)
 
 
 egg_counting1_plot + egg_counting1b_plot + boxplot_food_fc_e3_fh_d1 + boxplot_food_fc_e3_fn_d1 + boxplot_food_fc_e3_fh_d2  + boxplot_food_fc_e3_fn_d2
