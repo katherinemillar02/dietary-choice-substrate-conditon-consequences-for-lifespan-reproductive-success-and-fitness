@@ -220,7 +220,7 @@ exp2_egg_foodtype <- ggplot()+
   theme_classic()+
   scale_fill_manual(values=c("lightgreen", "lightblue"))+
   labs(x = "Substrate condition of diet",
-       y = "Mean average eggs per patch",
+       y = "Eggs per food patch",
        title = "Food Hardness")+
   theme(legend.position="none")+
   ylim(0,200)+
@@ -327,7 +327,7 @@ boxplot_food_fc_e3_fn_d2 <- ggplot()+
   theme_classic()+
   scale_fill_manual(values=c("gold", "pink"))+
   labs(x = "Nutrient Composition",
-       y = "Mean average flies per patch", 
+       y = "Flies per food patch", 
        title = "Day 2")+
   theme(legend.position="none")+ 
   ylim(0,9)+
@@ -344,7 +344,7 @@ boxplot_food_fc_e3_fn_d1 <- ggplot()+
   theme_classic()+
   scale_fill_manual(values=c("gold", "pink"))+
   labs(x = "Nutrient Composition",
-       y = "Mean average flies per patch", 
+       y = "Flies per food patch", 
        title = "Day 1")+
   theme(legend.position="none")+ 
   ylim(0,9)+
@@ -364,7 +364,7 @@ boxplot_food_fc_e3_fh_d2 <- ggplot()+
   theme_classic()+
   scale_fill_manual(values=c("gold", "pink"))+
   labs(x = "Food Hardness",
-       y = "Mean average flies per patch", 
+       y = "Flies per food patch", 
        title = "Day 2")+
   theme(legend.position="none")+ 
   ylim(0,9)+
@@ -381,7 +381,7 @@ boxplot_food_fc_e3_fh_d1 <- ggplot()+
   theme_classic()+
   scale_fill_manual(values=c("gold", "pink"))+
   labs(x = "Food Hardness",
-       y = "Mean average flies per patch", 
+       y = "Flies per food patch", 
        title = "Day 1")+
   theme(legend.position="none")+ 
   ylim(0,9)+
@@ -402,11 +402,15 @@ egg_counting1_plot
 (322-161)
 
 
-egg_counting1_plot + egg_counting1b_plot + boxplot_food_fc_e3_fh_d1 + boxplot_food_fc_e3_fn_d1 + boxplot_food_fc_e3_fh_d2  + boxplot_food_fc_e3_fn_d2
+egg_counting1_plot + egg_counting1b_plot 
+
+all <- boxplot_food_fc_e3_fh_d1 + boxplot_food_fc_e3_fn_d1 + boxplot_food_fc_e3_fh_d2  + boxplot_food_fc_e3_fn_d2
   
-exp3feeding_plotd1  + exp3feeding_plotd2
+d1d2 <- exp3feeding_plotd1  + exp3feeding_plotd2
 
+d1d2 / all
 
+dld2
 
  egg_counting3_plot + softhardegg_plot_exp3 + nutrientegg_plot_exp3
 
