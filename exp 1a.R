@@ -2,6 +2,8 @@ exp1a_all_day_lm_2 <- lm(formula = log(fly_numbers + 1) ~ day * diet , data = ex
 
 summary(exp1a_all_day_lm_2)
 
+emmeans::emmeans(exp1a_all_day_lm_2, pairwise ~ diet * day)
+
 drop1(exp1a_all_day_lm_2, test = "F")
 
 exp1a_all_day_lm_3 <- lm(formula = log(fly_numbers + 1) ~  diet , data = exp1a_all)
@@ -184,6 +186,7 @@ performance::check_model(eggcountinge1b_lm_6_foodcondition)
 performance::check_model(eggcountinge1b_lm_6_foodcondition, check = c("qq"))
 performance::check_model(eggcountinge1b_lm_6_foodcondition, check = c("homogeneity"))
 
+summary(eggcountinge1b_lm_7_foodcondition)
 summary(eggcountinge1b_lm_6_foodcondition)
 
 boxplot_food_fc_e1b_fh_e1_egg <- ggplot()+ 
