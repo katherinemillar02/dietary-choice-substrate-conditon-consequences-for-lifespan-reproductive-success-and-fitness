@@ -76,7 +76,6 @@ emmeans::emmeans(qpcr_foxo_lm , pairwise ~ sample)
 
 
 
-
 foxo_plot + dilp3_plot
 
 
