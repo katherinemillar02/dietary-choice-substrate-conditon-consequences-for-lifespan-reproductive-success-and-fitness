@@ -115,6 +115,7 @@ exp2d1 <- long_feedinge2d1 %>% mutate(day = "1")
 exp2d2 <- long_feedinge2d2 %>% mutate(day = "2")
 #- binding the data 
 exp2_combined <- rbind(exp2d1, exp2d2)
+view(exp2_combined)
 #- exp 2 summary both days
 exp2_combined_summary <- exp2_combined %>%  
   group_by(diet) %>% 
@@ -122,7 +123,6 @@ exp2_combined_summary <- exp2_combined %>%
             sd = sd(fly_numbers),
             n = n(),
             se = sd/sqrt(n))
-
 #  Table of the combined days data for experiment 2
 exp2table <- exp2_combined %>% 
   group_by('Diet' = diet) %>% 
