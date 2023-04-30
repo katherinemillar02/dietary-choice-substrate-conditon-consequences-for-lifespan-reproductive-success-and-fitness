@@ -251,7 +251,8 @@ exp2_egg_foodnutrition <- ggplot()+
               shape = 21)
 
 
-egg_counting2_plot + exp2_egg_foodtype + exp2_egg_foodnutrition
+egg_counting2_plot 
+exp2_egg_foodtype + exp2_egg_foodnutrition
 
 
 egg_counting2_plot + softhardegg_plot + nutrientegg_plot
@@ -404,7 +405,8 @@ egg_counting1_plot
 
 egg_counting1_plot + egg_counting1b_plot 
 
-all <- boxplot_food_fc_e3_fh_d1 + boxplot_food_fc_e3_fn_d1 + boxplot_food_fc_e3_fh_d2  + boxplot_food_fc_e3_fn_d2
+all <- boxplot_food_fc_e3_fh_d1 + boxplot_food_fc_e3_fn_d1 
+boxplot_food_fc_e3_fh_d2  + boxplot_food_fc_e3_fn_d2
   
 d1d2 <- exp3feeding_plotd1  + exp3feeding_plotd2
 
@@ -414,5 +416,6 @@ dld2
 
  egg_counting3_plot + softhardegg_plot_exp3 + nutrientegg_plot_exp3
 
-egg_counting3_plot + boxplot_egg_fc_e3 + boxplot_food_fc_e3_fn 
+egg_counting3_plot 
+boxplot_egg_fc_e3 + boxplot_food_fc_e3_fn 
 
