@@ -120,9 +120,11 @@ boxplot_food_fc_e1b_fn_e1 <- ggplot()+
               shape = 21)
 
 
-exp1feeding_plotd1 + exp1feeding_plotd2 + boxplot_food_fc_e1a_fh_e1 + boxplot_food_fc_e1a_fn_e1 
+exp1feeding_plotd1 + exp1feeding_plotd2 
+boxplot_food_fc_e1a_fh_e1 + boxplot_food_fc_e1a_fn_e1 
 
-exp1bfeeding_plotd1 + exp1bfeeding_plotd2 + boxplot_food_fc_e1b_fh_e1 + boxplot_food_fc_e1b_fn_e1
+exp1bfeeding_plotd1 + exp1bfeeding_plotd2 
+boxplot_food_fc_e1b_fh_e1 + boxplot_food_fc_e1b_fn_e1
 
 
 

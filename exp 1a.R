@@ -247,7 +247,8 @@ boxplot_food_fc_e1b_fn_e1a_egg <- ggplot()+
 
 egg_counting1_plot + egg_counting1b_plot 
 
- boxplot_food_fc_e1b_fh_e1a_egg + boxplot_food_fc_e1b_fn_e1a_egg + boxplot_food_fc_e1b_fh_e1_egg + boxplot_food_fc_e1b_fn_e1_egg  
+ boxplot_food_fc_e1b_fh_e1a_egg + boxplot_food_fc_e1b_fn_e1a_egg 
+ boxplot_food_fc_e1b_fh_e1_egg + boxplot_food_fc_e1b_fn_e1_egg  
 
  wrap_plots( egg_counting1_plot + egg_counting1b_plot + boxplot_food_fc_e1b_fh_e1a_egg + boxplot_food_fc_e1b_fn_e1a_egg + boxplot_food_fc_e1b_fh_e1_egg + boxplot_food_fc_e1b_fn_e1_egg   )
  
