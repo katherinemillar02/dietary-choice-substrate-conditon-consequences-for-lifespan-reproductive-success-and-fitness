@@ -100,11 +100,11 @@ dilp3_plot <- dilp3_sum %>%
   ggplot(aes(x = sample, y = mean))+
   geom_bar(stat = "identity",
            fill = "skyblue",
-           colour = "#FFB6C1",
+           colour = "darkgreen",
            alpha = 0.6)+
   theme_classic()+
   geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
-                colour = "#FFB6C1",
+                colour = "darkgreen",
                 width = 0.2)+
   labs(title = "dilp3",
        x = "Diet larvae were reared on \n(Protein: Carbohydrate/ Food Hardness)",
