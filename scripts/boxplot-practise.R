@@ -327,9 +327,9 @@ boxplot_food_fc_e3_fn_d2 <- ggplot()+
   geom_boxplot(long_feedinge3d2, mapping=aes(x=food_nutrition, y=fly_numbers, fill=food_nutrition))+
   theme_classic()+
   scale_fill_manual(values=c("gold", "pink"))+
-  labs(x = "Nutrient Composition",
+  labs(x = "Protein: Carbohydrate content of diet",
        y = "Flies per food patch", 
-       title = "Day 2")+
+       title = "Nutrient Composition (Day 2)")+
   theme(legend.position="none")+ 
   ylim(0,9)+
   geom_jitter(data = long_feedinge3d2,
@@ -364,9 +364,9 @@ boxplot_food_fc_e3_fh_d2 <- ggplot()+
   geom_boxplot(long_feedinge3d2, mapping=aes(x=food_type, y=fly_numbers, fill=food_type))+
   theme_classic()+
   scale_fill_manual(values=c("gold", "pink"))+
-  labs(x = "Food Hardness",
+  labs(x = "Substrate condition of diet",
        y = "Flies per food patch", 
-       title = "Day 2")+
+       title = " Food Hardness (Day 2)")+
   theme(legend.position="none")+ 
   ylim(0,9)+
   geom_jitter(data = long_feedinge3d2,
