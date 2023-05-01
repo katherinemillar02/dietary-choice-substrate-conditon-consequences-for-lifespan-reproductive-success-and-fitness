@@ -193,9 +193,9 @@ boxplot_food_fc_e1b_fh_e1_egg <- ggplot()+
   geom_boxplot(long_egg_counting1b, mapping=aes(x=food_type, y=egg_numbers, fill=food_type))+
   theme_classic()+
   scale_fill_manual(values=c("lightgreen", "lightblue"))+
-  labs(x = "Food Hardness",
+  labs(x = "Substrate condition of diet",
        y = "Flies per food patch", 
-       title = "Experiment 1b")+
+       title = "Food Hardness")+
   theme(legend.position="none")+ 
   ylim(0,200)+
   geom_jitter(data =  long_egg_counting1b,
@@ -257,7 +257,7 @@ egg_counting1_plot + egg_counting1b_plot
  
  hey <- egg_counting1_plot + egg_counting1b_plot 
  
-yone <-  boxplot_food_fc_e1b_fh_e1a_egg + boxplot_food_fc_e1b_fn_e1a_egg + boxplot_food_fc_e1b_fh_e1_egg + boxplot_food_fc_e1b_fn_e1_egg
+ boxplot_food_fc_e1b_fh_e1_egg + boxplot_food_fc_e1b_fn_e1_egg
  
 hey / yone
  
@@ -266,9 +266,9 @@ boxplot_food_fc_e1b_fn_e1_egg <- ggplot()+
   geom_boxplot(long_egg_counting1b, mapping=aes(x=food_nutrition, y=egg_numbers, fill=food_nutrition))+
   theme_classic()+
   scale_fill_manual(values=c("lightgreen", "lightblue"))+
-  labs(x = "Food Nutrition",
+  labs(x = "Protein: Carbohydrate content of diet",
        y = "Flies per food patch", 
-       title = "Experiment 1b")+
+       title = "Nutrient Composition")+
   theme(legend.position="none")+ 
   ylim(0,200)+
   geom_jitter(data =  long_egg_counting1b,
