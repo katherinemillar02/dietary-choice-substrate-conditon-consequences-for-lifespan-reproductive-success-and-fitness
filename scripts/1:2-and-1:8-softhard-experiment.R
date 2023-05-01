@@ -1148,9 +1148,9 @@ egg_counting1b_plot <- egg_counting1_summary_1b %>%
               width = 0.2,
               shape = 21)+
   ylim(0,200)+
-  labs(x = "Diet \n(Protein; Carbohydrate)",
+  labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of eggs laid on each patch",
-       title = "Experiment 1b")+
+       title = "Overall Diets")+
   theme_classic()
 
 #-- using patchwork to compare the egg plots 
