@@ -96,7 +96,7 @@ exp3feeding_plotd2 <- exp3feeding_summary_d2 %>%
   ylim(0.0, 4.0)+
   labs(x = "Diet \n(Protein: Carbohydrate)",
        y = "Mean (+/- S.E.) number of flies on a patch",
-       title = "Day 2")+
+       title = "Overall Diets (Day 2)")+
   theme_classic() 
 
 exp3feeding_plotd1 + exp3feeding_plotd2
