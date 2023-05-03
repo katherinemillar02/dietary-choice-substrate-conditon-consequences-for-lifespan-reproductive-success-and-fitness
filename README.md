@@ -34,3 +34,6 @@ Oviposition preference based experiment.
 Both feeding behaviour and oviposition preference was measured in this experiment, using a diet which is known that *d. melanogaster* like to lay their eggs on, and a diet which is known to be a least preferred diet for oviposition preference. 
 
 <img title="droso pic" alt="drosopAlt text" src="/images/graphimage.png" width=400 height=300>
+
+**"qPCR data analysis" (qPCR 8:1 and 1:8 larvae gene expression experiments)**
+Effect of maternal oviposition choice on larval gene expression.  This experiment analyses the qPCR data collected to look at the effect of oviposition choice on larval gene expression using target genes *dilp3* and *dFOXO*. 
