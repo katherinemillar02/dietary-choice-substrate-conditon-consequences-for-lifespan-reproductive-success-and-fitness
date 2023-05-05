@@ -21,7 +21,7 @@ foodhardness_boxplot_exp2_oviposition <- ggplot()+
 foodnutrition_boxplot_exp2_oviposition  <- ggplot()+ 
   geom_boxplot(long_egg_counting2, mapping=aes(x=food_nutrition, y=egg_numbers, fill=food_nutrition))+
   theme_classic()+
-  scale_fill_manual(values=c("#999933", "#44AA99"))+
+  scale_fill_manual(values=c("#FFAC1C", "#44AA99"))+
   labs(x = "Protein: Carbohydrate content of diet",
        y = "Eggs per food patch", 
        title = "Nutrient Composition")+
