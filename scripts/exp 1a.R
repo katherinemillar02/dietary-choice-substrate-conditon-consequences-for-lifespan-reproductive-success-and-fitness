@@ -194,7 +194,7 @@ boxplot_food_fc_e1b_fh_e1_egg <- ggplot()+
   theme_classic()+
   scale_fill_manual(values=c("lightgreen", "lightblue"))+
   labs(x = "Substrate condition of diet",
-       y = "Flies per food patch", 
+       y = "Eggs per food patch", 
        title = "Food Hardness")+
   theme(legend.position="none")+ 
   ylim(0,200)+
@@ -232,7 +232,7 @@ boxplot_food_fc_e1b_fn_e1a_egg <- ggplot()+
   theme_classic()+
   scale_fill_manual(values=c("lightgreen", "lightblue"))+
   labs(x = "Food Nutrition",
-       y = "Flies per patch", 
+       y = "Eggs per patch", 
        title = "Experiment 1a")+
   theme(legend.position="none")+ 
   ylim(0,200)+
@@ -267,7 +267,7 @@ boxplot_food_fc_e1b_fn_e1_egg <- ggplot()+
   theme_classic()+
   scale_fill_manual(values=c("lightgreen", "lightblue"))+
   labs(x = "Protein: Carbohydrate content of diet",
-       y = "Flies per food patch", 
+       y = "Eggs per food patch", 
        title = "Nutrient Composition")+
   theme(legend.position="none")+ 
   ylim(0,200)+
@@ -289,7 +289,7 @@ boxplot_foodcondition_e1a_d2 <- ggplot()+
   theme_classic()+
   scale_fill_manual(values=c("lightgreen", "lightblue"))+
   labs(x = "Food Nutrition",
-       y = "Flies per food patch", 
+       y = "Eggs per food patch", 
        title = "Experiment 1b")+
   theme(legend.position="none")+ 
   ylim(0,200)+

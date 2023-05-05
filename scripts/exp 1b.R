@@ -14,7 +14,7 @@ performance::check_model(exp1b_all_day_lm_3, check = c("homogeneity"))
 performance::check_model(exp1b_all_day_lm_3, check = c("linearity"))
 performance::check_model(exp1b_all_day_lm_3, check = c("outliers"))
 
-MASS::boxcox(exp1b_all_day_lm_3 )
+MASS::boxcox(exp1b_all_day_lm_3)
 
 emmeans::emmeans(exp1b_all_day_lm_3, pairwise ~ diet * day)
 
@@ -41,8 +41,6 @@ exp1b_combined_foodconditions_lm <- lm(fly_numbers ~ food_type * food_nutrition 
 
 performance::check_model(exp1b_combined_foodconditions_lm )
 performance::check_model(exp1b_combined_foodconditions_lm, check = c("qq"))
-
-
 performance::check_model(exp1b_combined_foodconditions_lm, check = c("homogeneity"))
 performance::check_model(exp1b_combined_foodconditions_lm, check = c("linearity"))
 performance::check_model(exp1b_combined_foodconditions_lm, check = c("outliers"))
