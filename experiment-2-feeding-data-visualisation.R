@@ -50,5 +50,6 @@ nutrientcompositon_boxplot_exp1b_feeding <- exp2_combined %>%
 
 
 # Using patchwork to combine the plots together 
+
 foodhardness_boxplot_exp2_feeding + nutrientcompositon_boxplot_exp1b_feeding
 
