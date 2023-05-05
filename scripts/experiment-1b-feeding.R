@@ -156,7 +156,7 @@ foodhardness_boxplot_exp1b_oviposition <- ggplot()+
               width = 0.2,
               shape = 21)
 
-# using oatchwork to compare the plots together 
+# using patchwork to compare the plots together 
 foodhardness_boxplot_exp1b_feeding + foodhardness_boxplot_exp1b_oviposition
 
 
