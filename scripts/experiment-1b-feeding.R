@@ -139,7 +139,7 @@ foodhardness_boxplot_exp1b_feeding <- ggplot()+
 
 
 # comparing 1:2 and 1:8 diets
-foodhardness_boxplot_exp1b_oviposition <- ggplot()+ 
+nutrientcompositon_boxplot_exp1b_feeding <- ggplot()+ 
   geom_boxplot(exp1ball, mapping=aes(x=food_nutrition, y=fly_numbers, fill=food_nutrition))+
   theme_classic()+
   scale_fill_manual(values=c("#CF9FFF", "#FF8C69"))+
@@ -157,7 +157,7 @@ foodhardness_boxplot_exp1b_oviposition <- ggplot()+
               shape = 21)
 
 # using patchwork to compare the plots together 
-foodhardness_boxplot_exp1b_feeding + foodhardness_boxplot_exp1b_oviposition
+foodhardness_boxplot_exp1b_feeding + nutrientcompositon_boxplot_exp1b_feeding
 
 
 
