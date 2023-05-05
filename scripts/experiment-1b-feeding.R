@@ -120,8 +120,9 @@ summary(exp1b_combined_foodconditions_lm_5)
 # using boxplots to look at the different variables
 
 # comparing soft and hard foods 
-foodhardness_boxplot_exp1b_feeding <- ggplot()+ 
-  geom_boxplot(exp1ball, mapping=aes(x=food_type, y=fly_numbers, fill=food_type))+
+foodhardness_boxplot_exp1b_feeding <- exp1ball %>% 
+ggplot(aes(x = food_type, y = fly_numbers, fill = food_type))+ 
+  geom_boxplot()+
   theme_classic()+
   scale_fill_manual(values=c("gold", "pink"))+
   labs(x = "Substrate condition of diet",
@@ -139,8 +140,9 @@ foodhardness_boxplot_exp1b_feeding <- ggplot()+
 
 
 # comparing 1:2 and 1:8 diets
-nutrientcompositon_boxplot_exp1b_feeding <- ggplot()+ 
-  geom_boxplot(exp1ball, mapping=aes(x=food_nutrition, y=fly_numbers, fill=food_nutrition))+
+nutrientcompositon_boxplot_exp1b_feeding <- exp1ball %>%
+  ggplot(aes(x=food_nutrition, y=fly_numbers, fill=food_nutrition))+ 
+  geom_boxplot()+
   theme_classic()+
   scale_fill_manual(values=c("#CF9FFF", "#FF8C69"))+
   labs(x = "Protein: Carbohydrate content of diet",
@@ -158,7 +160,7 @@ nutrientcompositon_boxplot_exp1b_feeding <- ggplot()+
 
 # using patchwork to compare the plots together 
 foodhardness_boxplot_exp1b_feeding + nutrientcompositon_boxplot_exp1b_feeding
-
+ 
 
 
 
