@@ -29,8 +29,10 @@ foodhardness_boxplot_exp2_feeding <- exp2_combined  %>%
               shape = 21)
 
 
-# comparing 1:2 and 8:1 diets
-nutrientcompositon_boxplot_exp1b_feeding <- exp2_combined %>%
+# 
+
+
+nutrientcompositon_boxplot_exp2_feeding <- exp2_combined %>%
   ggplot(aes(x=food_nutrition, y=fly_numbers, fill=food_nutrition))+ 
   geom_boxplot()+
   theme_classic()+
@@ -51,5 +53,5 @@ nutrientcompositon_boxplot_exp1b_feeding <- exp2_combined %>%
 
 # Using patchwork to combine the plots together 
 
-foodhardness_boxplot_exp2_feeding + nutrientcompositon_boxplot_exp1b_feeding
+foodhardness_boxplot_exp2_feeding + nutrientcompositon_boxplot_exp2_feeding
 
