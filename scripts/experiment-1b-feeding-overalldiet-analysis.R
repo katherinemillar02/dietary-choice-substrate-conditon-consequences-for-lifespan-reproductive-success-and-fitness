@@ -9,7 +9,7 @@ feedinge1bd1 <- read_excel("data/RPFemaleFeedingE1bD1.xlsx")
 long_feedinge1bd1 <- feedinge1bd1 %>% 
   pivot_longer(cols = ("1:2H":"1:8S"), names_to = "diet", values_to = "fly_numbers")
 
-# doing calculations of day 1 data ]
+# doing calculations of day 1 data 
 exp1bfeeding_summary <- long_feedinge1bd1 %>%  
   group_by(diet) %>% 
   summarise(mean = mean(fly_numbers),
@@ -17,9 +17,38 @@ exp1bfeeding_summary <- long_feedinge1bd1 %>%
             n = n(),
             se = sd/sqrt(n))
 
+# day 2 
+# reading the data in 
+feedinge1bd2 <- read_excel("data/RPFemaleFeedingE1bD2.xlsx")
+#---- Making the data long
+long_feedinge1bd2 <- feedinge1bd2 %>% 
+  pivot_longer(cols = ("1:2H":"1:8S"), names_to = "diet", values_to = "fly_numbers")
 
-# Data analysis ----
 
+# doing calculations of just day 2 data 
+exp1bd2feeding_summary <- long_feedinge1bd2 %>%  
+  group_by(diet) %>% 
+  summarise(mean = mean(fly_numbers),
+            sd = sd(fly_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+
+
+#- Combining the data from the days to look for the significance in days and diet in a model 
+
+# Mutating a variable for day 
+exp1bd1 <- long_feedinge1bd1 %>% mutate(day = "1") 
+exp1bd2 <- long_feedinge1bd2 %>% mutate(day = "2")
+
+
+# Combining the days 
+exp1ball <- rbind(exp1bd1, exp1bd2)
+
+
+
+# Data analysis of comnbined days analysis  ----
+
+# using day as a variable in the model 
 # Trying a linear model in log and dependant variable + 1 
 exp1b_all_day_lm_3 <- lm(formula = log(fly_numbers + 1) ~  diet * day , data = exp1ball)
 
