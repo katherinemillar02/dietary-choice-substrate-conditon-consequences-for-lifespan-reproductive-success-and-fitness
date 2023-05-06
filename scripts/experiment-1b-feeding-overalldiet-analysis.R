@@ -1,8 +1,24 @@
 # NEW SCRIPT FOR EXPERIMENT 1B
 # MADE TO LOOK AT DAYS SEPERATLEY 
 
+# reading data in 
+#----- (Exp1b) Day 1 ----
+#-------- Reading the data in
+feedinge1bd1 <- read_excel("data/RPFemaleFeedingE1bD1.xlsx")
+#---- Making the data long
+long_feedinge1bd1 <- feedinge1bd1 %>% 
+  pivot_longer(cols = ("1:2H":"1:8S"), names_to = "diet", values_to = "fly_numbers")
 
-# Data analysis 
+# doing calculations of day 1 data ]
+exp1bfeeding_summary <- long_feedinge1bd1 %>%  
+  group_by(diet) %>% 
+  summarise(mean = mean(fly_numbers),
+            sd = sd(fly_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+
+
+# Data analysis ----
 
 # Trying a linear model in log and dependant variable + 1 
 exp1b_all_day_lm_3 <- lm(formula = log(fly_numbers + 1) ~  diet * day , data = exp1ball)
