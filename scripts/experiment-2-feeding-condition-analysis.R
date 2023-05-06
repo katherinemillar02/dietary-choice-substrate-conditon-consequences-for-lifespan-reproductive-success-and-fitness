@@ -5,7 +5,13 @@
 exp2_combined$food_type <- ifelse(exp2_combined$diet %in% c("8:1H", "1:2H"), "Hard", "Soft")
 exp2_combined$food_nutrition <- ifelse(exp2_combined$diet %in% c("8:1", "1:2H", "1:2S"), "1:2", "8:1")
 
-
+# calculations for the food condition data 
+softhard_summary_exp2 <- exp2_combined %>%  
+  group_by(food_type) %>% 
+  summarise(mean = mean(fly_numbers),
+            sd = sd(fly_numbers),
+            n = n(),
+            se = sd/sqrt(n))
 
 # creating a linear model based on food nutrition and food type 
 exp2_combined_foodcondition_lm <- lm(fly_numbers ~ food_type + food_nutrition + food_type : food_nutrition, data = exp2_combined)

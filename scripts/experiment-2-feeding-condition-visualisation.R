@@ -29,9 +29,7 @@ foodhardness_boxplot_exp2_feeding <- exp2_combined  %>%
               shape = 21)
 
 
-# 
-
-
+# comparing 1:2 and 8:1 foods 
 nutrientcompositon_boxplot_exp2_feeding <- exp2_combined %>%
   ggplot(aes(x=food_nutrition, y=fly_numbers, fill=food_nutrition))+ 
   geom_boxplot()+
@@ -54,4 +52,61 @@ nutrientcompositon_boxplot_exp2_feeding <- exp2_combined %>%
 # Using patchwork to combine the plots together 
 
 foodhardness_boxplot_exp2_feeding + nutrientcompositon_boxplot_exp2_feeding
+
+
+
+
+# creating barplots to look at the food condition data 
+
+# a bar plot of soft vs hard diets in experiment 2 (days combined)
+softhard_plot_exp2 <- softhard_summary_exp2 %>% 
+  ggplot(aes(x = food_type, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "#FF6863",
+                width = 0.2)+
+  geom_jitter(data = exp2_combined,
+              aes(x = food_type,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)+
+  ylim(0.0, 9)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of flies on a patch",
+       title = "")+
+  theme_classic() 
+
+
+# a barplot of 1:2 vs 8:1 diets in experiment 2 (days combined)
+nutrient_plot_exp2 <- nutrient_summary_exp2 %>% 
+  ggplot(aes(x = food_nutrition, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "#FF6863",
+                width = 0.2)+
+  geom_jitter(data = exp2_combined,
+              aes(x = food_nutrition,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)+
+  ylim(0.0, 9)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of flies on a patch",
+       title = "")+
+  theme_classic() 
+
+
+
+# using patchwork to compare soft/hardness and nutrient composition
+softhard_plot_exp2 + nutrient_plot_exp2
 

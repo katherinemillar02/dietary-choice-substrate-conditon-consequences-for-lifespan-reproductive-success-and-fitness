@@ -1,7 +1,46 @@
 # DATA ANALYSIS 
 # EXPERIMENT 2 
 
-#------------ Combined days -- data analysis  -----
+
+# reading the data in for day 1 
+feedinge2d1 <- read_excel("data/RPFemaleFeedingE2D1.xlsx")
+# Making the data long format 
+long_feedinge2d1 <- feedinge2d1 %>% 
+  pivot_longer(cols = ("8:1S":"1:2H"), names_to = "diet", values_to = "fly_numbers")
+# doing calulations of day 1 data  
+exp2feeding_summary_d1 <- long_feedinge2d1 %>%  
+  group_by(diet) %>% 
+  summarise(mean = mean(fly_numbers),
+            sd = sd(fly_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+
+
+# reading the data in for day 2 
+feedinge2d2 <- read_excel("data/RPFemaleFeedingE2D2.xlsx")
+# Making the data long
+long_feedinge2d2 <- feedinge2d2 %>% 
+  pivot_longer(cols = ("8:1S":"1:2H"), names_to = "diet", values_to = "fly_numbers")
+# doing calculations of day 2 data 
+exp2d2feeding_summary <- long_feedinge2d2 %>%  
+  group_by(diet) %>% 
+  summarise(mean = mean(fly_numbers),
+            sd = sd(fly_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+
+
+
+
+# Combined days data analysis
+# combining the days so the significance of day can be looked at 
+
+# mutating a day variable
+exp2d1 <- long_feedinge2d1 %>% mutate(day = "1")
+exp2d2 <- long_feedinge2d2 %>% mutate(day = "2")
+
+# using rbind to combine the days 
+exp2_combined <- rbind(exp2d1, exp2d2)
 
 # testing for the significance in day
 exp2_combined_days_lm <- lm(fly_numbers ~ day, data = exp2_combined)
@@ -117,6 +156,14 @@ exp2_combined %>% ggplot(aes(x=fly_numbers, y=diet, colour = diet, fill = diet, 
     size = 1, linetype = "dashed"
   )
 
+
+# calculating a summary analysis for the data in day 2 on both days 
+exp2_combined_summary <- exp2_combined %>%  
+  group_by(diet) %>% 
+  summarise(mean = mean(fly_numbers),
+            sd = sd(fly_numbers),
+            n = n(),
+            se = sd/sqrt(n))
 
 
 
