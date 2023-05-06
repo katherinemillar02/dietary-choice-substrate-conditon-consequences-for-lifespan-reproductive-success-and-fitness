@@ -339,14 +339,13 @@ exp1bfeeding_plotd2 <- exp1bd2feeding_summary %>%
   theme_classic() 
 
 
-#------- comparing the days using patchwork
-
+# comparing the days using patchwork
 exp1bfeeding_plotd1 + exp1bfeeding_plotd2 
 
 #-----  (Exp1b) data analysis -----
 #- Data analysis of combined days (experiment 1b)
 
-#------- Mutating a variable for day 
+# Mutating a variable for day 
 exp1bd1 <- long_feedinge1bd1 %>% mutate(day = "1") 
 exp1bd2 <- long_feedinge1bd2 %>% mutate(day = "2")
 
