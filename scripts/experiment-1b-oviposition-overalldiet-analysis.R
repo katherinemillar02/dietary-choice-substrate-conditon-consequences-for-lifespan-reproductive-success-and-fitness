@@ -1,6 +1,20 @@
 # EGG COUNTING ANALYSIS 
 # NEW SCRIPT WITH PROPERLY CHECKED MODELS 
 
+#____ Reading the data in 
+egg_counting_data_1b <- (read_excel(path = "data/RPEggCountE1b.xlsx", na = "NA"))
+#____ Making the data long 
+long_egg_counting1b <- egg_counting_data_1b %>% 
+  pivot_longer(cols = ("1:2H":"1:8S"), names_to = "diet", values_to = "egg_numbers")
+#_____ Making a summary of the data 
+egg_counting1_summary_1b <- long_egg_counting1b %>% 
+  group_by(diet) %>% 
+  summarise(mean = mean(egg_numbers),
+            sd = sd(egg_numbers),
+            n = n(),
+            se = sd/sqrt(n))
+
+
 # Doing data analysis for overall egg numbers to diet
 
 # Linear model 
