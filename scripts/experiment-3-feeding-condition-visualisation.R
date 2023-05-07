@@ -47,8 +47,63 @@ nutrientcompositon_boxplot_exp3_feeding_d2 <- long_feedinge3d2 %>%
               width = 0.2,
               shape = 21)
 
-
+ 
 # using patchwork to compare the plots 
 foodhardness_boxplot_exp3_feeding_d2 + nutrientcompositon_boxplot_exp3_feeding_d2
+
+
+
+# visualising with a barplot 
+
+# food hardness plot 
+softhard_plot_exp3 <- softhard_summary_exp3 %>% 
+  ggplot(aes(x = food_type, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "#FF6863",
+                width = 0.2)+
+  geom_jitter(data = exp3_combined,
+              aes(x = food_type,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)+
+  ylim(0.0, 9)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of flies on a patch",
+       title = "")+
+  theme_classic() 
+
+# nutrient composition plot 
+nutrient_plot_exp3 <- nutrient_summary_exp3 %>% 
+  ggplot(aes(x = food_nutrition, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "#FF6863",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "#FF6863",
+                width = 0.2)+
+  geom_jitter(data = exp3_combined,
+              aes(x = food_nutrition,
+                  y = fly_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)+
+  ylim(0.0, 9)+
+  labs(x = "Diet \n(Protein; Carbohydrate)",
+       y = "Mean (+/- S.E.) number of flies on a patch",
+       title = "")+
+  theme_classic() 
+
+# using patchwork to compare soft/hardness and nutrient composition - data visualisation
+softhard_plot_exp3 + nutrient_plot_exp3
+
+
 
 
