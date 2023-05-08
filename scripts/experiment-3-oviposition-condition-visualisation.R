@@ -50,3 +50,52 @@ nutrientcompositon_boxplot_exp3_oviposition <- long_egg_counting3 %>%
 foodhardness_boxplot_exp3_oviposition + nutrientcompositon_boxplot_exp3_oviposition 
 
 
+# using barplots
+# food hardness bar plot 
+softhardegg_plot_exp3 <- softhardegg_summary_exp3 %>% 
+  ggplot(aes(x = food_type, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "orange",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "orange",
+                width = 0.2)+
+  geom_jitter(data = long_egg_counting3,
+              aes(x = food_type,
+                  y = egg_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)+
+  ylim(0.0, 200)+
+  labs(x = "Diet \n(Protein: Carbohydrate)",
+       y = "Mean (+/- S.E.) number of eggs on a patch",
+       title = "")+
+  theme_classic()
+
+
+# nutrient composition barplot 
+nutrientegg_plot_exp3 <- nutrientegg_summary_exp3 %>% 
+  ggplot(aes(x = food_nutrition, y = mean))+
+  geom_bar(stat = "identity",
+           fill = "skyblue",
+           colour = "orange",
+           alpha = 0.6)+
+  geom_errorbar(aes(ymin = mean-se, ymax = mean+se), 
+                colour = "orange",
+                width = 0.2)+
+  geom_jitter(data = long_egg_counting3,
+              aes(x = food_nutrition,
+                  y = egg_numbers),
+              fill = "skyblue",
+              colour = "#3a3c3d",
+              width = 0.2,
+              shape = 21)+
+  ylim(0.0, 200)+
+  labs(x = "Diet \n(Protein: Carbohydrate)",
+       y = "Mean (+/- S.E.) number of eggs on a patch",
+       title = "")+
+  theme_classic() 
+# combining the experiment hardness plot with the nutrient plot with patchwork 
+softhardegg_plot_exp3 + nutrientegg_plot_exp3
