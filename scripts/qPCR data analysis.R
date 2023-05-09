@@ -130,6 +130,7 @@ performance::check_model(qpcr_dilp3_lm , check = c("qq"))
 
 summary(qpcr_dilp3_lm)
 summary(qpcr_dilp3_glm)
+#
 
 emmeans::emmeans(qpcr_dilp3_glm , pairwise ~ sample) 
 emmeans::emmeans(qpcr_dilp3_lm , pairwise ~ sample) 
