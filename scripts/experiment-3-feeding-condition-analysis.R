@@ -79,9 +79,10 @@ summary(exp3_combined_foodcondition_glm)
 # overdispersed so trying quasipoisson
 exp3_combined_foodcondition_glm2 <- glm(fly_numbers ~ food_type + food_nutrition + food_type : food_nutrition, family = quasipoisson, data = exp3_combined)
 
-
+# adding + 1 as some count is 0
 exp3_combined_foodcondition_glm_3 <- glm(formula = (fly_numbers + 1) ~ food_type + food_nutrition + day + food_type:food_nutrition + food_type:day + day:food_nutrition, family = poisson, data = exp3_combined)
 
+# performance check of new model
 performance::check_model(exp3_combined_foodcondition_glm_3)
 performance::check_model(exp3_combined_foodcondition_glm_3, check = c("qq"))
 
