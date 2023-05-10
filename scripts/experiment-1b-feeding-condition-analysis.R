@@ -72,7 +72,7 @@ performance::check_model(exp1b_combined_foodconditions_lm_4, check = c("outliers
 summary(exp1b_combined_foodconditions_lm_4)
 
 # dropping the interaction effect of food nutrition and food hardness 
-exp1b_combined_foodconditions_lm_5 <- lm(formula = log(fly_numbers + 1) ~ food_type + food_nutrition + day, data = exp1ball)
+exp1b_combined_foodconditions_lm_5 <- lm(formula = log(fly_numbers + 1) ~ food_type + food_nutrition, data = exp1ball)
 
 # ANOVA analysis using summary function
 summary(exp1b_combined_foodconditions_lm_5)

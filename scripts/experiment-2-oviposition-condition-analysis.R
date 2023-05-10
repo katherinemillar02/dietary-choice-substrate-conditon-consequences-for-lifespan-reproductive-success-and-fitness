@@ -48,3 +48,5 @@ performance::check_model(exp2_egg_foodcondition_glm2, check = c("qq"))
 # homogenity still looks slopey
 # normality looks a lot better
 # stick with this model so far
+
+summary(exp2_egg_foodcondition_glm2)
