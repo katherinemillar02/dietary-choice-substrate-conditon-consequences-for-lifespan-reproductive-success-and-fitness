@@ -19,7 +19,7 @@ This project began with using a 'patch preference assay' to test different food 
 
 <img title="droso pic" alt="drosopAlt text" src="/images/exp1assay.png" width=200 height=200>
 
-**__Figure 2__** Image shows an experimental assay from one of the experiments. 
+*__Figure 2__* Image shows an experimental assay from one of the experiments. 
 
 ## Description of scripts 
 
