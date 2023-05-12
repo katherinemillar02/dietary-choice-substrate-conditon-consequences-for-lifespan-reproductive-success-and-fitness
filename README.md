@@ -13,10 +13,9 @@ This data included follows on from a previous project completed through a summer
 
 
 This project began with using a 'patch preference assay' to test different food conditions on lifespan and fitness in fruitflies. Using both varying protein: carbohydrate diet patches as well as varying food hardness. 
-<img title="droso pic" alt="drosopAlt text" src="/images/experimentlayout.png" width=200 height=200>
 
-**__Figure 1__** Figure shows schematic of experimental assay plates, of how the experiments were planned out. 
-Experiments involved observations of where the flies liked to feed/ spend time as well as oviposition analysis of where they liked to lay their eggs. 
+
+
 
 <img title="droso pic" alt="drosopAlt text" src="/images/exp1assay.png" width=200 height=200>
 
