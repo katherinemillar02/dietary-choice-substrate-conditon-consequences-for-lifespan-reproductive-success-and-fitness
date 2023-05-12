@@ -42,7 +42,7 @@ This explains scripts with visualisation using barplots of the feeding observati
 For example variables could be: **1:2H, 1:2S, 1:8H, 1:8S**
 
 
-<img title="droso pic" alt="drosopAlt text" src="/images/overalldiet-visualisation.png" width=00 height=250>
+<img title="droso pic" alt="drosopAlt text" src="/images/overalldiet-visualisation.png" width=400 height=250>
 
 
 **"feeding-condition-analysis"**
