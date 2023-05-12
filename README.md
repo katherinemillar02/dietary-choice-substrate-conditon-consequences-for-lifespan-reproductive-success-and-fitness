@@ -15,7 +15,28 @@ This project began with using a 'patch preference assay' to test different food 
 
 <img title="droso pic" alt="drosopAlt text" src="/images/exp1assay.png" width=200 height=200>
 
-## Description of R Scripts 
+## Description of scripts 
+
+Scripts for each experiment are in sections of: 
+
+"feeding-overalldiet-analysis"
+This explains scripts with analysis of the feeding observation count data of diets which had both varying P:C ratios and soft and hard foods - before being split into variables. 
+For example variables could be: 1:2H, 1:2S, 1:8H, 1:8S
+
+"feeding-overalldiet-visualisation"
+This explains scripts with visualisation using barplots of the feeding observation count data of diets which had both varying P:C ratios and soft and hard foods - before being split into variables. 
+For example variables could be: 1:2H, 1:2S, 1:8H, 1:8S
+
+"feeding-condition-analysis"
+This explains scripts with analysis of the feeding observation count data of diets which had varying P:C ratios and soft and hard foods, split into variables of "Nutrient Composition" (P:C ratios)
+and "Food Hardness" (soft and hard foods). 
+For example variables could be: 1:2, 1:8, Hard, Soft 
+
+"feeding-condition-visualisation"
+This explains scripts with visualisation using boxplots and barplots of the feeding observation count data of diets which had varying P:C ratios and soft and hard foods, split into variables of "Nutrient Composition" (P:C ratios)and "Food Hardness" (soft and hard foods). 
+For example variables could be: 1:2, 1:8, Hard, Soft 
+
+## Description of "old-scripts" 
 
 **"Experiment1.R" (1:8 and 1:2 hard and soft diets)**
 
