@@ -15,6 +15,10 @@ This data included follows on from a previous project completed through a summer
 This project began with using a 'patch preference assay' to test different food conditions on lifespan and fitness in fruitflies. Using both varying protein: carbohydrate diet patches as well as varying food hardness. 
 
 
+<img title="droso pic" alt="drosopAlt text" src="/images/drosophila.schematic.png" width=400 height=200>
+
+*__Figure 1__* Figure shows a schematic of an example of how a patch preference assay was planned to be set out. 
+
 
 
 <img title="droso pic" alt="drosopAlt text" src="/images/exp1assay.png" width=200 height=200>
@@ -60,25 +64,5 @@ This explains scripts with visualisation using boxplots and barplots of the ovip
 For example variables could be: **1:2, 1:8, Hard, Soft**
 
 
-## Description of "old-scripts" 
+. 
 
-**"Experiment1.R" (1:8 and 1:2 hard and soft diets)**
-
-A script with two repeated experiments. This experiment looked at using the protein: carbohydrate ratios 1:8 and 1:2 with both a soft and hard version of each diet, to test whether mated female *drosophila melanogaster* showed a particular preference for a diet. 
-The preferred diet in which the *drosophila* chose to lay their eggs was also calculated. 
-
-**"Experiment2.R" (8:1 and 1:2 hard and soft diets)**
-
-An experiment to test a known preferred diet (8:1) with a known least preferred diet (1:2) to see if *drosophila melanogaster* will favour food type over dietary levels. 
-
-<img title="droso pic" alt="drosopAlt text" src="/images/drosophila.schematic.png" width=400 height=200>
-
-**"Experiment3.R" (8:1 and 1:8 hard and soft diets)**
-
-Oviposition preference based experiment.
-Both feeding behaviour and oviposition preference was measured in this experiment, using a diet which is known that *d. melanogaster* like to lay their eggs on, and a diet which is known to be a least preferred diet for oviposition preference. 
-
-<img title="droso pic" alt="drosopAlt text" src="/images/graphimage.png" width=400 height=300>
-
-**"qPCR data analysis" (qPCR 8:1 and 1:8 larvae gene expression experiments)**
-Effect of maternal oviposition choice on larval gene expression.  This experiment analyses the qPCR data collected to look at the effect of oviposition choice on larval gene expression using target genes *dilp3* and *dFOXO*. 
