@@ -1,6 +1,6 @@
 # The effect of mating status and substrate condition on dietary choice and consequences for lifespan and reproductive success.
 
-#  <img src='images/ggplot2fhhex.png' align="right" height="150" />
+
  
 
 # Project Aims 
