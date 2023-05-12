@@ -3,20 +3,22 @@
 
  
 
-# Project Aims 
+# Project Description
 
 <img title="droso pic" alt="drosopAlt text" src="/images/RLogo.png" width=100 height=100>
 
-A GitHub repistory and R-project for my third year research project.
+A GitHub repistory and R-project including data analysis and visualisation for my third year research project.
 
-This is a second part/ follow on from a previous project done in a summer studentship (Effects of dietary choice on Lifespan in *Drosophila melanogaster* - https://github.com/katherinemillar02/effects-of-dietary-choice-on-lifespan-in-drosophila-melanogaster).
-
-<img title="droso pic" alt="drosopAlt text" src="/images/experimentlayout.png" width=400 height=200>
+This data included follows on from a previous project completed through a summer studentship (Titled: Effects of dietary choice on Lifespan in *Drosophila melanogaster*:  https://github.com/katherinemillar02/effects-of-dietary-choice-on-lifespan-in-drosophila-melanogaster).
 
 
 This project began with using a 'patch preference assay' to test different food conditions on lifespan and fitness in fruitflies. Using both varying protein: carbohydrate diet patches as well as varying food hardness. 
+<img title="droso pic" alt="drosopAlt text" src="/images/experimentlayout.png" width=400 height=200>
+**Figure 1** Figure shows schematic of experimental assay plates, of how the experiments were planned out. 
+Experiments involved observations of where the flies liked to feed/ spend time as well as oviposition analysis of where they liked to lay their eggs. 
 
 <img title="droso pic" alt="drosopAlt text" src="/images/exp1assay.png" width=200 height=200>
+**Figure 2** Image shows an experimental assay from one of the experiments. 
 
 ## Description of scripts 
 
