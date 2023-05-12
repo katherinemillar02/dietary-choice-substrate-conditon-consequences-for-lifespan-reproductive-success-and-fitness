@@ -29,6 +29,9 @@ This project began with using a 'patch preference assay' to test different food 
 ## Description of scripts 
 
 Scripts for each experiment are in sections of: 
+**"experiment 1"**
+**"experiment 2"**
+**"experiment 3"**
 
 **"feeding-overalldiet-analysis"**
 This explains scripts with analysis of the feeding observation count data of diets which had both varying P:C ratios and soft and hard foods - before being split into variables..
@@ -39,7 +42,7 @@ This explains scripts with visualisation using barplots of the feeding observati
 For example variables could be: **1:2H, 1:2S, 1:8H, 1:8S**
 
 
-<img title="droso pic" alt="drosopAlt text" src="/images/overalldiet-visualisation.png" width=400 height=250>
+<img title="droso pic" alt="drosopAlt text" src="/images/overalldiet-visualisation.png" width=00 height=250>
 
 
 **"feeding-condition-analysis"**
