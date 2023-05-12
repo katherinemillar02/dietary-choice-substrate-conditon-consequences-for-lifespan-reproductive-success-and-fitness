@@ -31,7 +31,7 @@ This project began with using a 'patch preference assay' to test different food 
 Scripts for each experiment are in sections of: 
 
 **"feeding-overalldiet-analysis"**
-This explains scripts with analysis of the feeding observation count data of diets which had both varying P:C ratios and soft and hard foods - before being split into variables. 
+This explains scripts with analysis of the feeding observation count data of diets which had both varying P:C ratios and soft and hard foods - before being split into variables..
 For example variables could be: **1:2H, 1:2S, 1:8H, 1:8S**
 
 **"feeding-overalldiet-visualisation"**
