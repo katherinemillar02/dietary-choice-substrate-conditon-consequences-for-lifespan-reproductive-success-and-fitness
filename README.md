@@ -1,6 +1,6 @@
 # The effect of mating status and substrate condition on dietary choice and consequences for lifespan and reproductive success.
 
-# drosophiladiet <img src='images/ggplot2fhhex.png' align="right" height="200" />
+# drosophiladiet <img src='images/ggplot2fhhex.png' align="right" height="100" />
  
 
 # Project Aims 
