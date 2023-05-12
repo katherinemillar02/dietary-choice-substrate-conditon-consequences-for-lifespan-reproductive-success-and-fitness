@@ -33,8 +33,26 @@ and "Food Hardness" (soft and hard foods).
 For example variables could be: 1:2, 1:8, Hard, Soft 
 
 **"feeding-condition-visualisation"**
-This explains scripts with visualisation using boxplots and barplots of the feeding observation count data of diets which had varying P:C ratios and soft and hard foods, split into variables of "Nutrient Composition" (P:C ratios)and "Food Hardness" (soft and hard foods). 
+This explains scripts with visualisation using boxplots and barplots of the feeding observation count data of diets which had varying P:C ratios and soft and hard foods, split into variables of "Nutrient Composition" (P:C ratios) and "Food Hardness" (soft and hard foods). 
 For example variables could be: 1:2, 1:8, Hard, Soft 
+
+**"oviposition-overalldiet-analysis"**
+This explains scripts with analysis of the oviposition count observation data of diets which had both varying P:C ratios and soft and hard foods - before being split into variables. 
+For example variables could be: 1:2H, 1:2S, 1:8H, 1:8S
+
+**"oviposition-overalldiet-visualisation"**
+This explains scripts with visualisation using barplots of the oviposition count observation count data of diets which had both varying P:C ratios and soft and hard foods - before being split into variables. 
+For example variables could be: 1:2H, 1:2S, 1:8H, 1:8S
+
+**"oviposition-condition-analysis"**
+This explains scripts with analysis of the oviposition observation count data of diets which had varying P:C ratios and soft and hard foods, split into variables of "Nutrient Composition" (P:C ratios)
+and "Food Hardness" (soft and hard foods). 
+For example variables could be: 1:2, 1:8, Hard, Soft 
+
+**"oviposition-condition-visualisation"**
+This explains scripts with visualisation using boxplots and barplots of the oviposition observation count data of diets which had varying P:C ratios and soft and hard foods, split into variables of "Nutrient Composition" (P:C ratios) and "Food Hardness" (soft and hard foods). 
+For example variables could be: 1:2, 1:8, Hard, Soft 
+
 
 ## Description of "old-scripts" 
 
