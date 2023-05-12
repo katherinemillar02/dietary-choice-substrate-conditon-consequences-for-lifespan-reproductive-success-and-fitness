@@ -7,7 +7,7 @@
 
 <img title="droso pic" alt="drosopAlt text" src="/images/RLogo.png" width=100 height=100>
 
-A GitHub repistory and R-project for my third year research project..
+A GitHub repistory and R-project for my third year research project.
 
 This is a second part/ follow on from a previous project done in a summer studentship (Effects of dietary choice on Lifespan in *Drosophila melanogaster* - https://github.com/katherinemillar02/effects-of-dietary-choice-on-lifespan-in-drosophila-melanogaster).
 
