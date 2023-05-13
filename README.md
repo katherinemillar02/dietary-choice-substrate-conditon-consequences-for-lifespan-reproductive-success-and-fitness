@@ -26,6 +26,11 @@ This project began with using a 'patch preference assay' to test different food 
 
 *__Figure 2__* Image shows an experimental assay from one of the experiments. 
 
+This project experimented the larval expression of genes using *quantitative PCR* in larvae who were reared on different diets: 
+1:8H, 1:8S, 8:1H, 8:1S 
+
+
+
 ## Description of scripts 
 
 Scripts for each experiment are in sections of: 
@@ -74,6 +79,17 @@ For example variables could be: **1:2, 1:8, Hard, Soft**
 This explains scripts with visualisation using boxplots and barplots of the oviposition observation count data of diets which had varying P:C ratios and soft and hard foods, split into variables of "Nutrient Composition" (P:C ratios) and "Food Hardness" (soft and hard foods). 
 For example variables could be: **1:2, 1:8, Hard, Soft**
 
+**qPCR-calculations**
+This script contains the calculations used to calculate the average of expression of larvae reared on diets using target genes dFOXO and dilp3, and reference genes fd38 and rp20. 
 
-. 
+**qPCR-dilp3-analysis**
+This script contains analysis of larvae reared on diets compared with the reference gene dilp3.
 
+**qPCR-dilp3-visualisation**
+This script contains visualisation of larvae reared on diets compared with the reference gene dilp3.
+
+**qPCR-dFOXO-analysis**
+This script contains analysis of larvae reared on diets compared with the reference gene dFOXO.
+
+**qPCR-dFOXO-visualisation**
+This script contains visualisation of larvae reared on diets compared with the reference gene dFOXO.
