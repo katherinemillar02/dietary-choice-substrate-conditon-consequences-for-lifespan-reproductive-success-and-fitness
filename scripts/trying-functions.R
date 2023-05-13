@@ -1,4 +1,5 @@
 # summarising each group down to one row 
+# looking at dplyr website "summarise group down to one row" 
 
 # function title 
 feeding_overalldiet_calculations <- function(data, group_col) {
