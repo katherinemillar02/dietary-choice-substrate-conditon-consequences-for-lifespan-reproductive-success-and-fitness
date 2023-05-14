@@ -17,4 +17,5 @@ exp1bd1feeding <- feeding_overalldiet_calculations(long_feedinge1bd1, diet)
 exp1bd2feeding <- feeding_overalldiet_calculations(long_feedinge1bd2, diet)
 exp2d1feeding <- feeding_overalldiet_calculations(long_feedinge2d1, diet)
 exp2d2feeding <- feeding_overalldiet_calculations(long_feedinge2d2, diet)
-
+exp3d1feeding <- feeding_overalldiet_calculations(long_feedinge3d1, diet)
+exp3d2feeding <- feeding_overalldiet_calculations(long_feedinge3d2, diet)
