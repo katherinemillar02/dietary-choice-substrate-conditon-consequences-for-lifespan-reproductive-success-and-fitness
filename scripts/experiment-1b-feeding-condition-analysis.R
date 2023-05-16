@@ -1,5 +1,8 @@
 
 # TWO FACTOR ANALYSIS 
+
+
+
 # using combined day data to look at significance in day across hardness and nutrition
 # Seperating the data for hard and soft and 1:8 and 1:2 into seperate variables
 exp1ball$food_type <- ifelse(exp1ball$diet %in% c("1:8H", "1:2H"), "Hard", "Soft")
