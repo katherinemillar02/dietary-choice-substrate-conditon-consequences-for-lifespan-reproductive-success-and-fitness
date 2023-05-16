@@ -1,11 +1,4 @@
 
-# playing around 
-function_name <- function(arg_1, arg_2, ...) {
-}
-print(mean(25:82))
-# summarising each group down to one row 
-# looking at dplyr website "summarise group down to one row" 
-
 # function  for the overall diet calculations
 feeding_overalldiet_calculations <- function(data, group_col) {
   summary <- data %>%
