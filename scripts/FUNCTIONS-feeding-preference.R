@@ -65,4 +65,20 @@ exp3d1feedinghardness <- feeding_hardness_calculations(long_feedinge3d1, food_ty
 exp3d2feedinghardness <- feeding_hardness_calculations(long_feedinge3d2, food_type)
 
 
+# playing around 
+round(10.3464, digits = 2)
 
+report_p <- function(p, digits = 3) {
+paste("p=", round(p,digits))
+}
+
+p <- c(5e-25, 0.8, 0.0001, 0.049)
+t <- c(10, 23, 39,5)
+
+# map function 
+# tbl, list files, map_df, 
+
+
+theme_custom <- function(base_size=8, base_family="Sans") {
+  
+}
