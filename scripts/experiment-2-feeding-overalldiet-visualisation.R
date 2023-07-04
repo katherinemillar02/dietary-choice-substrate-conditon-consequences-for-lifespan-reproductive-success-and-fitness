@@ -2,7 +2,7 @@
 
 
 # Visualising the data for feeding day 1 
-exp2feeding_plot_d1<- exp2feeding_summary_d1 %>% 
+exp2feeding_plot_d1 <- exp2feeding_summary_d1 %>% 
   ggplot(aes(x = diet, y = mean))+
   geom_bar(stat = "identity",
            fill = "skyblue",
