@@ -1,6 +1,9 @@
 # EGG COUNTING ANALYSIS 
 # NEW SCRIPT WITH PROPERLY CHECKED MODELS 
 
+library(tidyverse)
+
+
 #____ Reading the data in 
 egg_counting_data_1b <- (read_excel(path = "data/RPEggCountE1b.xlsx", na = "NA"))
 #____ Making the data long 
